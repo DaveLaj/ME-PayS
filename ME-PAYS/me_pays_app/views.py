@@ -13,3 +13,12 @@ def register(request):
 
 def home(request):
     return render(request, "home.html", {})
+
+
+def transactions(request):
+    return render(request, "transactions.html", {})
+
+
+def account(request):
+    return render(request, "account.html", {})
+

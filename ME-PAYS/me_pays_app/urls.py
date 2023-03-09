@@ -24,4 +24,6 @@ urlpatterns = [
     path("index", views.index),
     path("register", views.register),
     path("home", views.home),
+    path("transactions", views.transactions),
+    path("account", views.account),
 ]
