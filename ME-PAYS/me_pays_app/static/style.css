@@ -20,6 +20,11 @@ body {
   margin-bottom: 8px;
 }
 
+.sidebar ul li a:hover {
+  background-color: #f1ed71;
+  border-radius: 30px;
+}
+
 .sidebar li.active a,
 .sidebar li.active a:hover {
   background-color: #f1ed71;
@@ -30,6 +35,15 @@ body {
   color: black;
 }
 
+.table thead tr {
+  border: 2px solid;
+  border-color: #ff7070;
+}
+
+.table tbody tr {
+  border: 2px solid;
+  border-color: #f1ed71;
+}
 
 @media(max-width: 767px) {
   #side_nav {
