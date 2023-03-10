@@ -30,6 +30,7 @@ body {
   color: black;
 }
 
+
 @media(max-width: 767px) {
   #side_nav {
     margin-left: -200px;
