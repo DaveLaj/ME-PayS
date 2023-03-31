@@ -39,5 +39,26 @@
         $('.sidebar').removeClass('active');
       })
     </script>
+
+    <script type="text/javascript">
+
+      $("#addFile").click(function () {
+        newRowAdd =
+          '<div id="row" class="input-group mb-3">' +
+            '<select class="form-select" id="inputGroupSelect01">' +
+              '<option selected>Choose...</option>'+
+              '<option value="1">Document Title..</option>' +
+              '<option value="2">Document Title...</option>' +
+            '</select>' +
+            '<button class="btn btn-danger" id="DeleteRow" type="button"> Cancel</button>' +
+          '</div>'
+
+        $('#newinput').append(newRowAdd);
+      });
+
+      $("body").on("click", "#DeleteRow", function () {
+        $(this).parents("#row").remove();
+      })
+    </script>
   </body>
 </html>
