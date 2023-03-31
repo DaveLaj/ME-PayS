@@ -35,3 +35,21 @@ def cash_division_account(request):
     return render(request, "cash_div/c_account.html", {})
 
 
+def admin_home(request):
+    return render(request, "admin/admin_home.html", {})
+
+
+def admin_addUser(request):
+    return render(request, "admin/admin_addUser.html", {})
+
+
+def admin_listOfStaff(request):
+    return render(request, "admin/admin_listOfStaff.html", {})
+
+
+def admin_listOfStudent(request):
+    return render(request, "admin/admin_listOfStudent.html", {})
+
+
+
+

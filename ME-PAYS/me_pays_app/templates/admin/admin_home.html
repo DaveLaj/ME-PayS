@@ -1,0 +1,16 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex">
+    {% include 'admin/admin_sidebar.html' %}
+    <div class="content">
+        {% include 'admin/admin_nav.html' %}
+
+        <div class="dashboard-content px-3 pt-4">
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back Admin!</h1>
+
+        </div>
+    </div>{% endblock %}

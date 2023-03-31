@@ -29,5 +29,8 @@ urlpatterns = [
     path("cash_division_home", views.cash_division_home),
     path("cash_division_transaction", views.cash_division_transaction),
     path("cash_division_account", views.cash_division_account),
-
+    path("admin_home", views.admin_home),
+    path("admin_addUser", views.admin_addUser),
+    path("admin_listOfStaff", views.admin_listOfStaff),
+    path("admin_listOfStudent", views.admin_listOfStudent),
 ]
