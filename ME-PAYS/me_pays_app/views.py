@@ -23,15 +23,15 @@ def account(request):
     return render(request, "account.html", {})
 
 
-def cash_division_home(request):
+def cashdiv_home(request):
     return render(request, "cash_div/c_home.html", {})
 
 
-def cash_division_transaction(request):
+def cashdiv_transaction(request):
     return render(request, "cash_div/c_transaction.html", {})
 
 
-def cash_division_account(request):
+def cashdiv_account(request):
     return render(request, "cash_div/c_account.html", {})
 
 

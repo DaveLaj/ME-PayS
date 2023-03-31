@@ -15,7 +15,62 @@
                 <button type="button" class="btn fw-bold rounded-pill" style="background-color: #ff7070; width: 400px;">Cash
                     in</button>
                 <button type="button" class="btn fw-bold rounded-pill"
-                    style="background-color: #ff7070; width: 400px; margin-left: 30px;">Pay fees</button>
+                    style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
+                    data-bs-target="#payFees">Pay fees</button>
+                
+                <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="inputPassword" class="col-sm-2 col-form-label">Document/s</label>
+                                    <div class="input-group mb-3">
+                                        <select class="form-select" id="inputGroupSelect01">
+                                            <option selected>Choose...</option>
+                                            <option value="1">Document Title..</option>
+                                            <option value="2">Document Title...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="date" class="col-sm-2 col-form-label">Date</label>
+                                    <div class="col-sm-10">
+                                        <input type="date" class="form-control" id="date">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label for="" class="col-sm-2 col-form-label">Payment Method</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
+                                            value="option1">
+                                        <label class="form-check-label" for="inlineRadio1">MC-PayS</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
+                                            value="option2">
+                                        <label class="form-check-label" for="inlineRadio2">Cash</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Total Amount</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="amount">
+                                    </div>
+                                </div>
+                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="row d-flex mt-3 align-items-center justify-content-center">
                 <div class="col-sm-5 mt-1">
