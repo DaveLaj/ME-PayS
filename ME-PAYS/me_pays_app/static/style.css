@@ -31,12 +31,12 @@ body {
 
 .table thead tr {
     border: 2px solid;
-    border-color: #ff7070;
+    border-color: black;
 }
 
 .table tbody tr {
     border: 2px solid;
-    border-color: #f1ed71;
+    border-color: black;
 }
 @media(max-width: 767px){
     #side_nav{
