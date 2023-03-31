@@ -26,4 +26,8 @@ urlpatterns = [
     path("home", views.home),
     path("transactions", views.transactions),
     path("account", views.account),
+    path("cash_division_home", views.cash_division_home),
+    path("cash_division_transaction", views.cash_division_transaction),
+    path("cash_division_account", views.cash_division_account),
+
 ]

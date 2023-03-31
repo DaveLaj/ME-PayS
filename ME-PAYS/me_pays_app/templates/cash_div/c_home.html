@@ -1,0 +1,47 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex">
+    {% include 'cash_div/c_sidebar.html' %}
+    <div class="content">
+        {% include 'cash_div/c_nav.html' %}
+
+        <div class="dashboard-content px-3 pt-4">
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome!</h1>
+            <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
+                <button type="button" class="btn fw-bold rounded-pill" style="background-color: #ff7070; width: 400px;">Cash
+                    in</button>
+                <button type="button" class="btn fw-bold rounded-pill"
+                    style="background-color: #ff7070; width: 400px; margin-left: 30px;">Pay fees</button>
+            </div>
+            <div class="row d-flex mt-3 align-items-center justify-content-center">
+                <div class="col-sm-5 mt-1">
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
+                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Cash-in's (as of today)
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5 mt-1">
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
+                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Payment's (as of today)
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
