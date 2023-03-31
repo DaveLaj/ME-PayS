@@ -28,38 +28,38 @@
                             </div>
                             <div class="modal-body fw-bold">
                                 <div class="row">
-                                    <label for="inputDocument" class="col-sm-2 col-form-label">Document/s</label>
-                                    <div class="input-group mb-3">
+                                    <label for="inputDocument" class="col-sm-2 col-form-label">Document/s:</label>
+                                    <div class=" mb-3  col-sm-10  d-flex">
                                         <select class="form-select" id="inputDocument">
                                             <option selected>Choose...</option>
                                             <option value="1">Document Title..</option>
                                             <option value="2">Document Title...</option>
                                         </select>
-                                        <button id="addFile" type="button" class="btn btn-dark"><i class="bi bi-plus-square-fill me-2"></i>Add</button>
+                                        <button id="addFile" type="button" class="btn btn-dark d-flex"><i class="bi bi-plus-square-fill me-2"></i>Add</button>
                                     </div>
-                                    <div id="newinput"></div>
+                                    <div id="newinput" class="m-1"></div>
                                 </div>
                                 <div class="row">
-                                    <label for="date" class="col-sm-2 col-form-label">Date</label>
+                                    <label for="date" class="col-sm-2 col-form-label">Date:</label>
                                     <div class="col-sm-10">
                                         <input type="date" class="form-control" id="date">
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <label for="" class="col-sm-2 col-form-label">Payment Method</label>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                                            value="option1">
-                                        <label class="form-check-label" for="inlineRadio1">MC-PayS</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                                            value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">Cash</label>
+                                <div class="row">
+                                    <label for="" class="col-sm-2 col-form-label">Payment Method:</label>
+                                    <div class="col m-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                            <label class="form-check-label" for="inlineRadio1">MC-PayS</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                            <label class="form-check-label" for="inlineRadio2">Cash</label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Total Amount</label>
+                                    <label for="amount" class="col-sm-2 col-form-label">Total Amount:</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="amount">
                                     </div>
@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row d-flex mt-3 align-items-center justify-content-center">
+            <div class="row d-flex mt-5 align-items-center justify-content-center">
                 <div class="col-sm-5 mt-1">
                     <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
                         <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Cash-in's (as of today)
