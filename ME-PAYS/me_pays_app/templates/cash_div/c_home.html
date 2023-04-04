@@ -12,11 +12,60 @@
         <div class="dashboard-content px-3 pt-4">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome!</h1>
             <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
-                <button type="button" class="btn fw-bold rounded-pill" style="background-color: #ff7070; width: 400px;">Cash
-                    in</button>
+
+                <!-- Cash IN -->
+                <button type="button" class="btn fw-bold rounded-pill"
+                    style="background-color: #ff7070; width: 400px;" data-bs-toggle="modal"
+                    data-bs-target="#cashIn">Cash In</button>
+
+                <div class="modal fade" id="cashIn" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">CASH IN</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Amount:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <input type="text" class="form-control" id="amount">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="date" class="col-sm-2 col-form-label">Date:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <input type="date" class="form-control" id="date">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <input type="text" class="form-control" id="StudentID">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="RFID">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- PAY FEES -->
                 <button type="button" class="btn fw-bold rounded-pill"
                     style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
                     data-bs-target="#payFees">Pay fees</button>
+
                 
                 <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -41,21 +90,8 @@
                                 </div>
                                 <div class="row">
                                     <label for="date" class="col-sm-2 col-form-label">Date:</label>
-                                    <div class="col-sm-10">
+                                    <div class="mb-3 col-sm-10">
                                         <input type="date" class="form-control" id="date">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="" class="col-sm-2 col-form-label">Payment Method:</label>
-                                    <div class="col m-2">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">MC-PayS</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">Cash</label>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -64,7 +100,27 @@
                                         <input type="text" class="form-control" id="amount">
                                     </div>
                                 </div>
-                
+                                <div class="row">
+                                    <label for="" class="col-sm-2 col-form-label">Payment Method:</label>
+                                    <div class="col m-2">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="RadioOptions" id="MC-PayS" value="MC-PayS">
+                                            <label class="form-check-label" for="MC-PayS">MC-PayS</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="RadioOptions" id="Cash" value="Cash">
+                                            <label class="form-check-label" for="Cash">Cash</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="MC-PayS showRFID">
+                                    <div class="row">
+                                        <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="RFID">
+                                        </div>
+                                    </div>
+                                </div>                                
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -75,7 +131,7 @@
                 </div>
             </div>
             <div class="row d-flex mt-5 align-items-center justify-content-center">
-                <div class="col-sm-5 mt-1">
+                <div class="col-sm-5 mb-3 mt-1">
                     <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
                         <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Cash-in's (as of today)
                         </div>
@@ -85,7 +141,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-5 mt-1">
+                <div class="col-sm-5 mb-3 mt-1">
                     <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
                         <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Payment's (as of today)
                         </div>

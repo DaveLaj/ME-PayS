@@ -15,6 +15,12 @@
     body {
       font-family: "Poppins";
     }
+
+    /* Show RFID */
+
+  .showRFID {
+      display: none;
+  }
   </style>
 
   <body>  
@@ -25,6 +31,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
+    <!-- Sidebar Query -->
     <script>
       $(".sidebar ul li").on('click', function () {
         $(".sidebar ul li.active").removeClass('active');
@@ -39,6 +46,8 @@
         $('.sidebar').removeClass('active');
       })
     </script>
+
+    <!-- Add Document CashDiv Query -->
 
     <script type="text/javascript">
 
@@ -60,6 +69,19 @@
       $("body").on("click", "#DeleteRow", function () {
         $(this).parents("#row").remove();
       })
+
+      // $(document).ready(function() {
+
+        $(document).ready(function () {
+          $('input[type="radio"]').click(function () {
+            var inputValue = $(this).attr("value");
+            var targetBox = $("." + inputValue);
+            $(".showRFID").not(targetBox).hide();
+            $(targetBox).show();
+          });
+        });
+        
+
     </script>
   </body>
 </html>
