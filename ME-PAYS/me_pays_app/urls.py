@@ -35,4 +35,5 @@ urlpatterns = [
     path("admin_listOfStudent", views.admin_listOfStudent),
     path("canteen_home", views.canteen_home),
     path("canteen_products", views.canteen_products),
+    path("canteen_history", views.canteen_history),
 ]

@@ -59,5 +59,8 @@ def canteen_products(request):
     return render(request, "canteen/canteen_products.html", {})
 
 
+def canteen_history(request):
+    return render(request, "canteen/canteen_history.html", {})
+
 
 
