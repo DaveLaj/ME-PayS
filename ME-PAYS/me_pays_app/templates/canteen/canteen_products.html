@@ -1,0 +1,124 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex">
+    {% include 'canteen/canteen_sidebar.html' %}
+    <div class="content">
+        {% include 'canteen/canteen_nav.html' %}
+
+        <div class="dashboard-content px-3 pt-4">
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Products</h1>
+            <div class="col-sm-8 m-auto">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-dark" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="mt-5 ms-5">
+                <button type="button" class="btn btn-dark fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#addProduct"
+                    style="width: 250px;"><i class="bi bi-plus-circle-fill"></i> Add Product</button>
+                <div class="modal fade" id="addProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Add Product</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="product" class="col-sm-2 col-form-label">Name of Product:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="product" placeholder="Name of Product">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="price" class="col-sm-2 col-form-label">Price:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="price" placeholder="Price">
+                                    </div>
+                                </div>
+            
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-content px-3 pt-3">
+                <div class="container-fluid">
+            
+                    <div class="card-body">
+                        <!-- Table with hoverable rows -->
+                        <table class="table table-hover table-bordered">
+                            <thead class="text-center">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name of Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col" style="width: 300px;">Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary">Update</button>
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary">Update</button>
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary">Update</button>
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">4</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary">Update</button>
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">5</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary">Update</button>
+                                        <button type="button" class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- End Table with hoverable rows -->
+            
+                    </div>
+            
+                </div>
+            </div>
+
+        </div>
+    </div>{% endblock %}

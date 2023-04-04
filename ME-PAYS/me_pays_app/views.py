@@ -51,5 +51,13 @@ def admin_listOfStudent(request):
     return render(request, "admin/admin_listOfStudent.html", {})
 
 
+def canteen_home(request):
+    return render(request, "canteen/canteen_home.html", {})
+
+
+def canteen_products(request):
+    return render(request, "canteen/canteen_products.html", {})
+
+
 
 

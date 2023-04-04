@@ -33,4 +33,6 @@ urlpatterns = [
     path("admin_addUser", views.admin_addUser),
     path("admin_listOfStaff", views.admin_listOfStaff),
     path("admin_listOfStudent", views.admin_listOfStudent),
+    path("canteen_home", views.canteen_home),
+    path("canteen_products", views.canteen_products),
 ]

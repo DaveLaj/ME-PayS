@@ -24,10 +24,10 @@
   </style>
 
   <body>  
-    
-    {% block content%} 
-    {% endblock %}
+          {% block content%}
+          {% endblock %}
 
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
@@ -82,6 +82,29 @@
         });
         
 
+    </script>
+
+    <!-- Canteen Query -->
+    <script type="text/javascript">
+
+      $("#addProduct").click(function () {
+        newRowAdd =
+          '<div id="row" class="mb-3 d-flex">' +
+          '<label for="inputDocument" class="col-sm-2 col-form-label"></label>' +
+          '<select class="form-select" id="inputProductSelect">' +
+          '<option selected>Choose...</option>' +
+          '<option value="1">Document Title..</option>' +
+          '<option value="2">Document Title...</option>' +
+          '</select>' +
+          '<button class="btn btn-danger" id="DeleteRow" type="button"> Cancel</button>' +
+          '</div>'
+
+        $('#newproduct').append(newRowAdd);
+      });
+
+      $("body").on("click", "#DeleteRow", function () {
+        $(this).parents("#row").remove();
+      })
     </script>
   </body>
 </html>

@@ -1,0 +1,67 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex">
+    {% include 'canteen/canteen_sidebar.html' %}
+    <div class="content">
+        {% include 'canteen/canteen_nav.html' %}
+
+        <div class="dashboard-content px-3 pt-4">
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back!</h1>
+            <div class="row d-flex mt-3 ms-1" style="margin: 12px;">
+                <div class="col-sm-5 mb-3">
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
+                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Earnings (as of today)
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-7">
+                    <div class="card border-3 scrollbar-black bordered-black square" style="border-color: black; ">
+                        <div class="card-header text-center fw-bold" style="border-color: black;">
+                            CART
+                        </div>
+                        <div class="card-body overflow-x-scroll">
+                            <div class="row">
+                                <label for="inputProduct" class="col-sm-2 col-form-label">Product/s:</label>
+                                <div class=" mb-3  col-sm-10  d-flex">
+                                    <select class="form-select" id="inputProductSelect">
+                                        <option selected>Choose...</option>
+                                        <option value="1">Document Title..</option>
+                                        <option value="2">Document Title...</option>
+                                    </select>
+                                    <button id="addProduct" type="button" class="btn btn-dark d-flex"><i
+                                            class="bi bi-plus-square-fill me-2"></i>Add</button>
+                                </div>
+                                <div id="newproduct" class="m-1"></div>
+                            </div>
+                            <div class="row">
+                                <label for="amount" class="col-sm-2 col-form-label">Total Amount:</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="amount">
+                                </div>
+                            </div>
+                           
+                            <div class="row">
+                                <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
+                                <div class="col-sm-10 mb-3">
+                                    <input type="password" class="form-control" id="RFID">
+                                </div>
+                            </div>
+            
+                            <a href="#" class="btn btn-primary float-end">PAY</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!--  -->
+            </div>
+
+        </div>
+    </div>{% endblock %}
