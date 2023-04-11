@@ -18,10 +18,12 @@ from django.urls import path
 from . import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.index),
-    path("index", views.index),
+    path("index", views.index, name='index'),
     path("register", views.register),
     path("home", views.home),
     path("transactions", views.transactions),
@@ -36,4 +38,6 @@ urlpatterns = [
     path("canteen_home", views.canteen_home),
     path("canteen_products", views.canteen_products),
     path("canteen_history", views.canteen_history),
+    path("logout", views.logout, name= "logout"),   #add this
+
 ]

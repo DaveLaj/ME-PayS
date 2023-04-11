@@ -1,7 +1,7 @@
 {% extends 'base.html'%}
 {% include 'nav.html'%}
 {% load static %}
-{% block title %} Login {% endblock%}
+{% block title %} Register {% endblock%}
 {% block content%}
 <main class="login-bg" style="background-color: #dfdddd">
     <div class="container">
@@ -13,11 +13,11 @@
                             <div class="card-header p-1 m-1">
                                 <div class="d-flex justify-content-center">
                                     <a href="index" class="logo d-flex align-items-center w-auto text-decoration-none">
-                                        <img src="{% static 'logo/LOGO.png' %}" class="img-fluid" width="100px" alt="Logo" />
+                                        <img src="{% static 'logo/LOGO.png' %}" class="img-fluid" width="80px" alt="Logo" />
                                     
                                         <span>
                                             <strong class="d-none d-lg-block text-danger fw-bold h3">
-                                                <img src="{% static 'logo/LOGO2.png' %}" class="img-fluid" width="200px" alt="Logo2" />
+                                                <img src="{% static 'logo/LOGO2.png' %}" class="img-fluid" width="150px" alt="Logo2" />
                                             </strong>
                                         </span>
                                     </a>
@@ -26,7 +26,7 @@
                             </div>
 
                             <div class="card-body">
-                                <div class="pb-2">
+                                <div class="">
                                     <h5 class="card-title text-center pb-0">
                                         REGISTER
                                     </h5>
@@ -34,13 +34,23 @@
                                         Enter your username & password to sign up.
                                     </p>
                                 </div>
-
-                                <form class="row g-3 needs-validation" novalidate>
+                                <form class="row g-1 needs-validation"  method="post">
+                                    {% csrf_token %}
                                     <div class="col-12">
-                                        <label for="yourUsername" class="form-label">Username</label>
+                                        {% if messages %}
+                                            <ul class="messages list-unstyled text-white text-center">
+                                                {% for message in messages %}
+                                                <li{% if message.tags %} class="  bg-secondary p-1 rounded-5  ml-b {{ message.tags }}"{% endif %}>{{ message }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
                                         <div class="input-group has-validation">
-                                            <input type="text" name="username" class="form-control" id="yourUsername"
-                                                placeholder="Enter Username" required />
+                                            <div class="col-md-12">
+                                                {{ form.username }}
+                                            </div>
                                             <div class="invalid-feedback">
                                                 Please enter your username.
                                             </div>
@@ -48,34 +58,48 @@
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="yourPassword" class="form-label">Password</label>
-                                        <input type="password" name="password" class="form-control" id="yourPassword"
-                                            placeholder="Enter Password" required />
+                                        <label for="{{ form.email.id_for_label }}"  class="form-label">Email</label>
+                                        <div class="col-md-12">
+                                            {{ form.email }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please enter your email!
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                                        <div class="col-md-12">
+                                            {{ form.password }}
+                                        </div>
                                         <div class="invalid-feedback">
                                             Please enter your password!
                                         </div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="yourPassword" class="form-label">Confirm Password</label>
-                                        <input type="password" name="password" class="form-control" id="yourPassword" placeholder="Enter Password"
-                                            required />
+                                        <label for="{{ form.password_repeat.id_for_label }}" class="form-label">Confirm Password</label>
+                                        <div class="col-md-12">
+                                            {{ form.password_repeat }}
+                                        </div>
                                         <div class="invalid-feedback">
                                             Please Confirm password!
                                         </div>
                                     </div>
 
                                 
-                                    <div class="col-12 pt-4">
-                                        <button class="btn btn-warning w-100 rounded fw-bold" href="dash">
+                                    <div class="col-12 pt-2">
+                                        <button class="btn btn-warning w-100 rounded fw-bold"  type="submit" value="Register" >
                                             REGISTER
                                         </button>
+
                                     </div>
                                 </form>
                             </div>
 
                             <div class="card-footer m-1">
-                                <o>A My.IIT account is required to log in.</o>
+                                <p>Already have account? <a href="index">LOGIN HERE</a></p>
+                                <p>A My.IIT account is required to log in.</p>
                             </div>
                         </div>
                     </div>
