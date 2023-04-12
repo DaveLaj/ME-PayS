@@ -38,6 +38,6 @@ urlpatterns = [
     path("canteen_home", views.canteen_home),
     path("canteen_products", views.canteen_products),
     path("canteen_history", views.canteen_history),
-    path("logout", views.logout, name= "logout"),   #add this
+    path("logout", views.logout_request, name= "logout"),   #add this
 
 ]

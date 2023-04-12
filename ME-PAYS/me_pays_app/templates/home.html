@@ -12,7 +12,13 @@
         {% include 'nav.html' %}
 
         <div class="dashboard-content px-3 pt-4">
-            <h2 class="fs-1 ps-3 pb-3 fw-bold">Welcome!</h2>
+            <h2 class="fs-1 ps-3 pb-3 fw-bold">
+                {% if user.is_authenticated %}
+                <p>Welcome, {{ user.get_username }}. Thanks for logging in.</p>
+                    {% else %}
+                    <p>Welcome, New User. Please log in.</p>
+                {% endif %}
+            </h2>
             <div class="container-fluid">
                 <div class="card text-center" style="border-color: #f1ed71; border-width: 5px; height: 11rem;">
                     <div class="card-header fw-bold fs-4 rounded-0" style="background-color: #f1ed71;">
