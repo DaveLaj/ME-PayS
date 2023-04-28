@@ -16,8 +16,13 @@ def index(request):
         username = request.POST['username']
         password = request.POST['password']
         # Check username and password combination if correct
-        user = authenticate(username=username, password=password)
-        login(request, user)
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request,  '')
+
+        user = authenticate(request, username=username, password=password)
+        
         if user is not None:
             
             # Save session as cookie to login the user
