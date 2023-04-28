@@ -68,9 +68,9 @@ def register(request):
         form = RegisterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            if User.objects.filter(username=form.cleaned_data['username']).exists():
+            if User.objects.filter(username = form.cleaned_data['username']).exists():
                 messages.error(request, "Account already exists!")
-            elif User.objects.filter(email=form.cleaned_data['email']).exists():
+            elif User.objects.filter(email = form.cleaned_data['email']).exists():
                 messages.error(request, "Account already exists!")
             elif form.cleaned_data['password'] != form.cleaned_data['password_repeat']:
                 messages.error(request, "Password do not match!")
@@ -86,6 +86,7 @@ def register(request):
                 # Login the user
                 login(request, user)
                 messages.success(request, "You're succesfully registered!")
+                
                 return HttpResponseRedirect('register')
 
    # No post data availabe, let's just show the page.

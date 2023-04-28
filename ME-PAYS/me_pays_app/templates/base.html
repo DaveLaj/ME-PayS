@@ -107,5 +107,15 @@
         $(this).parents("#row").remove();
       })
     </script>
+
+    <!-- Message Timeout -->
+    <script>
+      setTimeout(function () {
+        if ($('#msg').length > 0) {
+          $('#msg').remove();
+        }
+      }, 5000)    // 2000 millisecond
+    </script>
+
   </body>
 </html>

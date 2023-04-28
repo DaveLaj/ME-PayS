@@ -54,7 +54,7 @@
 
                 <form class="row g-1 needs-validation" action="{% url 'index' %}" method="post">
                   {% csrf_token %}
-                  <div class="col-12">
+                  <div class="col-12" id="msg">
                     {% if messages %}
                     <ul class="messages list-unstyled text-white text-center">
                       {% for message in messages %}
