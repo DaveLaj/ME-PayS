@@ -4,9 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-from .forms import RegisterForm
+from me_pays_app.forms import RegisterForm
 
-# Create your views here.
 
 
 # User Login
