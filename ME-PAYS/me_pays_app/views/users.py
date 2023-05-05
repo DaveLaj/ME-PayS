@@ -1,27 +1,31 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from me_pays_app.forms import RegisterForm
-
-
+from django.urls import reverse
+from django.contrib.auth.views import auth_login
+from me_pays_app.views.decorators import *
+import time
 
 # User Login
+@redirect_if_logged_in
 def index(request):
+    CustomUser = get_user_model()
     if request.method == 'POST':
         # Process the request if posted data are available
-        username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
         # Check username and password combination if correct
         try:
-            user = User.objects.get(username=username)
+            user = CustomUser.objects.get(email=email)
         except:
             messages.error(request,  '')
 
-        user = authenticate(request, username=username, password=password)
-        
+        user = authenticate(request, email=email, password=password, backend = 'django.contrib.auth.backends.ModelBackend')
+
         if user is not None:
             
             # Save session as cookie to login the user
@@ -38,13 +42,15 @@ def index(request):
     
 
 # Admin Login
+@redirect_if_logged_in
 def admin_login(request):
+    
     if request.user.is_authenticated:
         return redirect(reverse("admin")) 
     if request.method == 'POST':
-        username = request.POST["username"]
+        email = request.POST["email"]
         password = request.POST["password"]
-        user = authenticate(request,username = username, password = password)
+        user = authenticate(request,email = email, password = password)
         if user is not None:
             if(user.is_superuser):
                 auth_login(request, user)
@@ -57,42 +63,45 @@ def admin_login(request):
 
     
 
-
+@redirect_if_logged_in
 def register(request):
     # if this is a POST request we need to process the form data
     template = 'register.html'
-   
+    CustomUser = get_user_model()
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
         form = RegisterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            if User.objects.filter(username = form.cleaned_data['username']).exists():
+            if CustomUser.objects.filter(email = form.cleaned_data['email']).exists():
                 messages.error(request, "Account already exists!")
-            elif User.objects.filter(email = form.cleaned_data['email']).exists():
-                messages.error(request, "Account already exists!")
-            elif form.cleaned_data['password'] != form.cleaned_data['password_repeat']:
+            elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 messages.error(request, "Password do not match!")
             else:
                 # Create the user:
-                user = User.objects.create_user(
-                    form.cleaned_data['username'],
+                user = CustomUser.objects.create_user(
                     form.cleaned_data['email'],
-                    form.cleaned_data['password']
+                    form.cleaned_data['password1'],
                 )
                 user.save()
 
                 # Login the user
-                login(request, user)
+                login(request, user,  backend = 'django.contrib.auth.backends.ModelBackend')
                 messages.success(request, "You're succesfully registered!")
-                
                 return HttpResponseRedirect('register')
-
+        else:
+            errors = form.errors
+            return render(request, template, {'form': form, 'errors': errors})
    # No post data availabe, let's just show the page.
     else:
+
         form = RegisterForm()
 
     return render(request, template, {'form': form})
+
+
+
+
 
 
 

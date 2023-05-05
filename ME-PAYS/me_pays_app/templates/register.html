@@ -46,18 +46,6 @@
                                         {% endif %}
                                     </div>
                                     <div class="col-12">
-                                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                                        <div class="input-group has-validation">
-                                            <div class="col-md-12">
-                                                {{ form.username }}
-                                            </div>
-                                            <div class="invalid-feedback">
-                                                Please enter your username.
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12">
                                         <label for="{{ form.email.id_for_label }}"  class="form-label">Email</label>
                                         <div class="col-md-12">
                                             {{ form.email }}
@@ -66,11 +54,29 @@
                                             Please enter your email!
                                         </div>
                                     </div>
-
+                                    <div class="col-12">
+                                        <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                        <div class="col-md-12">
+                                            {{ form.first_name }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please enter your First Name!
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                        <div class="col-md-12">
+                                            {{ form.last_name }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please enter your Last Name!
+                                        </div>
+                                    </div>
+       
                                     <div class="col-12">
                                         <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
                                         <div class="col-md-12">
-                                            {{ form.password }}
+                                            {{ form.password1 }}
                                         </div>
                                         <div class="invalid-feedback">
                                             Please enter your password!
@@ -80,7 +86,7 @@
                                     <div class="col-12">
                                         <label for="{{ form.password_repeat.id_for_label }}" class="form-label">Confirm Password</label>
                                         <div class="col-md-12">
-                                            {{ form.password_repeat }}
+                                            {{ form.password2 }}
                                         </div>
                                         <div class="invalid-feedback">
                                             Please Confirm password!
@@ -96,9 +102,19 @@
                                     </div>
                                 </form>
                             </div>
-
+                            <div>
+                                {% if form.errors %}
+                                    <ul>
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
                             <div class="card-footer m-1">
-                                <p>Already have account? <a href="index">LOGIN HERE</a></p>
+                                <p>Already have account? <a href="{% url 'index' %}">LOGIN HERE</a></p>
                                 <p>A My.IIT account is required to log in.</p>
                             </div>
                         </div>
