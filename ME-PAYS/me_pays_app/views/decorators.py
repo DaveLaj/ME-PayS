@@ -6,3 +6,4 @@ def redirect_if_logged_in(view_func):
             return redirect('home')  # replace 'home' with your desired URL
         return view_func(request, *args, **kwargs)
     return wrapper
+

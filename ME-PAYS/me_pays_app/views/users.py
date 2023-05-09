@@ -9,6 +9,10 @@ from django.urls import reverse
 from django.contrib.auth.views import auth_login
 from me_pays_app.views.decorators import *
 import time
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from me_pays_app.models.users import *
+
+
 
 # User Login
 @redirect_if_logged_in
@@ -64,7 +68,7 @@ def admin_login(request):
     
 
 @redirect_if_logged_in
-def register(request):
+def registerenduser(request):
     # if this is a POST request we need to process the form data
     template = 'register.html'
     CustomUser = get_user_model()
@@ -79,11 +83,21 @@ def register(request):
                 messages.error(request, "Password do not match!")
             else:
                 # Create the user:
-                user = CustomUser.objects.create_user(
+
+                user = CustomUser.objects.create_enduser(
                     form.cleaned_data['email'],
-                    form.cleaned_data['password1'],
+                    form.cleaned_data['password1']
                 )
-                user.save()
+                
+                enduser = EndUser.objects.create(
+                user=user,
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                school_id=form.cleaned_data['school_id'],
+                contact_number=form.cleaned_data['contact_number'],
+                )
+                user.save()   
+                enduser.save()
 
                 # Login the user
                 login(request, user,  backend = 'django.contrib.auth.backends.ModelBackend')
@@ -98,6 +112,8 @@ def register(request):
         form = RegisterForm()
 
     return render(request, template, {'form': form})
+
+
 
 
 
