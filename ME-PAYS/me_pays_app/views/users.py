@@ -40,6 +40,8 @@ def index(request):
                 return home(request)
             elif user.groups.all()[0].name=='admin':
                 return admin_home(request)
+            elif user.groups.all()[0].name=='cashier':
+                return cashdiv_home(request)
         else:
             # Incorrect credentials, let's throw an error to the screen.
             messages.error(request, "Incorrect username and / or password.")
