@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from me_pays_app.forms import RegisterForm
@@ -32,10 +32,14 @@ def index(request):
 
         if user is not None:
             
-            # Save session as cookie to login the user
-            login(request, user)
+             # Save session as cookie to login the user
+            login(request, user) 
             # Success, now let's login the user.
-            return render(request, 'home.html')
+            # check user roles  
+            if user.groups.all()[0].name=='enduser':
+                return home(request)
+            elif user.groups.all()[0].name=='admin':
+                return admin_home(request)
         else:
             # Incorrect credentials, let's throw an error to the screen.
             messages.error(request, "Incorrect username and / or password.")
@@ -46,24 +50,24 @@ def index(request):
     
 
 # Admin Login
-@redirect_if_logged_in
-def admin_login(request):
+# @redirect_if_logged_in
+# def admin_login(request):
     
-    if request.user.is_authenticated:
-        return redirect(reverse("admin")) 
-    if request.method == 'POST':
-        email = request.POST["email"]
-        password = request.POST["password"]
-        user = authenticate(request,email = email, password = password)
-        if user is not None:
-            if(user.is_superuser):
-                auth_login(request, user)
-                return redirect(reverse("dashboard"))
-            else:
-                messages.info(request, "invalid credentials")
-            return redirect(reverse("admin"))
+#     if request.user.is_authenticated:
+#         return redirect(reverse("admin")) 
+#     if request.method == 'POST':
+#         email = request.POST["email"]
+#         password = request.POST["password"]
+#         user = authenticate(request,email = email, password = password)
+#         if user is not None:
+#             if(user.is_superuser):
+#                 auth_login(request, user)
+#                 return redirect(reverse("dashboard"))
+#             else:
+#                 messages.info(request, "invalid credentials")
+#             return redirect(reverse("admin"))
          
-    return render(request,'login.html') 
+#     return render(request,'login.html') 
 
     
 
@@ -81,6 +85,10 @@ def registerenduser(request):
                 messages.error(request, "Account already exists!")
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 messages.error(request, "Password do not match!")
+            elif EndUser.objects.filter(contact_number = form.cleaned_data['contact_number']).exists():
+                messages.error(request, "Contact Number already in use!")
+            elif EndUser.objects.filter(school_id = form.cleaned_data['school_id']).exists():
+                messages.error(request, "School ID already in use!")
             else:
                 # Create the user:
 
@@ -120,12 +128,12 @@ def registerenduser(request):
 
 
 
-
+@allowed_users(allowed_roles=['enduser'])
 @login_required(login_url='index')
 def home(request):
     return render(request, "home.html", {})
 
-
+@allowed_users(allowed_roles=['enduser'])
 @login_required(login_url='index')
 def transactions(request):
     return render(request, "transactions.html", {})

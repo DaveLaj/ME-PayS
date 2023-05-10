@@ -5,14 +5,14 @@ from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from me_pays_app.models.users import *
 from django.contrib.auth.models import Group    
 from django.contrib.auth.models import Permission
-
+from .forms import CustomGroups
 class CustomUserAdmin(UserAdmin):
+    add_form = CustomGroups
     model = get_user_model()
-    list_display = ('email', 'is_staff', 'is_superuser', 'is_active', 'role')
+    list_display = ('email', 'is_staff', 'is_superuser', 'is_active')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        # ('Personal info', {'fields': ('first_name', 'last_name', 'contact_number')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'role')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
@@ -22,6 +22,7 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
     filter_horizontal = ['groups', 'user_permissions']
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('email',)
     ordering = ('email',)
 

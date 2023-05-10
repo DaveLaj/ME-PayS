@@ -100,7 +100,10 @@ DATABASES = {
 
 # AUTH_GROUP_MODEL = 'me_pays_app.CustomGroup'
 AUTH_USER_MODEL = 'me_pays_app.CustomUser'
-AUTHENTICATION_BACKENDS = [    'django.contrib.auth.backends.ModelBackend',    'me_pays_app.backends.EmailBackend',]
+AUTHENTICATION_BACKENDS = [    
+    'django.contrib.auth.backends.ModelBackend',    
+    'me_pays_app.backends.EmailBackend',
+    ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {

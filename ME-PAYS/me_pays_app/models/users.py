@@ -4,13 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save  
 from django.dispatch import receiver
-class Role(models.TextChoices):
-        
-        ADMIN = "ADMIN", 'Admin'
-        ENDUSER = "ENDUSER", 'EndUser'
-        CASHIER = "CASHIER", 'Cashier'
-        POS = "POS", 'Pos'
-
+from django.contrib.auth.models import Group
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -38,7 +32,6 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
-        extra_fields.setdefault('role', Role.ADMIN) # set role to ADMIN
         if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
@@ -47,25 +40,33 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
     
     def create_enduser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('role', Role.ENDUSER)
-        return self.create_user(email, password, **extra_fields)
-    
+        group = Group.objects.get(name='enduser')
+        user = self.create_user(email, password, **extra_fields)
+        user.groups.set([group])
+        return user
+
+
+
+
     def get_enduser(self):
-        return self.get_queryset().filter(role=Role.ENDUSER)
+        enduser_group = Group.objects.get(name='enduser')
+        return self.objects.filter(groups__name=enduser_group.name)
     
-    def create_cashier(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('role', Role.CASHIER)
-        return self.create_user(email, password, **extra_fields)
     
-    def get_cashier(self):
-        return self.get_queryset().filter(role=Role.CASHIER)
     
-    def create_pos(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('role', Role.POS)
-        return self.create_user(email, password, **extra_fields)
+    # def create_cashier(self, email, password=None, **extra_fields):
+    #     extra_fields.setdefault('role', Role.CASHIER)
+    #     return self.create_user(email, password, **extra_fields)
     
-    def get_pos(self):
-        return self.get_queryset().filter(role=Role.POS)
+    # def get_cashier(self):
+    #     return self.get_queryset().filter(role=Role.CASHIER)
+    
+    # def create_pos(self, email, password=None, **extra_fields):
+    #     extra_fields.setdefault('role', Role.POS)
+    #     return self.create_user(email, password, **extra_fields)
+    
+    # def get_pos(self):
+    #     return self.get_queryset().filter(role=Role.POS)
     
        
 
@@ -75,7 +76,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-    role = models.CharField(max_length=50, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
@@ -89,7 +89,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class EndUser(models.Model):
 
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='enduser')
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     contact_number = models.BigIntegerField()
@@ -99,6 +99,27 @@ class EndUser(models.Model):
 
 
 
+class Cashier(models.Model):
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    location = models.CharField(max_length=60)
+    
+
+
+class POS(models.Model):
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    contact_number = models.IntegerField()
+    name = models.CharField(max_length=50)
+    location = models.CharField(max_length=60)
+
+
+
+
+
+
+# technique to create placeholder on creation of CustomUser instance
 # @receiver(post_save, sender=EndUser)
 # def create_enduser_profile(sender, instance, created, **kwargs):
 #     if created and instance.role == "ENDUSER":

@@ -14,7 +14,7 @@
         <div class="dashboard-content px-3 pt-4">
             <h2 class="fs-1 ps-3 pb-3 fw-bold">
                 {% if user.is_authenticated %}
-                <p>Welcome, {{ user.get_username }}. Thanks for logging in.</p>
+                <p>Welcome, {{ request.user.enduser.first_name }}. Thanks for logging in.</p>
                     {% else %}
                     <p>Welcome, New User. Please log in.</p>
                 {% endif %}
