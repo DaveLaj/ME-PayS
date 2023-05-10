@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from .forms import RegisterForm
+from .models import *
 
 # Create your views here.
 
@@ -70,6 +71,8 @@ def register(request):
         if form.is_valid():
             if User.objects.filter(username = form.cleaned_data['username']).exists():
                 messages.error(request, "Account already exists!")
+            # elif User.objects.filter(id = form.cleaned_data['id']).exists():
+            #     messages.error(request, "ID already exists!")
             elif User.objects.filter(email = form.cleaned_data['email']).exists():
                 messages.error(request, "Account already exists!")
             elif form.cleaned_data['password'] != form.cleaned_data['password_repeat']:
@@ -78,6 +81,7 @@ def register(request):
                 # Create the user:
                 user = User.objects.create_user(
                     form.cleaned_data['username'],
+                    # form.cleaned_data['id'],
                     form.cleaned_data['email'],
                     form.cleaned_data['password']
                 )
@@ -96,7 +100,7 @@ def register(request):
     return render(request, template, {'form': form})
 
 
-
+# STUDENT
 @login_required(login_url='index')
 def home(request):
     return render(request, "home.html", {})
@@ -112,6 +116,7 @@ def account(request):
     return render(request, "account.html", {})
 
 
+# CASHIERING DIVISION
 @login_required(login_url='index')
 def cashdiv_home(request):
     return render(request, "cash_div/c_home.html", {})
@@ -127,6 +132,7 @@ def cashdiv_account(request):
     return render(request, "cash_div/c_account.html", {})
 
 
+# ADMIN
 @login_required(login_url='index')
 def admin_home(request):
     return render(request, "admin/admin_home.html", {})
@@ -147,6 +153,7 @@ def admin_listOfStudent(request):
     return render(request, "admin/admin_listOfStudent.html", {})
 
 
+# CANTEEN
 @login_required(login_url='index')
 def canteen_home(request):
     return render(request, "canteen/canteen_home.html", {})
@@ -161,7 +168,7 @@ def canteen_products(request):
 def canteen_history(request):
     return render(request, "canteen/canteen_history.html", {})
 
-
+# LOGOUT
 @login_required(login_url='index')
 def logout_request(request):
 	logout(request)
@@ -170,3 +177,20 @@ def logout_request(request):
 
 
 
+# Functions
+
+#CANTEEN
+
+def insertMenu(request):
+    if request.method == 'POST':
+        insName = request.POST['product'];
+        insPrice = request.POST['product_price'];
+        insMenu=menu(menu_name=insName, menu_price=insPrice);
+        insMenu.save();
+        messages.success(request, "Product Successfully Added!")
+    return redirect(request.META['HTTP_REFERER'])
+
+
+def menuList(request):
+    menu_data = menu.objects.all()
+    return render(request,  "canteen/canteen_products.html", {'menu_data': menu_data})

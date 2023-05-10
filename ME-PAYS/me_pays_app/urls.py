@@ -40,4 +40,8 @@ urlpatterns = [
     path("canteen_history", views.canteen_history),
     path("logout", views.logout_request, name= "logout"),   #add this
 
+    # functions
+    path("insertMenu", views.insertMenu),
+    path("menuList", views.menuList, name="menuList"),
+
 ]
