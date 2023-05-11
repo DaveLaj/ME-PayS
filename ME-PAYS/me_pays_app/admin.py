@@ -9,7 +9,7 @@ from .forms import CustomGroups
 class CustomUserAdmin(UserAdmin):
     add_form = CustomGroups
     model = get_user_model()
-    list_display = ('email', 'is_staff', 'is_superuser', 'is_active')
+    list_display = ('email', 'is_staff', 'is_superuser', 'is_active', 'display_groups')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
@@ -25,6 +25,12 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('email',)
     ordering = ('email',)
+
+    
+    def display_groups(self, obj):
+        return ', '.join([group.name for group in obj.groups.all()])
+
+    display_groups.short_description = 'Groups'
 
     
 

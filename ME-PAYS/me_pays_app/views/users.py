@@ -42,6 +42,8 @@ def index(request):
                 return redirect('admin_home')
             elif user.groups.all()[0].name == 'cashier':
                 return redirect('cashdiv_home')
+            elif user.groups.all()[0].name == 'pos':
+                return redirect('canteen_home')
         else:
             # Incorrect credentials, let's throw an error to the screen.
             messages.error(request, "Incorrect username and / or password.")
@@ -49,28 +51,6 @@ def index(request):
     else:
         # No post data availabe, let's just show the page to the user.
         return render(request, 'index.html')
-    
-
-# Admin Login
-# @redirect_if_logged_in
-# def admin_login(request):
-    
-#     if request.user.is_authenticated:
-#         return redirect(reverse("admin")) 
-#     if request.method == 'POST':
-#         email = request.POST["email"]
-#         password = request.POST["password"]
-#         user = authenticate(request,email = email, password = password)
-#         if user is not None:
-#             if(user.is_superuser):
-#                 auth_login(request, user)
-#                 return redirect(reverse("dashboard"))
-#             else:
-#                 messages.info(request, "invalid credentials")
-#             return redirect(reverse("admin"))
-         
-#     return render(request,'login.html') 
-
     
 
 @redirect_if_logged_in
