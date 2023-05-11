@@ -36,12 +36,12 @@ def index(request):
             login(request, user) 
             # Success, now let's login the user.
             # check user roles  
-            if user.groups.all()[0].name=='enduser':
-                return home(request)
-            elif user.groups.all()[0].name=='admin':
-                return admin_home(request)
-            elif user.groups.all()[0].name=='cashier':
-                return cashdiv_home(request)
+            if user.groups.all()[0].name == 'enduser':
+                return redirect('home')
+            elif user.groups.all()[0].name == 'admin':
+                return redirect('admin_home')
+            elif user.groups.all()[0].name == 'cashier':
+                return redirect('cashdiv_home')
         else:
             # Incorrect credentials, let's throw an error to the screen.
             messages.error(request, "Incorrect username and / or password.")
