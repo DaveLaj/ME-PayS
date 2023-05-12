@@ -12,8 +12,9 @@
         <div class="dashboard-content px-3 pt-4">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Products</h1>
             <div class="col-sm-8 m-auto">
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                {% comment %} search form input  {% endcomment %}
+                <form class="d-flex" role="search" action={% url "searchProduct"%}>
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name = "query">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
             </div>
@@ -38,7 +39,7 @@
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
-                            <form class="row g-1 needs-validation" action="insertMenu" method="post">
+                            <form class="row g-1 needs-validation" action={% url "insertMenu"%} method="post">
                                 {% csrf_token %}
                                 <div class="modal-header" style="background-color: #fffb90;">
                                     <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Add Product</h1>
@@ -71,6 +72,8 @@
                 
                 
             </div>
+
+            <h3>Results: {{ count }} Entries</h3>
             <div class="dashboard-content px-3 pt-3">
                 <div class="container-fluid">
             
@@ -137,7 +140,8 @@
                                                 </div>
                                                 <div class="modal-body fw-bold">
                                                     <div class="row">
-                                                        <h3>Are you sure you want to delete this row?</h3>
+                                                        <h3>Are you sure you want to delete this item?</h3>
+                                                        <p>ID: {{ item.id }} | Name: {{ item.menu_name }} | Price: {{ item.menu_price }} </p>
                                                     </div>
                                                     
                                                 

@@ -36,7 +36,8 @@ urlpatterns = [
     path("canteen_home", canteen_home, name='canteen_home'),
 
     # canteen product workings
-    path("canteen_products", canteen_products, name='canteen_products'),
+    path('canteen_products/', canteen_products, name='canteen_products'),
+    path('canteen_products/search', searchProduct, name='searchProduct'),
     path('updateMenu/<int:item_id>', updateMenu, name='updateMenu'),
     path('deleteMenu/<int:item_id>', deleteMenu, name='deleteMenu'),
     path("insertMenu", insertMenu, name="insertMenu"),

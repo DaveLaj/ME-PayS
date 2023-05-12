@@ -54,18 +54,52 @@ def canteen_home(request):
     return render(request, "canteen/canteen_home.html", {})
     
 
-@login_required(login_url='index')
-def canteen_products(request):
 
-    menu_data = menu.objects.filter(menu_owner_id=(request.user.id), menu_is_active=True)
-    paginator = Paginator(menu_data, 2)
+
+@user_passes_test(user_has_pos_group)
+@login_required(login_url='index')  
+def searchProduct(request):
+    search_string = request.GET.get('query')
+    if search_string:
+        menu_data = menu.objects.filter(menu_name__icontains=search_string, menu_owner_id=request.user.id, menu_is_active=True)
+    else:
+        menu_data = menu.objects.filter(menu_owner_id=request.user.id, menu_is_active=True)
+    paginator = Paginator(menu_data, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    count = menu_data.count()
     context = {
+        'count' : count,
         'page_obj': page_obj,
         'menu_data': menu_data
     }
+
     return render(request, "canteen/canteen_products.html", context)
+    
+
+
+
+
+
+
+
+@user_passes_test(user_has_pos_group)
+@login_required(login_url='index')
+def canteen_products(request):
+    
+    menu_data = menu.objects.filter(menu_owner_id=request.user.id, menu_is_active=True)
+    paginator = Paginator(menu_data, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    count = menu_data.count()
+    context = {
+        'count' : count,
+        'page_obj': page_obj,
+        'menu_data': menu_data
+    }
+
+    return render(request, "canteen/canteen_products.html", context)
+
 
 
 @login_required(login_url='index')
