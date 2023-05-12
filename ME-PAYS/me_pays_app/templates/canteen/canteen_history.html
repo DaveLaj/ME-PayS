@@ -1,0 +1,66 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex">
+    {% include 'canteen/canteen_sidebar.html' %}
+    <div class="content">
+        {% include 'canteen/canteen_nav.html' %}
+
+        <div class="dashboard-content px-3 pt-4">
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">History</h1>
+            <div class="col-sm-8 m-auto">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-dark" type="submit">Search</button>
+                </form>
+            </div>
+            
+            <div class="dashboard-content px-3 pt-3">
+                <div class="container-fluid">
+                    <!-- Table with hoverable rows -->
+                    <table class="table table-hover table-bordered mt-3 mx-auto" style="width: 1000px;">
+                        <thead class="text-center">
+                            <tr>
+                                <th scope="col" style="width: 50px;">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Total Profit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">4</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- End Table with hoverable rows -->
+            
+                </div>
+            </div>
+
+        </div>
+    </div>{% endblock %}

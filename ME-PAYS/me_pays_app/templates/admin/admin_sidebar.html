@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="sidebar bg-dark" id="side_nav">
+    <div class="header-box ps-3 pt-3 pb-4 d-flex justify-content-center ">
+        <h1 class="fs-4">
+            <span class="bg-white text-dark rounded shadow px-3 me-2 p-2 mx-auto">
+                <img src="{% static 'logo/LOGO2.png' %}" alt="" style="width: 110px; height: 33px;">
+            </span>
+        </h1>
+        <button class="btn d-md-none d-block close-btn px-1 py-0 text-black"><i
+                class="bi bi-list text-white"></i></button>
+    </div>
+    <ul class="list-unstyled px-2 text-center pt-5">
+        <li><a href="admin_home" class="text-decoration-none fw-bold px-3 py-2 d-block">Home</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle text-decoration-none fw-bold px-3 py-2 d-block" data-bs-toggle="dropdown">List of
+                Users</a>
+            <div class="dropdown-menu dropdown-menu-end">
+                <a href="admin_listOfStaff" class="dropdown-item p-2">List of Staff</a>
+                <a href="admin_listOfStudent" class="dropdown-item p-2">List of Students</a>
+            </div>
+        </li>
+    </ul>
+</div>

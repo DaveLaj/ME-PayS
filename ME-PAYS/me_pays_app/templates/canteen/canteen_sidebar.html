@@ -1,0 +1,17 @@
+{% load static %}
+
+<div class="sidebar " style="background-color: #343a40;" id="side_nav">
+    <div class="header-box ps-3 pt-3 pb-4 d-flex justify-content-center ">
+        <h1 class="fs-4">
+            <span class="bg-white text-dark rounded shadow px-3 me-2 p-2 mx-auto">
+                <img src="{% static 'logo/LOGO2.png' %}" alt="" style="width: 110px; height: 33px;">
+            </span>
+        </h1>
+        <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="bi bi-list"></i></button>
+    </div>
+    <ul class="list-unstyled px-2 text-center pt-5">
+        <li><a href="canteen_home" class="text-decoration-none fw-bold px-3 py-2 d-block">Home</a></li>
+        <li><a href="canteen_products" class="text-decoration-none fw-bold px-3 py-2 d-block">Add Products</a></li>
+        <li><a href="canteen_history" class="text-decoration-none fw-bold px-3 py-2 d-block">History</a></li>
+    </ul>
+</div>

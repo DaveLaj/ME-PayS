@@ -91,10 +91,35 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+import os
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
+
+
+
+# AUTH_GROUP_MODEL = 'me_pays_app.CustomGroup'
+AUTH_USER_MODEL = 'me_pays_app.CustomUser'
+AUTHENTICATION_BACKENDS = [    
+    'django.contrib.auth.backends.ModelBackend',    
+    'me_pays_app.backends.EmailBackend',
+    ]
 
 AUTH_PASSWORD_VALIDATORS = [
     {

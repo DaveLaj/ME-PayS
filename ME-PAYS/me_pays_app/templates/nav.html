@@ -1,25 +1,30 @@
 {% load static %}
 
 
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light p-2 fixed-top" style="background-color: #dfdddd;">
-        <div class="d-flex align-items-center justify-content-between">
-            <a class="navbar-brand" href="home">
-                <img src="{% static 'logo/ME-cutout.png' %}" class="img-fluid" width="180px" alt="Logo" />
-            </a>
-            <span>
-                <i class="bi bi-list toggle-sidebar-btn text-white fs-2"></i>
-            </span>
+<nav class="navbar navbar-expand-md navbar-light" style="background-color: #dfdddd;">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between d-md-none d-block">
+            <h1 class="fs-4 p-2">
+                <span class="bg-white text-dark rounded shadow px-2 me-2 p-2 mx-auto">
+                    <img src="{% static 'logo/LOGO2.png' %}" alt="" style="width: 110px; height: 33px;">
+                </span>
+            </h1>
+
+            <button class="btn px-1 py-0 open-btn"><i class="bi bi-list"></i></button>
+        </div>
+        <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse"   
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <i class="bi bi-caret-down-fill"></i>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-lg-0">
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" type="button" class="btn fw-bold rounded-pil" style="background-color: #ff7070; width: 120px;">Logout</a>
+                </li>
+            </ul>
         </div>
 
-        <div class="navbar-nav ms-auto ">
-            <button class="btn btn-danger w-100 rounded fw-bold " href="index.html">
-                <span>
-                    <i class="bi bi-box-arrow-right"></i>
-                </span>Logout
-            </button>
-        </div>
-    </nav>
-    
-</header>
+    </div>
+</nav>
 

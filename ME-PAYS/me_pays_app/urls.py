@@ -15,12 +15,35 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from . import views
+from me_pays_app.views.users import *
+from me_pays_app.views.pos import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", views.index),
-    path("index", views.index),
-    path("home", views.home),
+    path("", index, name='index'),
+    path("register", registerenduser, name='register'),
+    path("home", home, name='home'),
+    path("transactions", transactions, name='transactions'),
+    path("account", account, name='account'),
+    path("cashdiv_home", cashdiv_home, name='cashdiv_home'),
+    path("cashdiv_transaction", cashdiv_transaction, name='cashdiv_transaction'),
+    path("cashdiv_account", cashdiv_account, name='cashdiv_account'),
+    path("admin_home", admin_home, name='admin_home'),
+    path("admin_addUser", admin_addUser, name='admin_adduser'),
+    path("admin_listOfStaff", admin_listOfStaff, name='admin_listOfStaff'),
+    path("admin_listOfStudent", admin_listOfStudent, name='admin_listOfStudent'),
+    path("canteen_home", canteen_home, name='canteen_home'),
+
+    # canteen product workings
+    path("canteen_products", canteen_products, name='canteen_products'),
+    path('updateMenu/<int:item_id>', updateMenu, name='updateMenu'),
+    path('deleteMenu/<int:item_id>', deleteMenu, name='deleteMenu'),
+    path("insertMenu", insertMenu, name="insertMenu"),
+
+
+    path("canteen_history", canteen_history, name='canteen_history'),
+    path("logout", logout_request, name= "logout"),   #add this   
+   
+
 ]
