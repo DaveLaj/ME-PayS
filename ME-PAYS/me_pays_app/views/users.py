@@ -125,56 +125,65 @@ def transactions(request):
 def account(request):
     return render(request, "account.html", {})
 
-
+@allowed_users(allowed_roles=['cashier'])
 @login_required(login_url='index')
 def cashdiv_home(request):
     return render(request, "cash_div/c_home.html", {})
 
-
+@allowed_users(allowed_roles=['cashier'])
 @login_required(login_url='index')
 def cashdiv_transaction(request):
     return render(request, "cash_div/c_transaction.html", {})
 
-
+@allowed_users(allowed_roles=['cashier'])
 @login_required(login_url='index')
 def cashdiv_account(request):
     return render(request, "cash_div/c_account.html", {})
 
-
+@allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')
 def admin_home(request):
     return render(request, "admin/admin_home.html", {})
 
-
+@allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')
 def admin_addUser(request):
     return render(request, "admin/admin_addUser.html", {})
 
-
+@allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')
-def admin_listOfStaff(request):
-    return render(request, "admin/admin_listOfStaff.html", {})
+def admin_listOfAdmin(request):
+    return render(request, "admin/admin_listOfAdmin.html", {})
 
-
+@allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')
-def admin_listOfStudent(request):
-    return render(request, "admin/admin_listOfStudent.html", {})
+def admin_listOfEndUser(request):
+    return render(request, "admin/admin_listOfEndUser.html", {})
 
+@allowed_users(allowed_roles=['admin'])
+@login_required(login_url='index')
+def admin_listOfCashier(request):
+    return render(request, "admin/admin_listOfCashier.html", {})
 
+@allowed_users(allowed_roles=['admin'])
+@login_required(login_url='index')
+def admin_listOfPOS(request):
+    return render(request, "admin/admin_listOfPOS.html", {})
+
+@allowed_users(allowed_roles=['pos'])
 @login_required(login_url='index')
 def canteen_home(request):
     return render(request, "canteen/canteen_home.html", {})
 
-
+@allowed_users(allowed_roles=['pos'])
 @login_required(login_url='index')
 def canteen_products(request):
     return render(request, "canteen/canteen_products.html", {})
 
-
+@allowed_users(allowed_roles=['pos'])
 @login_required(login_url='index')
 def canteen_history(request):
     return render(request, "canteen/canteen_history.html", {})
-
 
 @login_required(login_url='index')
 def logout_request(request):

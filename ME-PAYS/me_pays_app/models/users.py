@@ -50,13 +50,15 @@ class CustomUserManager(BaseUserManager):
         user = self.create_user(email, password, **extra_fields)
         user.groups.set([group])
         return user
+    
+    def create_pos(self, email, password=None, **extra_fields):
+        group = Group.objects.get(name='pos')
+        user = self.create_user(email, password, **extra_fields)
+        user.groups.set([group])
+        return user
+    
 
 
-
-
-    def get_enduser(self):
-        enduser_group = Group.objects.get(name='enduser')
-        return self.objects.filter(groups__name=enduser_group.name)
     
     
     
@@ -108,7 +110,8 @@ class EndUser(models.Model):
 class Cashier(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='cashier')
-    name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=60)
     
 
@@ -116,11 +119,17 @@ class Cashier(models.Model):
 class POS(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    contact_number = models.IntegerField()
-    name = models.CharField(max_length=50)
-    location = models.CharField(max_length=60)
+    store_name = models.CharField(max_length=30, blank=True)
+    contact_number = models.BigIntegerField()
+    location = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
 
+class Admin(models.Model):
 
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    contact_number = models.BigIntegerField()
 
 
 

@@ -91,7 +91,7 @@
                             <tbody>
                                 {% comment %} start of iterations {% endcomment %}
                                 {% for item in page_obj %}
-                                <div class="modal fade" id="updateProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                <div class="modal fade" id="updateProduct{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -127,7 +127,7 @@
                                 </div>
 
 
-                                <div class="modal fade" id="deleteProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                <div class="modal fade" id="deleteProduct{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
@@ -160,9 +160,9 @@
                                     <td>{{ item.menu_price }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#updateProduct">Update</button>
+                                        data-bs-target="#updateProduct{{ item.id }}">Update</button>
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteProduct">Delete</button>
+                                        data-bs-target="#deleteProduct{{ item.id }}">Delete</button>
                                     </td>
                                 </tr>
                                 {% endfor %}

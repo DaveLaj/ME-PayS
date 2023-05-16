@@ -5,6 +5,7 @@ from django.contrib import messages
 from me_pays_app.forms import *
 from me_pays_app.models.pos import menu
 from django.core.paginator import Paginator
+from django.db.models import Q
 import logging
 
 logger = logging.getLogger(__name__)
@@ -25,16 +26,27 @@ def insertMenu(request):
 @user_passes_test(user_has_pos_group)
 def updateMenu(request, item_id):
     menu_item = menu.objects.get(id=item_id)
-    
     if request.method == 'POST':
-        updated_name = request.POST['product']
-        updated_price = request.POST['product_price']
+        updated_name = request.POST.get('product')
+        updated_price = request.POST.get('product_price')
+        if updated_name!='' and updated_price!='':
+            menu_item.menu_name = updated_name
+            menu_item.menu_price = updated_price
+            menu_item.save()
+            messages.success(request, "Product Successfully Updated!")
 
-        menu_item.menu_name = updated_name
-        menu_item.menu_price = updated_price
-        menu_item.save()
-        messages.success(request, "Product Successfully Updated!")
-    return redirect(request.META['HTTP_REFERER'])
+        elif updated_name!='':
+            menu_item.menu_name = updated_name
+            menu_item.save()
+            messages.success(request, "Product Successfully Updated!")
+        else:
+            menu_item.menu_price = updated_price
+            menu_item.save()
+            messages.success(request, "Product Successfully Updated!")
+        return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        messages.success(request, "Nothing to Update!")
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 @user_passes_test(user_has_pos_group)
@@ -61,9 +73,13 @@ def canteen_home(request):
 def searchProduct(request):
     search_string = request.GET.get('query')
     if search_string:
-        menu_data = menu.objects.filter(menu_name__icontains=search_string, menu_owner_id=request.user.id, menu_is_active=True)
+        menu_data = menu.objects.filter(
+            menu_name__icontains=search_string, 
+            menu_owner_id=request.user.id, 
+            menu_is_active=True
+        ).order_by('id')
     else:
-        menu_data = menu.objects.filter(menu_owner_id=request.user.id, menu_is_active=True)
+        menu_data = menu.objects.filter(menu_owner_id=request.user.id, menu_is_active=True).order_by('id')
     paginator = Paginator(menu_data, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -87,7 +103,7 @@ def searchProduct(request):
 @login_required(login_url='index')
 def canteen_products(request):
     
-    menu_data = menu.objects.filter(menu_owner_id=request.user.id, menu_is_active=True)
+    menu_data = menu.objects.filter(menu_owner_id=request.user.id, menu_is_active=True).order_by('id')
     paginator = Paginator(menu_data, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
