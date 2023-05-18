@@ -73,6 +73,10 @@ urlpatterns = [
     path("admin_listOfPOS", pos_list, name='admin_listOfPOS'),
     path('admin_listOfPOS/deletePOS/<int:account_id>', deletepos, name='deletePOS'),
     path('admin_listOfPOS/updatePOS/<int:account_id>', updatepos, name='updatePOS'),
+    path('admin_listOfPOS/changepassPOS/<int:changepass_id>', pos_change_password, name='changepassPOS'),
+
+
+
 
     # path("admin_listOfCashier", cashier_list, name='admin_listOfCashier'),
 

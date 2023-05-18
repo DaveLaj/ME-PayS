@@ -46,12 +46,17 @@ def pos_list(request):
     if 'account_id' in request.POST:
         account_id = request.POST['account_id']
         return updatepos(request, account_id, template='admin/admin_listOfPOS.html')
-    
-    # No updatepos form submission, render the pos_list template
+
     else:
-        form = POS_UpdateForm()
-    
-    context['update_form'] = form
+        None
+
+    if 'changepass_id' in request.POST:
+        account_id = request.POST['changepass_id']
+        return pos_change_password(request, account_id, template='admin/admin_listOfPOS.html')
+
+    else:
+        form = POS_ChangePassword()
+        context['changepass']=form
 
     # if this is a POST request we need to process the form data for insert
     if request.method == 'POST':
@@ -108,20 +113,42 @@ def pos_list(request):
 def updatepos(request, account_id, template='admin/admin_listOfPOS.html'):
     user = get_object_or_404(CustomUser, id=account_id)
     pos = user.pos  # Assuming the POS instance is associated with the user
-
     if request.method == 'POST':
-        form = POS_UpdateForm(request.POST, instance=pos)
-        if form.is_valid():
-            form.save()
+        store_name = request.POST.get('store_name')
+        contact_number = request.POST.get('contact_number')
+        location = request.POST.get('location')
+        description = request.POST.get('description')
+        
+        updated_fields = []
+        if store_name:
+            pos.store_name = store_name
+            updated_fields.append('store_name')
+        if contact_number:
+            pos.contact_number = contact_number
+            updated_fields.append('contact_number')
+        if location:
+            pos.location = location
+            updated_fields.append('location')
+        if description:
+            pos.description = description
+            updated_fields.append('description')
+        
+        if updated_fields:
+            pos.save(update_fields=updated_fields)
             messages.success(request, "Account Updated Successfully!")
-            return redirect('admin_listOfPOS')  # Replace 'pos_list' with your actual URL name for the POS list view
-    else:
-        form = POS_UpdateForm(instance=pos)
+        else:
+            messages.info(request, "No fields updated.")
+        
+        return redirect('admin_listOfPOS')  # Replace 'pos_list' with your actual URL name for the POS list view
     
     context = {
-        'update': form,
+        'person': user,  # Pass the user object to the template
     }
     return render(request, template, context)
+
+
+
+
 
 @user_passes_test(user_has_admin_group)
 @login_required(login_url='index')  
@@ -137,22 +164,21 @@ def deletepos(request, account_id):
 
 @user_passes_test(user_has_admin_group)
 @login_required(login_url='index')  
-def change_password(request, user_id, template='admin/admin_listOfPOS.html'):
-    user = get_object_or_404(CustomUser, id=user_id)
-
+def pos_change_password(request, changepass_id, template='admin/admin_listOfPOS.html'):
+    user = get_object_or_404(CustomUser, id=changepass_id)
     if request.method == 'POST':
         form = POS_ChangePassword(request.POST, instance=user)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Password changed successfully!")
-            return redirect('pos_list')  # Replace 'pos_list' with your actual URL name for the POS list view
+            if form.cleaned_data['password1'] != form.cleaned_data['password2']:
+                messages.error(request, "Password do not match!")
+            else:
+                user.set_password(form.cleaned_data['password1'])
+                user.save()
+                messages.success(request, "Password changed successfully!")
+                return redirect(request.META['HTTP_REFERER'])  # Replace 'pos_list' with your actual URL name for the POS list view
     else:
-        form = POS_ChangePassword(instance=user)
-
-    context = {
-        'changepass': form,
-    }
-    return render(request, template, context)
+        None
+    return render(request, template)
 
 
 @user_passes_test(user_has_admin_group)

@@ -104,8 +104,23 @@ def registerenduser(request):
     return render(request, template, {'form': form})
 
 
+# -----------Use this for self account update--------------------------------------------------------------------
+# def updatepos(request):
+#     template = 'admin/admin_listOfPOS.html'
+#     pos = request.user.pos  # Assuming the POS instance is associated with the user
+#     if request.method == 'POST':
+#         form = POS_UpdateForm(request.POST, instance=pos)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Account Deleted Successfully!")
+#             return redirect('pos_list')  # Replace 'pos_list' with your actual URL name for the POS list view
+#     else:
+#         form = POS_UpdateForm(instance=pos)
+#     context = {
+#         'update': form,
+#     }
 
-
+#     return render(request, template, context) 
 
 
 
@@ -120,7 +135,7 @@ def home(request):
 def transactions(request):
     return render(request, "transactions.html", {})
 
-
+@allowed_users(allowed_roles=['enduser'])
 @login_required(login_url='index')
 def account(request):
     return render(request, "account.html", {})

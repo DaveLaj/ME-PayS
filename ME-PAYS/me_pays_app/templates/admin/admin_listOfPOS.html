@@ -239,15 +239,37 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body fw-bold">
-                                                    <div class="row">
-                                                       {% comment %} {{ update_form.store_name|attr:"placeholder:Enter Store Name" }}
-                                                       {{ update_form.location|attr:"placeholder:Enter Location" }}
-                                                        {{ update_form.contact_number|attr:"placeholder:Enter Contact Number" }}
-                                                        {{ update_form.description|attr:"placeholder:Enter Description" }}
-                                                        {% endcomment %}
-                                                       {{ update_form.as_p }}
+                                                    <div class="row mb-2 mt-3">
+                                                        <label class="col-sm-2">Email:</label> 
+                                                        <div class="col-sm-10">
+                                                           <p>{{ person.email }}</p>
+                                                        </div>
+                                                     </div> 
+                                                     <div class="row mb-4">
+                                                        <label for="store_name" class="col-sm-2 col-form-label">Store Name:</label> 
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" name="store_name"  maxlength="30" placeholder="{{ person.pos.store_name }}" >
+                                                        </div>
+                                                     </div> 
+                                                     <div class="row mb-4">
+                                                        <label for="contact_number" class="col-sm-2 col-form-label">Contact #:</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="number" class="form-control limit-length" name="contact_number" placeholder="{{ person.pos.contact_number }}" oninput="this.value = this.value.slice(0, 10);">
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                    <div class="row mb-4">
+                                                        <label for="location" class="col-sm-2 col-form-label">Location:</label>
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" name="location" maxlength="50" placeholder="{{ person.pos.location }}" >
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-4">
+                                                        <label for="description" class="col-sm-2 col-form-label">Description:</label>
+                                                        <div class="col-sm-10">
+                                                            <textarea style="width: 100%; height: 150px;" class="form-control" name="description" maxlength="255" placeholder="{{ person.pos.description }}" ></textarea>
+                                                        </div>
+                                                    </div> 
+                                                </div> 
 
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -262,7 +284,7 @@
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
-                                            <form class="row g-1 needs-validation" action="{% url 'updatePOS' person.id %}" method="post">
+                                            <form class="row g-1 needs-validation" action="{% url 'changepassPOS' person.id %}" method="post">
                                                 {% csrf_token %}
 
                                                 <div class="modal-header" style="background-color: #FFBF00;">
@@ -270,9 +292,15 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body fw-bold">
-                                                    <div class="row">
-                                                        {% comment %} placeholder for the form fields {% endcomment %}
-                                                       
+                                                    <div class="row mb-4">
+                                                        <div class="col-md-9">
+                                                            {{ changepass.password1 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-4">
+                                                        <div class="col-md-9">
+                                                            {{ changepass.password2 }}
+                                                        </div>
                                                     </div>
                                                 </div>
 

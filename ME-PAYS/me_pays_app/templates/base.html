@@ -117,14 +117,16 @@
         }
       }, 5000)    // 2000 millisecond
     </script>
-    <script>
-      document.getElementById('contact_number').addEventListener('input', function () {
-          if (this.value.length > 10) {
-              this.value = this.value.slice(0, 10);
-          }
-      });
-   </script>
   
+   <script>
+    $(document).ready(function() {
+      // Set the duration (in milliseconds) for the message to be displayed
+      var messageDuration = 4000; // 5 seconds
+  
+      // Fade out the messages after the specified duration
+      $('.messages li').delay(messageDuration).fadeOut('slow');
+    });
+    </script>
 
   </body>
 </html>

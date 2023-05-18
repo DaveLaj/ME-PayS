@@ -49,13 +49,13 @@
                                     <div class="row">
                                         <label for="product" class="col-sm-2 col-form-label">Name of Product:</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="product" placeholder="Name of Product">
+                                            <input type="text" class="form-control" name="product" placeholder="Name of Product" required='true'>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <label for="price" class="col-sm-2 col-form-label">Price:</label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="product_price" placeholder="Price">
+                                            <input type="number" class="form-control" name="product_price" placeholder="Price" required='true'>
                                         </div>
                                     </div>
                 
@@ -112,7 +112,7 @@
                                                     <div class="row">
                                                         <label for="price" class="col-sm-2 col-form-label">Price:</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" name="product_price" placeholder="{{ item.menu_price}}">
+                                                            <input type="number" class="form-control" name="product_price" placeholder="{{ item.menu_price}}">
                                                         </div>
                                                     </div>
                                 

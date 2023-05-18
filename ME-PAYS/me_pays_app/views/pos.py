@@ -26,23 +26,22 @@ def insertMenu(request):
 @user_passes_test(user_has_pos_group)
 def updateMenu(request, item_id):
     menu_item = menu.objects.get(id=item_id)
+
     if request.method == 'POST':
         updated_name = request.POST.get('product')
         updated_price = request.POST.get('product_price')
-        if updated_name!='' and updated_price!='':
-            menu_item.menu_name = updated_name
-            menu_item.menu_price = updated_price
-            menu_item.save()
-            messages.success(request, "Product Successfully Updated!")
 
-        elif updated_name!='':
-            menu_item.menu_name = updated_name
-            menu_item.save()
+        if updated_name or updated_price:  # Check if any field is updated
+            if updated_name:
+                menu_item.menu_name = updated_name
+            if updated_price:
+                menu_item.menu_price = updated_price
+
+            menu_item.save(update_fields=['menu_name', 'menu_price'])
             messages.success(request, "Product Successfully Updated!")
         else:
-            menu_item.menu_price = updated_price
-            menu_item.save()
-            messages.success(request, "Product Successfully Updated!")
+            return redirect(request.META.get('HTTP_REFERER'))
+
         return redirect(request.META.get('HTTP_REFERER'))
     else:
         messages.success(request, "Nothing to Update!")
