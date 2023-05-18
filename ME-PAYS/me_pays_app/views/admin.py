@@ -139,7 +139,7 @@ def updatepos(request, account_id, template='admin/admin_listOfPOS.html'):
         else:
             messages.info(request, "No fields updated.")
         
-        return redirect('admin_listOfPOS')  # Replace 'pos_list' with your actual URL name for the POS list view
+        return redirect(request.META['HTTP_REFERER'])  
     
     context = {
         'person': user,  # Pass the user object to the template
