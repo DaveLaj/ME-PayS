@@ -16,9 +16,9 @@
             <a class="dropdown-toggle text-decoration-none fw-bold px-3 py-2 d-block" data-bs-toggle="dropdown">List of
                 Users</a>
             <div class="dropdown-menu dropdown-menu-end">
-                <a  class="dropdown-item p-2">List of End Users</a>
+                <a href={% url "admin_listOfEndUser"%} class="dropdown-item p-2">List of End Users</a>
                 <a href={% url "admin_listOfPOS"%} class="dropdown-item p-2">List of Points of Sale</a>
-                <a  class="dropdown-item p-2">List of Cashier</a>
+                <a href={% url "admin_listOfCashier"%} class="dropdown-item p-2">List of Cashier</a>
             </div>
         </li>
     </ul>

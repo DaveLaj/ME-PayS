@@ -1,21 +1,6 @@
 from django.shortcuts import redirect
 from django.http import HttpResponse
-# def redirect_if_logged_in(view_func):
-#     def wrapper(request, *args, **kwargs):
-#         if request.user.is_authenticated:
-#             if request.user.groups.all()[0].name=='admin':
-#                 return redirect('admin_home')  # replace 'home' with your desired URL
-#             elif request.user.groups.all()[0].name=='enduser':
-#                 return redirect('home')  # replace 'home' with your desired URL
-#             elif request.user.groups.all()[0].name=='cashier':
-#                 return redirect('cashdiv_home')  # replace 'home' with your desired URL
-#             elif request.user.groups.all()[0].name=='pos':
-#                 return redirect('pos_home')  # replace 'home' with your desired URL
-#             else:
-#                  return HttpResponse('NotFound.')
-        
-#         return view_func(request, *args, **kwargs)
-#     return wrapper
+
 
 def redirect_if_logged_in(view_func):
     def wrapper(request, *args, **kwargs):

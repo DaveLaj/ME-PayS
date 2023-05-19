@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from me_pays_app.forms import *
 from me_pays_app.models.pos import menu
@@ -16,11 +15,25 @@ def user_has_pos_group(user):
 @user_passes_test(user_has_pos_group)
 def insertMenu(request):
     if request.method == 'POST':
-        insName = request.POST['product']
-        insPrice = request.POST['product_price']
-        insMenu=menu(menu_name=insName, menu_price=insPrice, menu_owner_id=(request.user.id))
-        insMenu.save()
-        messages.success(request, "Product Successfully Added!")
+        existing_menu_obj = menu.objects.filter(menu_name=request.POST['product'])
+        if existing_menu_obj.exists():
+            if existing_menu_obj.first().menu_is_active == 1:
+                messages.error(request, "Product Already Exists!")
+            elif existing_menu_obj.first().menu_is_active == 0:
+                insName = request.POST['product']
+                insPrice = request.POST['product_price']
+                menu_item = menu.objects.get(menu_name=insName)
+                menu_item.menu_name = insName
+                menu_item.menu_price = insPrice
+                menu_item.menu_is_active = 1
+                menu_item.save(update_fields=['menu_name', 'menu_price', 'menu_is_active'])
+                messages.success(request, "Product Successfully Added!")
+        else:
+            insName = request.POST['product']
+            insPrice = request.POST['product_price']
+            insMenu=menu(menu_name=insName, menu_price=insPrice, menu_owner_id=(request.user.id))
+            insMenu.save()
+            messages.success(request, "Product Successfully Added!")
     return redirect(request.META['HTTP_REFERER'])
 
 @user_passes_test(user_has_pos_group)
@@ -33,13 +46,18 @@ def updateMenu(request, item_id):
 
         if updated_name or updated_price:  # Check if any field is updated
             if updated_name:
-                menu_item.menu_name = updated_name
+                if menu.objects.filter(menu_name=updated_name).exists():
+                    messages.success(request, "Product Name Already Taken")
+                    return redirect(request.META.get('HTTP_REFERER'))
+                else:
+                    menu_item.menu_name = updated_name
             if updated_price:
                 menu_item.menu_price = updated_price
 
             menu_item.save(update_fields=['menu_name', 'menu_price'])
             messages.success(request, "Product Successfully Updated!")
         else:
+            messages.error(request, "Process Failure please contact admin")
             return redirect(request.META.get('HTTP_REFERER'))
 
         return redirect(request.META.get('HTTP_REFERER'))

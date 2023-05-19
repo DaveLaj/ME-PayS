@@ -11,7 +11,7 @@ class RegisterForm(UserCreationForm):
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),required=True, help_text='Required.')
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
-    contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control', 'id': 'contact_number'}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
+    contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
     school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control'}),required=True, validators=[MaxLengthValidator(8, message='Please correct the format of your ID.')], help_text='Required.')
 
     class Meta:
@@ -23,11 +23,11 @@ class RegisterForm(UserCreationForm):
 
 
 class POS_CreationForm(UserCreationForm):
-    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control'}),required=True, help_text='Required.')
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control', 'maxlength':'100'}),required=True, help_text='Required.')
     store_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'maxlength': '30'}),required=True, help_text='Required.')
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
-    contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control limit-length', 'id': 'contact_number'}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
+    contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control limit-length', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
     location = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'maxlength': '100'}),required=True, help_text='Required.')
     description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
 

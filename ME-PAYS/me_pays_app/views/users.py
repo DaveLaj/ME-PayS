@@ -5,8 +5,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from me_pays_app.forms import RegisterForm
-from django.urls import reverse
-from django.contrib.auth.views import auth_login
 from me_pays_app.views.decorators import *
 import time
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -170,30 +168,12 @@ def admin_addUser(request):
 def admin_listOfAdmin(request):
     return render(request, "admin/admin_listOfAdmin.html", {})
 
-@allowed_users(allowed_roles=['admin'])
-@login_required(login_url='index')
-def admin_listOfEndUser(request):
-    return render(request, "admin/admin_listOfEndUser.html", {})
-
-@allowed_users(allowed_roles=['admin'])
-@login_required(login_url='index')
-def admin_listOfCashier(request):
-    return render(request, "admin/admin_listOfCashier.html", {})
-
-@allowed_users(allowed_roles=['admin'])
-@login_required(login_url='index')
-def admin_listOfPOS(request):
-    return render(request, "admin/admin_listOfPOS.html", {})
 
 @allowed_users(allowed_roles=['pos'])
 @login_required(login_url='index')
 def canteen_home(request):
     return render(request, "canteen/canteen_home.html", {})
 
-@allowed_users(allowed_roles=['pos'])
-@login_required(login_url='index')
-def canteen_products(request):
-    return render(request, "canteen/canteen_products.html", {})
 
 @allowed_users(allowed_roles=['pos'])
 @login_required(login_url='index')
