@@ -186,7 +186,7 @@
                                 <div class="modal fade" id="descshow{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
-                                            <div class="modal-header" style="background-color:#40E0D0;">
+                                            <div class="modal-header" style="background-color:#87CBB9;">
                                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Description: ID {{ person.id }}</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
@@ -202,13 +202,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                                 {% comment %} modal div for delete {% endcomment %}
                                 <div class="modal fade" id="deletePOS{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
                                             <form class="row g-1 needs-validation" action={% url 'deletePOS' person.id %} method="post">
                                                 {% csrf_token %}
-                                                <div class="modal-header" style="background-color: #FF5733;">
+                                                <div class="modal-header" style="background-color: #FA9884;">
                                                     <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Delete Account</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
@@ -234,7 +235,7 @@
                                             <form id='form2' class="row g-1 needs-validation" action="{% url 'updatePOS' person.id %}" method="post">
                                                 {% csrf_token %}
 
-                                                <div class="modal-header" style="background-color: #0096FF;">
+                                                <div class="modal-header" style="background-color: #A6D0DD;">
                                                     <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Update Profile</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
@@ -287,7 +288,7 @@
                                             <form class="row g-1 needs-validation" action="{% url 'changepassPOS' person.id %}" method="post">
                                                 {% csrf_token %}
 
-                                                <div class="modal-header" style="background-color: #FFBF00;">
+                                                <div class="modal-header" style="background-color: #FEFF86;">
                                                     <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Change Password</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
