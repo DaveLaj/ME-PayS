@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save  
 from django.contrib.auth.models import Group
+from django_cryptography.fields import encrypt
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -98,6 +99,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class EndUser(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='enduser')
+    rfid_code = encrypt(models.CharField(max_length=100, blank=True, null=True))
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     contact_number = models.BigIntegerField()
@@ -113,6 +115,8 @@ class Cashier(models.Model):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=60)
+    contact_number = models.CharField(max_length=10)
+
     
 
 

@@ -37,6 +37,7 @@ def insertMenu(request):
     return redirect(request.META['HTTP_REFERER'])
 
 @user_passes_test(user_has_pos_group)
+@login_required(login_url='index')
 def updateMenu(request, item_id):
     menu_item = menu.objects.get(id=item_id)
 
@@ -57,16 +58,15 @@ def updateMenu(request, item_id):
             menu_item.save(update_fields=['menu_name', 'menu_price'])
             messages.success(request, "Product Successfully Updated!")
         else:
-            messages.error(request, "Process Failure please contact admin")
+            messages.error(request, "Nothing to Update.")
             return redirect(request.META.get('HTTP_REFERER'))
 
         return redirect(request.META.get('HTTP_REFERER'))
-    else:
-        messages.success(request, "Nothing to Update!")
-        return redirect(request.META.get('HTTP_REFERER'))
+  
 
 
 @user_passes_test(user_has_pos_group)
+@login_required(login_url='index') 
 def deleteMenu(request, item_id):
     menu_item = menu.objects.get(id=item_id)
 
@@ -77,7 +77,7 @@ def deleteMenu(request, item_id):
     return redirect(request.META['HTTP_REFERER'])
 
 
-
+@user_passes_test(user_has_pos_group)
 @login_required(login_url='index')
 def canteen_home(request):
     return render(request, "canteen/canteen_home.html", {})
@@ -134,7 +134,7 @@ def canteen_products(request):
     return render(request, "canteen/canteen_products.html", context)
 
 
-
+@user_passes_test(user_has_pos_group)
 @login_required(login_url='index')
 def canteen_history(request):
     return render(request, "canteen/canteen_history.html", {})
