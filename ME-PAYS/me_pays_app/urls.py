@@ -71,7 +71,7 @@ urlpatterns = [
     path("admin_addUser", admin_addUser, name='admin_adduser'),
 
     path("admin_listOfPOS", pos_list, name='admin_listOfPOS'),
-    path('admin_listOfPOS/deletePOS/<int:account_id>', delete_user, name='deletePOS'),
+    path('admin_list/deleteaccount/<int:account_id>', delete_user, name='deletePOS'),
     path('admin_listOfPOS/updatePOS/<int:account_id>', update_pos, name='updatePOS'),
     path('admin_listOfPOS/changepassPOS/<int:changepass_id>', user_change_password, name='changepassPOS'),
 
@@ -80,6 +80,8 @@ urlpatterns = [
 
     path("admin_listOfCashier", cashier_list, name='admin_listOfCashier'),
 
+
+    path('admin_listOfEndUser/updateEndUser/<int:account_id>', update_enduser, name='updateEndUser'),
     path("admin_listOfEndUser", enduser_list, name='admin_listOfEndUser'),
     # path("admin_listOfEndUser/adduser", admin_registerenduser, name='admin_listOfEndUser'),
     

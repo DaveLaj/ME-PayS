@@ -175,6 +175,15 @@ def update_pos(request, account_id):
             pos.store_name = store_name
             updated_fields.append('store_name')
         if contact_number:
+            if int(pos.contact_number) == int(contact_number):
+                messages.error(request, "Contact Number Already Set!")
+                return redirect(request.META['HTTP_REFERER']) 
+            elif EndUser.objects.filter(contact_number = request.POST.get('contact_number')).exists():
+                messages.error(request, "Contact Number already exists!")
+                return redirect(request.META['HTTP_REFERER']) 
+            elif POS.objects.filter(contact_number = request.POST.get('contact_number')).exists():
+                messages.error(request, "Contact Number already exists!")
+                return redirect(request.META['HTTP_REFERER']) 
             pos.contact_number = contact_number
             updated_fields.append('contact_number')
         if location:
@@ -183,7 +192,6 @@ def update_pos(request, account_id):
         if description:
             pos.description = description
             updated_fields.append('description')
-        
         if updated_fields:
             pos.save(update_fields=updated_fields)
             messages.success(request, "Account Updated Successfully!")
@@ -264,17 +272,17 @@ def enduser_list(request):
 
     # Search Mechanism---------------------------------------------------------------------------------------------------------
     # Get the search query from the request
-    # search_query = request.GET.get('query')
+    search_query = request.GET.get('query')
 
-    # if search_query:
-    #     # Apply search filter to the queryset
-    #     pos_data = CustomUser.objects.filter(
-    #         Q(groups=enduser_group),
-    #         Q(is_active=1),
-    #         Q(email__icontains=search_query) | Q(pos__store_name__icontains=search_query) | Q(pos__contact_number__icontains=search_query)
-    #     ).order_by('id')
-    # else:
-    enduser_data = CustomUser.objects.filter(groups=enduser_group, is_active=1).order_by('id')
+    if search_query:
+        # Apply search filter to the queryset
+        enduser_data = CustomUser.objects.filter(
+            Q(groups=enduser_group),
+            Q(is_active=1),
+            Q(email__icontains=search_query) | Q(enduser__school_id__icontains=search_query) | Q(enduser__first_name__icontains=search_query) | Q(enduser__last_name__icontains=search_query)
+        ).order_by('id')
+    else:
+        enduser_data = CustomUser.objects.filter(groups=enduser_group, is_active=1).order_by('id')
 
     paginator = Paginator(enduser_data, 8)
     page_number = request.GET.get('page')
@@ -284,56 +292,53 @@ def enduser_list(request):
         'count' : count,
         'page_obj': page_obj,
     }
-    # if 'account_id' in request.POST:
-    #     account_id = request.POST['account_id']
-    #     return update_pos(request, account_id, template='admin/admin_listOfPOS.html')
-
-    # else:
-    #     None
+    if 'account_id' in request.POST:
+        account_id = request.POST['account_id']
+        return update_enduser(request, account_id, template='admin/admin_listOfEndUser.html')
+    else:
+        None
 
     if 'changepass_id' in request.POST:
         account_id = request.POST['changepass_id']
         return user_change_password(request, account_id)
     else:
-        form = POS_ChangePassword()
-        context['changepass']=form
+        changepassform = POS_ChangePassword()
+        context['changepass']=changepassform
 
     # if this is a POST request we need to process the form data for insert
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = POS_CreationForm(request.POST)
+        form = RegisterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             if CustomUser.objects.filter(email = form.cleaned_data['email']).exists():
                 messages.error(request, "Account already exists!")
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 messages.error(request, "Password do not match!")
-            elif POS.objects.filter(contact_number = form.cleaned_data['contact_number']).exists():
+            elif EndUser.objects.filter(contact_number = form.cleaned_data['contact_number']).exists():
                 messages.error(request, "Contact Number already in use!")
-            elif POS.objects.filter(store_name = form.cleaned_data['store_name']).exists():
-                messages.error(request, "Store Name already in use!")
+            elif EndUser.objects.filter(school_id = form.cleaned_data['school_id']).exists():
+                messages.error(request, "School ID already in use!")
             else:
                 # Create the user:
 
-                user = CustomUser.objects.create_pos(
+                user = CustomUser.objects.create_enduser(
                     form.cleaned_data['email'],
                     form.cleaned_data['password1']
                 )
                 
-                profile = POS.objects.create(
+                profile = EndUser.objects.create(
                 user=user,
-                store_name=form.cleaned_data['store_name'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                school_id=form.cleaned_data['school_id'],
                 contact_number=form.cleaned_data['contact_number'],
-                location=form.cleaned_data['location'],
-                description=form.cleaned_data['description'],
                 )
-
-                
                 user.save()   
                 profile.save()
 
                 # Login the user
-                messages.success(request, "POS Successfully Registered")
+                messages.success(request, "End User Successfully Registered")
                 return redirect(request.META['HTTP_REFERER'])   
         else:
             context['form']=form
@@ -342,7 +347,7 @@ def enduser_list(request):
    # No post data availabe, let's just show the page.
     else:
 
-        form = POS_CreationForm()
+        form = RegisterForm()
         context['form']=form
         
     return render(request, template, context)
@@ -350,31 +355,47 @@ def enduser_list(request):
 
 @user_passes_test(user_has_admin_group)
 @login_required(login_url='index')  
-def update_enduser(request, account_id, template='admin/admin_listOfPOS.html'):
+def update_enduser(request, account_id, template='admin/admin_listOfEndUser.html'):
     user = get_object_or_404(CustomUser, id=account_id)
-    pos = user.pos  # Assuming the POS instance is associated with the user
+    enduser = user.enduser  # Assuming the POS instance is associated with the user
     if request.method == 'POST':
-        store_name = request.POST.get('store_name')
+
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         contact_number = request.POST.get('contact_number')
-        location = request.POST.get('location')
-        description = request.POST.get('description')
+        school_id = request.POST.get('school_id')
         
+
         updated_fields = []
-        if store_name:
-            pos.store_name = store_name
-            updated_fields.append('store_name')
-        if contact_number:
-            pos.contact_number = contact_number
+        if first_name:
+            enduser.first_name = first_name
+            updated_fields.append('first_name')
+        if last_name:
+            enduser.last_name = last_name
+            updated_fields.append('last_name')
+        if contact_number: 
+            if int(enduser.contact_number) == int(contact_number):
+                messages.error(request, "Contact Number Already Set!")
+                return redirect(request.META['HTTP_REFERER']) 
+            elif POS.objects.filter(contact_number = contact_number).exists():
+                messages.error(request, "Contact Number already exists!")
+                return redirect(request.META['HTTP_REFERER'])  
+            elif EndUser.objects.filter(contact_number = request.POST.get('contact_number')).exists():
+                messages.error(request, "Contact Number already exists!")
+                return redirect(request.META['HTTP_REFERER']) 
+            enduser.contact_number = contact_number
             updated_fields.append('contact_number')
-        if location:
-            pos.location = location
-            updated_fields.append('location')
-        if description:
-            pos.description = description
-            updated_fields.append('description')
-        
+        if school_id:
+            if int(enduser.school_id) == int(school_id):
+                messages.error(request, "School ID Already Set!")
+                return redirect(request.META['HTTP_REFERER']) 
+            elif EndUser.objects.filter(contact_number = request.POST.get('school_id')).exists():
+                messages.error(request, "School ID already exists!")
+                return redirect(request.META['HTTP_REFERER']) 
+            enduser.school_id = school_id
+            updated_fields.append('school_id')
         if updated_fields:
-            pos.save(update_fields=updated_fields)
+            enduser.save(update_fields=updated_fields)
             messages.success(request, "Account Updated Successfully!")
         else:
             messages.info(request, "No fields updated.")

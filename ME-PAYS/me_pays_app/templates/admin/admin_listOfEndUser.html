@@ -10,9 +10,9 @@
         {% include 'admin/admin_nav.html' %}
 
         <div class="dashboard-content pt-4">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">List of Point of Sale Accounts</h1>
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">List of End User Accounts</h1>
             <div class="col-sm-8 m-auto p-2">
-                <form class="d-flex p-2" role="search" action={% url 'admin_listOfPOS' %} method="GET">
+                <form class="d-flex p-2" role="search" action={% url 'admin_listOfEndUser' %} method="GET">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>                
@@ -20,7 +20,7 @@
             <div class="mt-3 ms-5">
                 <div class="d-flex align-items-middle">
                     <button type="button" class="btn btn-primary fw-bold rounded-pill p-3" data-bs-toggle="modal"
-                        data-bs-target="#addpos"><i class="bi bi-plus-circle-fill"></i> Add Point of Sale</button>
+                        data-bs-target="#addenduser"><i class="bi bi-plus-circle-fill"></i> Add End User</button>
                     <!-- id="msg" -->
                     <div class="col-6 ps-3">
                         <div class="col-12" id="msg">
@@ -45,15 +45,15 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="modal fade" id="addpos" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                <div class="modal fade" id="addenduser" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
-                            <form class="row g-1 needs-validation" action={% url "admin_listOfPOS"%} method="post">
+                            <form class="row g-1 needs-validation" action={% url "admin_listOfEndUser"%} method="post">
                                 {% csrf_token %}
                                
                                 <div class="modal-header" style="background-color: #fffb90;">
-                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Add Point of Sale Account</h1>
+                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Add End User Account</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body fw-bold">
@@ -67,21 +67,21 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="{{ form.store_name.id_for_label }}"  class="form-label">Store Name:</label>
+                                        <label for="{{ form.first_name.id_for_label }}"  class="form-label">First Name:</label>
                                         <div class="col-md-12">
-                                            {{ form.store_name }}
+                                            {{ form.first_name }}
                                         </div>
                                         <div class="invalid-feedback">
-                                            Please enter your Store Name!
+                                            Please enter your First Name!
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="{{ form.location.id_for_label }}"  class="form-label">Location/Address:</label>
+                                        <label for="{{ form.last_name.id_for_label }}"  class="form-label">Last Name:</label>
                                         <div class="col-md-12">
-                                            {{ form.location }}
+                                            {{ form.last_name }}
                                         </div>
                                         <div class="invalid-feedback">
-                                            Please enter your Location/Address!
+                                            Please enter your Last Name!
                                         </div>
                                     </div> 
                                     <div class="col-12">
@@ -94,9 +94,9 @@
                                         </div>
                                     </div>
                                     <div class="col-12">
-                                        <label for="{{ form.description.id_for_label }}"  class="form-label">Description:</label>
+                                        <label for="{{ form.school_id.id_for_label }}"  class="form-label">School ID:</label>
                                         <div class="col-md-12">
-                                            {{ form.description }}
+                                            {{ form.school_id }}
                                         </div>
                                     </div>
                                     <div class="col-12">
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" name="admin_listOfPOS" class="btn btn-dark">Submit</button>
+                                    <button type="submit" name="admin_listOfEndUser" class="btn btn-dark">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -144,12 +144,14 @@
                                 <tr>
                                     <th scope="col" style="width: 50px;">#</th>
                                     <th scope="col" style="width: 150px;">Email</th> 
-                                    <th scope="col">Store</th>
-                                    <th scope="col">Location/Address</th>     
+                                    <th scope="col">School Id</th>   
+                                    <th scope="col">RFID Registered</th>   
+                                    <th scope="col">Name</th>
+                                      
                                     <th scope="col" style="width: 150px;">Contact #</th>
                                     <th scope="col" style="width: 150px;">Date Joined</th>
                                     <th scope="col" style="width: 150px;">Last Login</th>
-                                    <th scope="col" style="width: 150px;">Description</th>
+        
                                     <th scope="col" style="width: 150px;">Options</th>
                                 </tr>
                             </thead>
@@ -158,52 +160,34 @@
                                 <tr>
                                     <th scope="row">{{ person.id }}</th>
                                     <td>{{ person.email }}</td>
-                                    <td>{{ person.pos.store_name }}</td>
-                                    <td>{{ person.pos.location }}</td>
-                                    <td>{{ person.pos.contact_number }}</td>
-                                    {% comment %} <td>
-                                        {% for group in person.groups.all %}
-                                        {{ group.name }}
-                                        {% if not forloop.last %}, {% endif %}
-                                        {% endfor %}
-                                    </td> {% endcomment %}
+                                    <td>{{ person.enduser.school_id }}</td>
+                                    {% if person.enduser %}
+                                        {% if person.enduser.rfid_code is not null %}
+                                            <td>Registered</td>
+                                        {% else %}
+                                            <td>Not Registered</td>
+                                        {% endif %}
+                                    {% else %}
+                                        <td></td>
+                                    {% endif %}
+                                    <td>{{ person.enduser.first_name }} {{ person.enduser.last_name }}</td>
+                                    <td>{{ person.enduser.contact_number }}</td>
                                     <td>{{ person.date_joined }}</td>
                                     {% if person.last_login is null %}
                                     <td>No Login Entry</td>
                                     {% else %}
                                     <td>{{ person.last_login }}</td>
                                     {% endif %}
-                                    <td>
-                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#descshow{{ person.id }}">Show Description</button>
-                                    </td>  
                                     <td class="text-center p-2">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updatePOS{{ person.id }}">Update</button>
-                                        <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#deletePOS{{ person.id }}">Delete</button>
-                                        <button type="button" class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#changepassPOS{{ person.id }}">Change Password</button>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#update{{ person.id }}">Update</button>
+                                        <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#delete{{ person.id }}">Delete</button>
+                                        <button type="button" class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#changepass{{ person.id }}">Change Password</button>
                                     </td>
                                 </tr>
                                 
-                                <div class="modal fade" id="descshow{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header" style="background-color:#40E0D0;">
-                                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Description: ID {{ person.id }}</h1>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body fw-bold">
-                                                <div class="row">
-                                                    <h5>{{ person.pos.description }}</h5>
-                                                    
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                               
                                 {% comment %} modal div for delete {% endcomment %}
-                                <div class="modal fade" id="deletePOS{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal fade" id="delete{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
                                             <form class="row g-1 needs-validation" action={% url 'deletePOS' person.id %} method="post">
@@ -227,11 +211,11 @@
                                     </div>
                                 </div>
                                 {% comment %} modal div for update {% endcomment %}
-                                <div class="modal fade" id="updatePOS{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                <div class="modal fade" id="update{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                                         <div class="modal-content">
-                                            <form class="row g-1 needs-validation" action="{% url 'updatePOS' person.id %}" method="post">
+                                            <form class="row g-1 needs-validation" action="{% url 'updateEndUser' person.id %}" method="post">
                                                 {% csrf_token %}
 
                                                 <div class="modal-header" style="background-color: #0096FF;">
@@ -246,29 +230,29 @@
                                                         </div>
                                                      </div> 
                                                      <div class="row mb-4">
-                                                        <label for="store_name" class="col-sm-2 col-form-label">Store Name:</label> 
+                                                        <label for="first_name" class="col-sm-2 col-form-label">First Name:</label> 
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" name="store_name"  maxlength="30" placeholder="{{ person.pos.store_name }}" >
+                                                            <input type="text" class="form-control" name="first_name"  maxlength="30" placeholder="{{ person.enduser.first_name }}" >
+                                                        </div>
+                                                     </div> 
+                                                     <div class="row mb-4">
+                                                        <label for="last_name" class="col-sm-2 col-form-label">Last Name:</label> 
+                                                        <div class="col-sm-10">
+                                                            <input type="text" class="form-control" name="last_name"  maxlength="30" placeholder="{{ person.enduser.last_name }}" >
                                                         </div>
                                                      </div> 
                                                      <div class="row mb-4">
                                                         <label for="contact_number" class="col-sm-2 col-form-label">Contact #:</label>
                                                         <div class="col-sm-10">
-                                                            <input type="number" class="form-control limit-length" name="contact_number" placeholder="{{ person.pos.contact_number }}" oninput="this.value = this.value.slice(0, 10);">
+                                                            <input type="number" class="form-control limit-length" name="contact_number"  placeholder="{{ person.enduser.contact_number }}" oninput="this.value = this.value.slice(0, 10);">
                                                         </div>
                                                     </div>
                                                     <div class="row mb-4">
-                                                        <label for="location" class="col-sm-2 col-form-label">Location:</label>
+                                                        <label for="school_id" class="col-sm-2 col-form-label">School ID:</label>
                                                         <div class="col-sm-10">
-                                                            <input type="text" class="form-control" name="location" maxlength="50" placeholder="{{ person.pos.location }}" >
+                                                            <input type="text" class="form-control" name="school_id" oninput="this.value = this.value.slice(0, 8);" placeholder="{{ person.enduser.school_id }}" >
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-4">
-                                                        <label for="description" class="col-sm-2 col-form-label">Description:</label>
-                                                        <div class="col-sm-10">
-                                                            <textarea style="width: 100%; height: 150px;" class="form-control" name="description" maxlength="255" placeholder="{{ person.pos.description }}" ></textarea>
-                                                        </div>
-                                                    </div> 
                                                 </div> 
 
                                                 <div class="modal-footer">
@@ -280,7 +264,7 @@
                                     </div>
                                 </div>
                                 {% comment %} This is the modal div for change password {% endcomment %}
-                                <div class="modal fade" id="changepassPOS{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                <div class="modal fade" id="changepass{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
