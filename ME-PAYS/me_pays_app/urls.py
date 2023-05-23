@@ -71,13 +71,13 @@ urlpatterns = [
     path("admin_addUser", admin_addUser, name='admin_adduser'),
 
     path("admin_listOfPOS", pos_list, name='admin_listOfPOS'),
-    path('admin_list/deleteaccount/<int:account_id>', delete_user, name='deletePOS'),
+    path('admin_list/deleteaccount/<int:account_id>', delete_user, name='delete'),
     path('admin_listOfPOS/updatePOS/<int:account_id>', update_pos, name='updatePOS'),
-    path('admin_listOfPOS/changepassPOS/<int:changepass_id>', user_change_password, name='changepassPOS'),
+    path('admin_list/changepass/<int:changepass_id>', user_change_password, name='changepass'),
 
 
 
-
+    path('admin_listOfCashier/updateCashier/<int:account_id>', update_cashier, name='updateCashier'),
     path("admin_listOfCashier", cashier_list, name='admin_listOfCashier'),
 
 

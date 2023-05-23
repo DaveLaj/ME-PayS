@@ -207,7 +207,7 @@
                                 <div class="modal fade" id="deletePOS{{ person.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
-                                            <form class="row g-1 needs-validation" action={% url 'deletePOS' person.id %} method="post">
+                                            <form class="row g-1 needs-validation" action={% url 'delete' person.id %} method="post">
                                                 {% csrf_token %}
                                                 <div class="modal-header" style="background-color: #FA9884;">
                                                     <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Delete Account</h1>
@@ -285,7 +285,7 @@
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
-                                            <form class="row g-1 needs-validation" action="{% url 'changepassPOS' person.id %}" method="post">
+                                            <form class="row g-1 needs-validation" action="{% url 'changepass' person.id %}" method="post">
                                                 {% csrf_token %}
 
                                                 <div class="modal-header" style="background-color: #FEFF86;">

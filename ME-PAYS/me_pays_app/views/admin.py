@@ -16,7 +16,7 @@ def user_has_admin_group(user):
 def user_change_password(request, changepass_id):
     user = get_object_or_404(CustomUser, id=changepass_id)
     if request.method == 'POST':
-        form = POS_ChangePassword(request.POST, instance=user)
+        form = ChangePassword(request.POST, instance=user)
         if form.is_valid():
             if form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 messages.error(request, "Password do not match!")
@@ -106,7 +106,7 @@ def pos_list(request):
         return user_change_password(request, account_id, template='admin/admin_listOfPOS.html')
 
     else:
-        form = POS_ChangePassword()
+        form = ChangePassword()
         context['changepass']=form
 
     # if this is a POST request we need to process the form data for insert
@@ -302,13 +302,13 @@ def enduser_list(request):
         account_id = request.POST['changepass_id']
         return user_change_password(request, account_id)
     else:
-        changepassform = POS_ChangePassword()
+        changepassform = ChangePassword()
         context['changepass']=changepassform
 
     # if this is a POST request we need to process the form data for insert
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = RegisterForm(request.POST)
+        form = EndUser_CreationForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             if CustomUser.objects.filter(email = form.cleaned_data['email']).exists():
@@ -347,7 +347,7 @@ def enduser_list(request):
    # No post data availabe, let's just show the page.
     else:
 
-        form = RegisterForm()
+        form = EndUser_CreationForm()
         context['form']=form
         
     return render(request, template, context)
@@ -456,72 +456,69 @@ def update_enduser(request, account_id, template='admin/admin_listOfEndUser.html
 def cashier_list(request):
     CustomUser = get_user_model()
     template = 'admin/admin_listOfCashier.html'
-    pos_group = Group.objects.get(name='pos')
+    cashier_group = Group.objects.get(name='cashier')
 
     # Get the search query from the request
     search_query = request.GET.get('query')
 
     if search_query:
         # Apply search filter to the queryset
-        pos_data = CustomUser.objects.filter(
-            Q(groups=pos_group),
+        cashier_data = CustomUser.objects.filter(
+            Q(groups=cashier_group),
             Q(is_active=1),
-            Q(email__icontains=search_query) | Q(pos__store_name__icontains=search_query) | Q(pos__contact_number__icontains=search_query)
+            Q(email__icontains=search_query) | Q(pos__first_name__icontains=search_query)| Q(pos__last_name__icontains=search_query) | Q(pos__contact_number__icontains=search_query)
         ).order_by('id')
     else:
-        pos_data = CustomUser.objects.filter(groups=pos_group, is_active=1).order_by('id')
-    paginator = Paginator(pos_data, 8)
+        cashier_data = CustomUser.objects.filter(groups=cashier_group, is_active=1).order_by('id')
+    paginator = Paginator(cashier_data, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    count = pos_data.count()
+    count = cashier_data.count()
     context = {
         'count' : count,
         'page_obj': page_obj,
-        'pos_data': pos_data
+        'cashier_data': cashier_data
     }
+
     if 'account_id' in request.POST:
         account_id = request.POST['account_id']
-        return update_pos(request, account_id, template='admin/admin_listOfPOS.html')
-
+        return update_cashier(request, account_id, template='admin/admin_listOfCashier.html')
     else:
         None
 
     if 'changepass_id' in request.POST:
         account_id = request.POST['changepass_id']
-        return user_change_password(request, account_id, template='admin/admin_listOfPOS.html')
-
+        return user_change_password(request, account_id, template='admin/admin_listOfCashier.html')
     else:
-        form = POS_ChangePassword()
+        form = ChangePassword()
         context['changepass']=form
 
     # if this is a POST request we need to process the form data for insert
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        form = POS_CreationForm(request.POST)
+        form = Cashier_CreationForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
             if CustomUser.objects.filter(email = form.cleaned_data['email']).exists():
                 messages.error(request, "Account already exists!")
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 messages.error(request, "Password do not match!")
-            elif POS.objects.filter(contact_number = form.cleaned_data['contact_number']).exists():
+            elif Cashier.objects.filter(contact_number = form.cleaned_data['contact_number']).exists():
                 messages.error(request, "Contact Number already in use!")
-            elif POS.objects.filter(store_name = form.cleaned_data['store_name']).exists():
-                messages.error(request, "Store Name already in use!")
             else:
                 # Create the user:
 
-                user = CustomUser.objects.create_pos(
+                user = CustomUser.objects.create_cashier(
                     form.cleaned_data['email'],
                     form.cleaned_data['password1']
                 )
                 
-                profile = POS.objects.create(
+                profile = Cashier.objects.create(
                 user=user,
-                store_name=form.cleaned_data['store_name'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
                 contact_number=form.cleaned_data['contact_number'],
                 location=form.cleaned_data['location'],
-                description=form.cleaned_data['description'],
                 )
 
                 
@@ -529,7 +526,7 @@ def cashier_list(request):
                 profile.save()
 
                 # Login the user
-                messages.success(request, "POS Successfully Registered")
+                messages.success(request, "Successfully Registered")
                 return redirect(request.META['HTTP_REFERER'])   
         else:
             context['form']=form
@@ -538,7 +535,7 @@ def cashier_list(request):
    # No post data availabe, let's just show the page.
     else:
 
-        form = POS_CreationForm()
+        form = Cashier_CreationForm()
         context['form']=form
         
     return render(request, template, context)
@@ -551,3 +548,49 @@ def cashier_list(request):
 
 
 
+@user_passes_test(user_has_admin_group)
+@login_required(login_url='index')  
+def update_cashier(request, account_id, template='admin/admin_listOfCashier.html'):
+    user = get_object_or_404(CustomUser, id=account_id)
+    cashier = user.cashier  # Assuming the cashier instance is associated with the user
+    if request.method == 'POST':
+
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        contact_number = request.POST.get('contact_number')
+        location = request.POST.get('location')
+        
+
+        updated_fields = []
+        if first_name:
+            cashier.first_name = first_name
+            updated_fields.append('first_name')
+        if last_name:
+            cashier.last_name = last_name
+            updated_fields.append('last_name')
+        if contact_number: 
+            if int(cashier.contact_number) == int(contact_number):
+                messages.error(request, "Contact Number Already Set!")
+                return redirect(request.META['HTTP_REFERER']) 
+            elif POS.objects.filter(contact_number = contact_number).exists():
+                messages.error(request, "Contact Number already exists!")
+                return redirect(request.META['HTTP_REFERER'])  
+            elif EndUser.objects.filter(contact_number = request.POST.get('contact_number')).exists():
+                messages.error(request, "Contact Number already exists!")
+                return redirect(request.META['HTTP_REFERER']) 
+            cashier.contact_number = contact_number
+            updated_fields.append('contact_number')
+        if location:
+            cashier.location = location
+            updated_fields.append('location')
+        if updated_fields:
+            cashier.save(update_fields=updated_fields)
+            messages.success(request, "Account Updated Successfully!")
+        else:
+            messages.info(request, "No fields updated.")
+        
+        return redirect(request.META['HTTP_REFERER'])  
+    context = {
+        'person': user,  # Pass the user object to the template
+    }
+    return render(request, template, context)

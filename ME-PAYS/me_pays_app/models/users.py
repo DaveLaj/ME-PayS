@@ -58,6 +58,12 @@ class CustomUserManager(BaseUserManager):
         user.groups.set([group])
         return user
     
+    def create_cashier(self, email, password=None, **extra_fields):
+        group = Group.objects.get(name='cashier')
+        user = self.create_user(email, password, **extra_fields)
+        user.groups.set([group])
+        return user
+    
 
 
     
