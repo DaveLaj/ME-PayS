@@ -30,7 +30,7 @@ class EndUser_CreationForm(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter password'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Confirm password'}))
     contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
-    school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}),required=True, validators=[MaxLengthValidator(8, message='Please correct the format of your ID.')], help_text='Required.')
+    school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}), help_text='Required.')
 
     class Meta:
         model = CustomUser
