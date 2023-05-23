@@ -61,13 +61,50 @@
                 </div>
 
 
-                <!-- PAY FEES -->
+                {% comment %} RFID registration {% endcomment %}
                 <button type="button" class="btn fw-bold rounded-pill"
                     style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
-                    data-bs-target="#payFees">Pay fees</button>
+                    data-bs-target="#registercard">
+                    Enable RFID Services
+                </button>
+
+
+                <div class="modal fade" id="registercard" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <input type="text" class="form-control" id="StudentID">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="RFID">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-dark">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- PAY FEES -->
+                {% comment %} <button type="button" class="btn fw-bold rounded-pill"
+                    style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
+                    data-bs-target="#payFees">Pay fees</button> {% endcomment %}
 
                 
-                <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                {% comment %} <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
@@ -128,7 +165,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
             <div class="row d-flex mt-5 align-items-center justify-content-center">
                 <div class="col-sm-5 mb-3 mt-1">
