@@ -14,8 +14,8 @@
             <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
 
                 <!-- Cash IN -->
-                <button type="button" class="btn fw-bold rounded-pill"
-                    style="background-color: #ff7070; width: 400px;" data-bs-toggle="modal"
+                <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
+                    style="background-color: rgb(153, 185, 255); width: 300px;" data-bs-toggle="modal"
                     data-bs-target="#cashIn">Cash In</button>
 
                 <div class="modal fade" id="cashIn" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -62,8 +62,8 @@
 
 
                 {% comment %} RFID registration {% endcomment %}
-                <button type="button" class="btn fw-bold rounded-pill"
-                    style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
+                <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
+                    style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;" data-bs-toggle="modal"
                     data-bs-target="#registercard">
                     Enable RFID Services
                 </button>
@@ -99,12 +99,12 @@
                     </div>
                 </div>
                 <!-- PAY FEES -->
-                {% comment %} <button type="button" class="btn fw-bold rounded-pill"
-                    style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
-                    data-bs-target="#payFees">Pay fees</button> {% endcomment %}
+                <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
+                    style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;" data-bs-toggle="modal"
+                    data-bs-target="#payFees">Pay fees</button>
 
                 
-                {% comment %} <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
@@ -165,13 +165,12 @@
                             </div>
                         </div>
                     </div>
-                </div> {% endcomment %}
+                </div>
             </div>
             <div class="row d-flex mt-5 align-items-center justify-content-center">
                 <div class="col-sm-5 mb-3 mt-1">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
-                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Cash-in's (as of today)
-                        </div>
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #3d3c3c;">
+                        <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total Daily Cash-ins</div>
                         <div class="card-body">
                             <h5 class="card-title">Special title treatment</h5>
                             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
@@ -179,9 +178,8 @@
                     </div>
                 </div>
                 <div class="col-sm-5 mb-3 mt-1">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
-                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Payment's (as of today)
-                        </div>
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #3d3c3c;">
+                        <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total Daily Payments</div>
                         <div class="card-body">
                             <h5 class="card-title">Special title treatment</h5>
                             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
