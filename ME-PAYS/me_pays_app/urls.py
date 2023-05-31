@@ -56,7 +56,7 @@ from me_pays_app.views.users import registerenduser as users_registerenduser
 from me_pays_app.views.pos import *
 from me_pays_app.views.admin import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
+from me_pays_app.views.cashdiv import *
 
 urlpatterns = [
 
@@ -72,7 +72,8 @@ urlpatterns = [
 
     # Cashdiv workings
     path("cashdiv_home", cashdiv_home, name='cashdiv_home'),
-
+    path("cashdiv_home/sid_check", validate_SID, name='validate_SID'),
+    
 
     path("cashdiv_transaction", cashdiv_transaction, name='cashdiv_transaction'),
 

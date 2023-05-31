@@ -64,47 +64,74 @@
                 {% comment %} RFID registration {% endcomment %}
                 <button type="button" class="btn fw-bold rounded-pill"
                     style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
-                    data-bs-target="#registercard">
+                    data-bs-target="#regstep1Modal">
                     Enable RFID Services
                 </button>
 
 
-                <div class="modal fade" id="registercard" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                <div class="modal fade" id="regstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
+                            <div id="errorContainer"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services</h1>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services 1st Step</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
                                 <div class="row">
                                     <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
                                     <div class="mb-3 col-sm-10">
-                                        <input type="text" class="form-control" id="StudentID">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
-                                    <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="RFID">
+                                        <input type="text" class="form-control" id="regStudentID">
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-dark">Submit</button>
+                                <button type="button" class="btn btn-dark" onclick='validateAndProceed()'>Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
+
+
+
+
+
+                <div class="modal fade" id="regstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services 2nd Step</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="rfid">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-dark" onclick='previousStep(1)'>Previous</button>
+                                <button type="button" class="btn btn-dark" onclick='nextStep(3)'>Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- PAY FEES -->
-                {% comment %} <button type="button" class="btn fw-bold rounded-pill"
+               <button type="button" class="btn fw-bold rounded-pill"
                     style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
-                    data-bs-target="#payFees">Pay fees</button> {% endcomment %}
+                    data-bs-target="#payFees">Pay fees</button>
 
                 
-                {% comment %} <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+               <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
@@ -161,11 +188,11 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-dark">Submit</button>
+                                <button type="button" class="btn btn-dark" >Submit</button>
                             </div>
                         </div>
                     </div>
-                </div> {% endcomment %}
+                </div>
             </div>
             <div class="row d-flex mt-5 align-items-center justify-content-center">
                 <div class="col-sm-5 mb-3 mt-1">
@@ -194,4 +221,124 @@
 
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+<script>
+    var currentStep = 1;
+    function validateAndProceed() {
+        var regStudentID = document.getElementById("regStudentID").value;
+        if (regStudentID.trim() === "") {
+            var errorContainer = document.getElementById("errorContainer");
+            errorContainer.innerText = "Please enter the Student ID.";
+            return;
+        }
+        else{
+            validate_SID()
+        }
+    }
+
+    function showStep(step) {
+        $('.modal').modal('hide');
+        $('#regstep' + step + 'Modal').modal('show');   
+    }
+
+    function nextStep(step) {
+        currentStep = step;
+        showStep(currentStep);
+        
+    }
+    
+    function previousStep(step) {
+        currentStep = step;
+        showStep(currentStep);
+    }
+    function validate_SID() {
+        var studentID = $('#regStudentID').val();
+        var validateSIDUrl = "{% url 'validate_SID' %}"
+        $.ajax({
+            url: validateSIDUrl,  // Replace with the URL of your Django view
+            method: 'GET',
+            data: {
+                'school_id': studentID,
+            },
+            success: function(response) {
+                if (response.exists == 2) {
+                    // Student ID exists in the database and is active
+                    // Perform the desired action
+                    nextStep(2);
+                    $('#regstep2Modal').on('shown.bs.modal', function () {
+                        document.getElementById("rfid").focus();
+                    });
+                } 
+                else if (response.exists == 3) {
+                    // Student ID exists in the database and is active
+                    // Perform the desired action
+                    var errorMessage = 'Student ID is already in use!';
+                    var errorContainer = $('#errorContainer');
+                    var displayDuration = 5000; // 5 seconds
+                    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+                } else {
+                    // Student ID does not exist in the database
+                    // Perform the desired action
+                    var errorMessage = 'Student ID does not Exist!';
+                    var errorContainer = $('#errorContainer');
+                    var displayDuration = 5000; // 5 seconds
+                    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+                }
+            },
+            error: function(xhr, errmsg, err) {
+                var errorMessage = 'Please Enter a valid ID number';
+                var errorContainer = $('#errorContainer');
+                var displayDuration = 5000; // 5 seconds
+                displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+
+            }
+        });
+    }
+
+
+    function displayErrorMessageWithTimer(errorMessage, containerElement, duration) {
+        containerElement.text(errorMessage);
+        setTimeout(function() {
+          containerElement.empty();
+        }, duration);
+      }
+      
+
+    function submitForm() {
+        var firstName = $('#firstName').val();
+        var lastName = $('#lastName').val();
+        var phoneNumber = $('#phoneNumber').val();
+
+        $.ajax({
+        url: '/submit-form/', // Replace with your Django view URL
+        method: 'POST',
+        data: {
+            'first_name': firstName,
+            'last_name': lastName,
+            'phone_number': phoneNumber,
+            'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include Django CSRF token
+        },
+        success: function(response) {
+            // Handle successful form submission
+            // You can show a success message or redirect the user
+        },
+        error: function(xhr, errmsg, err) {
+            // Handle the error case
+            console.log(errmsg); // Log the error message to the console
+    
+            // Display an error message to the user
+            var errorMessage = 'An error occurred while validating the RFID code. Please try again later.';
+            // You can display the error message in an alert box or update an HTML element with the error message.
+            // For example, assuming you have an element with the ID 'errorContainer':
+            $('#errorContainer').text(errorMessage);
+            var displayDuration = 1000
+            setTimeout(function() {
+                $('#errorContainer').empty();
+              }, displayDuration);
+        }
+        });
+    }
+</script>
 {% endblock %}
