@@ -1,6 +1,5 @@
 from django.db import migrations
 from django.contrib.auth.models import Group, Permission
-from me_pays_app.perm import *
 
 def add_permissions_to_group(group, permissions):
     """

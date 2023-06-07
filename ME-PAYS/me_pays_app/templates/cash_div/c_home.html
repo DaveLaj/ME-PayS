@@ -18,49 +18,127 @@
                 <!-- Cash IN -->
                 <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
                     style="background-color: rgb(153, 185, 255); width: 300px;" data-bs-toggle="modal"
-                    data-bs-target="#cashIn">Cash In</button>
+                    data-bs-target="#loadstep1Modal" onclick="load_nextStep(1)">Cash In</button>
 
-                <div class="modal fade" id="cashIn" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+
+                    
+                
+                <div class="modal fade" id="loadstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
+                            <div id="load_errorContainerRFID"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">CASH IN</h1>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
                                 <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Amount:</label>
+                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                     <div class="mb-3 col-sm-10">
-                                        <input type="text" class="form-control" id="amount">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="date" class="col-sm-2 col-form-label">Date:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <input type="date" class="form-control" id="date">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <input type="text" class="form-control" id="StudentID">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
-                                    <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="RFID">
+                                        <input type="password" class="form-control" id="loadrfid">
+                                        
                                     </div>
                                 </div>
                             </div>
+                              
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-dark">Submit</button>
+                                <button type="button" id="loadbuttontarget" class="btn btn-dark" onclick="load_validateAndProceed()">Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="modal fade" id="loadstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div id="load_errorContainer2"></div>
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="personID"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Student Name:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="fullname"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Amount to be Loaded</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <input type="number" class="form-control" id="amountload">
+                                    </div>
+                                </div>  
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <button type="button" id="prev1" class="btn btn-secondary" onclick='load_previousStep(1)' >Back</button>
+                                <button type="button" id="loadbuttontarget2" class="btn btn-dark" onclick='load_nextStep(3)' >Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                
+                <div class="modal fade" id="loadstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div id="load_errorContainer2"></div>
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Load Top Up:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="basetopup"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Bonus 5&percnt;</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="bonustopup"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Total:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="totaltopup"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="prev1" class="btn btn-secondary" onclick='load_previousStep(3)' >Back</button>
+                                <button type="button" id="loadbuttontarget3" class="btn btn-dark" data-bs-dismiss="modal" onclick='payLoad()'>Pay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
 
 
                 {% comment %} RFID registration {% endcomment %}
@@ -91,7 +169,7 @@
                             
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" id="regbuttontarget" class="btn btn-dark" onclick='validateAndProceed()' autofocus>Next</button>
+                                <button type="button" id="regbuttontarget" class="btn btn-dark" onclick='validateAndProceed()'>Next</button>
                             </div>
                         </div>
                     </div>
@@ -107,13 +185,14 @@
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
+                            <div id="errorContainerRFID"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services 2nd Step</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
                                 <div class="row">
-                                    <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                     <div class="col-sm-10">
                                         <input type="password" class="form-control" id="rfid">
                                     </div>
@@ -121,7 +200,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-dark" onclick='previousStep(1)'>Previous</button>
-                                <button type="button" id="regbuttontarget2" class="btn btn-dark" onclick='nextStep(3)' autofocus>Confirm</button>
+                                <button type="button" id="regbuttontarget2" class="btn btn-dark" onclick='validate_rfid()' autofocus>Confirm</button>
                             </div>
                         </div>
                     </div>
@@ -138,7 +217,7 @@
                         </div>
                         <div class="modal-body fw-bold">
                             <div class="row">
-                                <label for="" class="col-sm-2 col-form-label">Confirm Registration For:</label>
+                                <label class="col-sm-2 col-form-label">Confirm Registration For:</label>
                                 <div class="col-sm-10">
                                     <h3>Student ID: <div id='currentschoolid'></div></h3>
                                 </div>
@@ -146,7 +225,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-dark" onclick='previousStep(2)'>Previous</button>
-                            <button type="button" id="regbuttontarget3" data-bs-dismiss="modal" class="btn btn-dark" onclick='registerRFID()' autofocus>Register</button>
+                            <button type="button" id="regbuttontarget3" data-bs-dismiss="modal" class="btn btn-dark" onclick='registerRFID()'>Register</button>
                         </div>
                     </div>
                 </div>
@@ -193,7 +272,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <label for="" class="col-sm-2 col-form-label">Payment Method:</label>
+                                    <label class="col-sm-2 col-form-label">Payment Method:</label>
                                     <div class="col m-3">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="RadioOptions" id="MC-PayS" value="MC-PayS">
@@ -207,7 +286,7 @@
                                 </div>
                                 <div class="MC-PayS showRFID">
                                     <div class="row">
-                                        <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
+                                        <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                         <div class="col-sm-10">
                                             <input type="password" class="form-control" id="RFID">
                                         </div>
@@ -251,158 +330,26 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 <script>
-    var currentStep = 1;
-    function validateAndProceed() {
-        var regStudentID = document.getElementById("regStudentID").value;
-        if (regStudentID.trim() === "") {
-            var errorContainer = document.getElementById("errorContainer");
-            errorContainer.innerText = "Please enter the Student ID.";
-            return;
-        }
-        else{
-            validate_SID()
-        }
-    }
-
-    function showStep(step) {
-        $('.modal').modal('hide');
-        $('#regstep' + step + 'Modal').modal('show');   
-    }
-
-    function nextStep(step) {
-        currentStep = step;
-        showStep(currentStep);
-        if (step==3){
-            var regStudentID = document.getElementById("regStudentID").value;
-            var currentSchoolIDElement = document.getElementById("currentschoolid");
-            currentSchoolIDElement.innerText = regStudentID;
-        }
-        
-    }
-    function previousStep(step) {
-        currentStep = step;
-        showStep(currentStep);
-    }
-    function validate_SID() {
-        var studentID = $('#regStudentID').val();
-        var validateSIDUrl = "{% url 'validate_SID' %}"
-        $.ajax({
-            url: validateSIDUrl,  // Replace with the URL of your Django view
-            method: 'GET',
-            data: {
-                'school_id': studentID,
-            },
-            success: function(response) {
-                if (response.exists == 2) {
-                    // Student ID exists in the database and is active
-                    // Perform the desired action
-                    nextStep(2);
-                    
-                    $('#regstep2Modal').on('shown.bs.modal', function () {
-                        document.getElementById("rfid").value = "";
-                        document.getElementById("rfid").focus();
-                    });
-                } 
-                else if (response.exists == 3) {
-                    // Student ID exists in the database and is active
-                    // Perform the desired action
-                    var errorMessage = 'Student ID is already in use!';
-                    var errorContainer = $('#errorContainer');
-                    var displayDuration = 5000; // 5 seconds
-                    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
-                } else {
-                    // Student ID does not exist in the database
-                    // Perform the desired action
-                    var errorMessage = 'Student ID does not Exist!';
-                    var errorContainer = $('#errorContainer');
-                    var displayDuration = 5000; // 5 seconds
-                    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
-                }
-            },
-            error: function(xhr, errmsg, err) {
-                var errorMessage = 'Please Enter a valid ID number';
-                var errorContainer = $('#errorContainer');
-                var displayDuration = 5000; // 5 seconds
-                displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
-
-            }
-        });
-    }
-
-
-    function displayErrorMessageWithTimer(errorMessage, containerElement, duration) {
-        containerElement.text(errorMessage);
-        setTimeout(function() {
-          containerElement.empty();
-        }, duration);
-      }
-      
-
-    function registerRFID() {
-        var school_id = $('#regStudentID').val();
-        var rfid = $('#RFID').val();
-        var register_rfid = "{% url 'register_rfid' %}"
-        $.ajax({
-        url: register_rfid, // Replace with your Django view URL
-        method: 'POST',
-        data: {
-            'school_id': school_id,
-            'rfid': rfid,
-            'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include Django CSRF token
-        },
-        success: function(response) {
-            // Handle successful form submission
-            // You can show a success message or redirect the user
-            var Message = response.message;
-            $('#statusContainer').text(Message);
-            var displayDuration = 5000
-            setTimeout(function() {
-                $('#statusContainer').empty();
-            }, displayDuration);
-        },
-        error: function(xhr, errmsg, err) {
-            // Handle the error case
-            console.log(errmsg); // Log the error message to the console
-    
-            // Display an error message to the user
-            var errorMessage = 'An error occurred while validating the RFID code. Please try again later.';
-            // You can display the error message in an alert box or update an HTML element with the error message.
-            // For example, assuming you have an element with the ID 'errorContainer':
-            $('#errorContainer').text(errorMessage);
-            var displayDuration = 1000
-            setTimeout(function() {
-                $('#errorContainer').empty();
-              }, displayDuration);
-        }
-        });
-    }
-
-
-    $(document).ready(function() {
-        $('#regstep1Modal').keyup(function(event) {
-          if (event.keyCode === 13) {
-            // Enter key pressed
-            $('#regbuttontarget').click();
-          }
-        });
-    });
-    $(document).ready(function() {
-        $('#regstep2Modal').keyup(function(event) {
-          if (event.keyCode === 13) {
-            // Enter key pressed
-            $('#regbuttontarget2').click(); // Trigger the "Register" button click event
-          }
-        });
-    });
-    $(document).ready(function() {
-        $('#regstep3Modal').keyup(function(event) {
-          if (event.keyCode === 13) {
-            // Enter key pressed
-            $('#regbuttontarget3').click(); // Trigger the "Register" button click event
-          }
-        });
-    });
-      
-      
+    // Set the CSRF token as a global variable
+    window.csrfToken = '{{ csrf_token }}';
 </script>
+
+
+
+
+
+<script src="{% static 'scripts/cashdiv.js' %}"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% endblock %}

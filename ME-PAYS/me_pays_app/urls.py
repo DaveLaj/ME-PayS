@@ -72,8 +72,14 @@ urlpatterns = [
 
     # Cashdiv workings
     path("cashdiv_home", cashdiv_home, name='cashdiv_home'),
-    path("cashdiv_home/sid_check", validate_SID, name='validate_SID'),
+    path("cashdiv_home/register_sid_check", validate_SID, name='validate_SID'),
+    path("cashdiv_home/register_rfid_check", validate_rfid, name='validate_rfid'),
     path("cashdiv_home/register_rfid", register_rfid_code, name='register_rfid'),
+
+    path("cashdiv_home/load_rfid_check", load_validate_rfid, name='load_validate_rfid'),
+    path("cashdiv_home/load_rfid_creds", load_rfid_creds, name='load_validate_creds'),
+    path("cashdiv_home/load_amount", load_cred_amount, name='load_cred_amount'),
+    
 
     path("cashdiv_transaction", cashdiv_transaction, name='cashdiv_transaction'),
 
