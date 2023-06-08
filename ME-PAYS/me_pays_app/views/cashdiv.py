@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 from django_cryptography.fields import *
-
+import hashlib
 
 
 @require_GET
@@ -43,7 +43,6 @@ def register_rfid_code(request):
     school_id = request.POST.get('school_id')
     rfid = request.POST.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
-    print("Register: "+rfid)
     try:
         end_user = EndUser.objects.get(school_id=school_id)
         end_user.rfid_code = rfid
@@ -73,7 +72,6 @@ def validate_rfid(request):
     if end_user is not None:
         # RFID instance already exists
         return JsonResponse({'exists': 1})
-    
     else:
         # RFID code does not exist in the database
         return JsonResponse({'exists': 0})
@@ -81,11 +79,10 @@ def validate_rfid(request):
 
 
 
-@require_GET
+@require_POST
 def load_validate_rfid(request):
-    rfid = request.GET.get('rfid')
+    rfid = request.POST.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
-    print("Validate"+rfid)
     if EndUser.objects.filter(rfid_code=rfid, user__is_active=1).exists():
         # RFID instance already exists
         return JsonResponse({'exists': 0})
@@ -106,6 +103,7 @@ def  load_rfid_creds(request):
     }
     return JsonResponse(response)
 
+@require_GET
 def load_cred_amount(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
@@ -119,6 +117,7 @@ def load_cred_amount(request):
         user.credit_balance += totalamount
         # Save the updated user object
         user.save()
+
         return JsonResponse({'status': 'success', 'message': 'Payment Successful, Please Check Your Load Balance'})
     else:
         return JsonResponse({'status': 'error', 'message': 'User not found, Contact Admin Immediately'})

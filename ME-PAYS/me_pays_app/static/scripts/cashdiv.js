@@ -21,7 +21,10 @@ function load_validate_rfid(){
     var validateRFIDURL = "cashdiv_home/load_rfid_check";
     $.ajax({
         url: validateRFIDURL,  // Replace with the URL of your Django view
-        method: 'GET',
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': window.csrfTokenLoad // Set the CSRF token in the headers
+        },
         data: {
             'rfid': RFID,
         },
@@ -86,15 +89,17 @@ function loadCredAmount(rfid, amount) {
     // Prepare the data to be sent in the AJAX request
     var requestData = {
       rfid: rfid,
-      amount: amount
+      amount: amount,
     };
   
     // Make the AJAX request
     $.ajax({
       url: 'cashdiv_home/load_amount',
-      type: 'GET',
+      method: 'GET',
+      headers: {
+        'X-CSRFToken': window.csrfToken // Set the CSRF token in the headers
+    },
       data: requestData,
-      dataType: 'json',
       success: function(response) {
         if (response.status === 'success') {
             // Handle success response
@@ -290,21 +295,20 @@ function validate_rfid(){
     var RFID = $('#rfid').val();
     var validateRFIDURL = "cashdiv_home/register_rfid_check"
     $.ajax({
-        url: validateRFIDURL,  // Replace with the URL of your Django view
+        url: validateRFIDURL, 
         method: 'GET',
         data: {
             'rfid': RFID,
         },
         success: function(response) {
             if (response.exists == 0) {
-                // RFID exists in the database and is active
+                // RFID does not exist
                 // Perform the desired action
                 nextStep(3);
-                
             } else {
-                // RFID does not exist in the database
+                // RFID already exists in DB
                 // Perform the desired action
-                var errorMessage = 'Please Enter Valid RFID code';
+                var errorMessage = 'RFID code is already in use!';
                 var errorContainer = $('#errorContainerRFID');
                 var displayDuration = 5000; // 5 seconds
                 displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
@@ -319,6 +323,8 @@ function validate_rfid(){
         }
     });
 }
+
+
 function displayErrorMessageWithTimer(errorMessage, containerElement, duration) {
     containerElement.text(errorMessage);
     setTimeout(function() {
@@ -335,7 +341,7 @@ function registerRFID() {
     url: register_rfid, // Replace with your Django view URL
     method: 'POST',
     headers: {
-        'X-CSRFToken': window.csrfToken // Set the CSRF token in the headers
+        'X-CSRFToken': window.csrfTokenReg // Set the CSRF token in the headers
     },
     data: {
         'school_id': school_id,
