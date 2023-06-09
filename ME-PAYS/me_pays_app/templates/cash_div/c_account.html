@@ -42,9 +42,6 @@
                                         <input type="text" class="form-control" id="address">
                                     </div>
                                 </div>
-                                <a class="nav-link active float-end" aria-current="page" href="#"><button type="button"
-                                        class="btn fw-bold rounded-pill" style="background-color: #ff7070; width: 160px;"> Save
-                                        Changes </button></a>
                             </div>
                         </div>
                     </div>
@@ -56,9 +53,53 @@
                                         class="rounded-circle" style="width: 150px;" alt="Avatar" /></a>
                             </div>
                             <div>
-                                <a class="nav-link active d-flex align-items-center justify-content-center" aria-current="page"
-                                    href="#"><button type="button" class="btn fw-bold rounded-pill"
-                                        style="background-color: #ff7070; width: 180px;">Edit Profile Picture</button></a>
+                                <a class="nav-link active d-flex align-items-center justify-content-center" aria-current="page">
+                                    <button type="button" class="btn border border-danger border-3 fw-bold rounded-pill" style="background-color: #ff7070; width: 180px;"
+                                        data-bs-toggle="modal" data-bs-target="#editProfile">
+                                        Edit Profile
+                                    </button>
+                                </a>
+                            </div>
+                            
+                            <div class="modal fade" id="editProfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #fffb90;">
+                                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Edit Profile</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body fw-bold">
+                                            <div class="row d-flex justify-content-center">
+                                                <div class="col-md">
+                                                    <div class="text-center">
+                                                        <a class="img logo rounded-circle"><img src="http://frontendfreecode.com/img/user.jpg"
+                                                                class="rounded-circle" style="width: 150px;" alt="Avatar" /></a>
+                                                        <h6 class="pt-2">JPG or PNG no larger than 5 MB</h6>
+                            
+                                                        <div class="file btn btn-sm btn-primary rounded-pill"
+                                                            style="position: relative; overflow: hidden; font-size: medium; font-weight: bold;">
+                                                            Upload new image
+                                                            <input type="file" name="file"
+                                                                style="position: absolute; font-size: 50px; opacity: 0; right: 0; top: 0;" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row pt-3">
+                                                <label for="contactno" class="col-sm col-form-label pt-3" style="font-size: medium;">Contact Number :</label>
+                                                <div class="col-sm-9 pt-2">
+                                                    <input type="text" class="form-control" id="contactno" placeholder="Input new contact number here">
+                                                </div>
+                                            </div>
+                            
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
