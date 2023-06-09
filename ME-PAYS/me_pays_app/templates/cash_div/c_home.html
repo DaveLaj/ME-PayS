@@ -11,23 +11,21 @@
 
         <div class="dashboard-content px-3 pt-4">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome!</h1>
-            <div class="col-6 ps-3">
-                <div class="col-12" id="statusContainer"></div>
+            <div class="d-flex justify-content-center col-12 ps-3">
+                <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer"></div>
             </div>
             <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
+
+
                 <!-- Cash IN -->
                 <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
                     style="background-color: rgb(153, 185, 255); width: 300px;" data-bs-toggle="modal"
-                    data-bs-target="#loadstep1Modal" onclick="load_nextStep(1)">Cash In</button>
+                    data-bs-target="#loadstep1Modal" onclick="load_nextStep(1)">Cash In
+                </button>
 
-
-                    
-                
-                <div class="modal fade" id="loadstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal fade" id="loadstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div id="load_errorContainerRFID"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -43,8 +41,9 @@
                             </div>
                               
                             <div class="modal-footer">
+                                <div id="load_errorContainerRFID" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" id="loadbuttontarget" class="btn btn-dark" onclick="load_validateAndProceed()">Next</button>
+                                <button type="button" id="loadbuttontarget" class="btn btn-primary" onclick="load_validateAndProceed()">Next</button>
                             </div>
                         </div>
                     </div>
@@ -54,7 +53,6 @@
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div id="load_errorContainer2"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -81,8 +79,9 @@
                             </div>
                             
                             <div class="modal-footer">
+                                <div id="load_errorContainer2" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" id="prev1" class="btn btn-secondary" onclick='load_previousStep(1)' >Back</button>
-                                <button type="button" id="loadbuttontarget2" class="btn btn-dark" onclick='load_nextStep(3)' >Next</button>
+                                <button type="button" id="loadbuttontarget2" class="btn btn-primary" onclick='load_nextStep(3)' >Next</button>
                             </div>
                         </div>
                     </div>
@@ -97,7 +96,6 @@
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div id="load_errorContainer2"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -123,24 +121,17 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
+                                <div id="load_errorContainer2" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" id="prev1" class="btn btn-secondary" onclick='load_previousStep(3)' >Back</button>
-                                <button type="button" id="loadbuttontarget3" class="btn btn-dark" data-bs-dismiss="modal" onclick='payLoad()'>Pay</button>
+                                <button type="button" id="loadbuttontarget3" class="btn btn-primary" data-bs-dismiss="modal" onclick='payLoad()'>Pay</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- CASH IN END -->
 
 
-
-
-
-
-
-
-
-
-
-
+                <!-- REGISTER -->
                 {% comment %} RFID registration {% endcomment %}
                 <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
                     style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;" data-bs-toggle="modal"
@@ -153,13 +144,14 @@
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div id="errorContainer"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services 1st Step</h1>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body fw-bold">
-                                <div class="row">
+                            <div class="modal-body ">
+                                
+                                <div class="row fw-bold">
+                                    <h1 class="modal-title fw-bold fs-3 pb-3">STEP 1: </h1>
                                     <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
                                     <div class="mb-3 col-sm-10">
                                         <input type="text" class="form-control" id="regStudentID">
@@ -168,8 +160,9 @@
                             </div>
                             
                             <div class="modal-footer">
+                                <div id="errorContainer" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" id="regbuttontarget" class="btn btn-dark" onclick='validateAndProceed()'>Next</button>
+                                <button type="button" id="regbuttontarget" class="btn btn-primary" onclick='validateAndProceed()'>Next</button>
                             </div>
                         </div>
                     </div>
@@ -185,13 +178,13 @@
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div id="errorContainerRFID"></div>
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services 2nd Step</h1>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Servicess</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body fw-bold">
-                                <div class="row">
+                            <div class="modal-body">
+                                <div class="row fw-bold">
+                                    <h1 class="modal-title fw-bold fs-3 pb-3">STEP 2: </h1>
                                     <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                     <div class="col-sm-10">
                                         <input type="password" class="form-control" id="rfid">
@@ -199,8 +192,9 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
+                                <div id="errorContainerRFID" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-dark" onclick='previousStep(1)'>Previous</button>
-                                <button type="button" id="regbuttontarget2" class="btn btn-dark" onclick='validate_rfid()' autofocus>Confirm</button>
+                                <button type="button" id="regbuttontarget2" class="btn btn-primary" onclick='validate_rfid()' autofocus>Confirm</button>
                             </div>
                         </div>
                     </div>
@@ -212,20 +206,21 @@
                 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header" style="background-color: #fffb90;">
-                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services 2nd Step</h1>
+                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body fw-bold">
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Confirm Registration For:</label>
+                        <div class="modal-body">
+                            <div class="row fw-bold">
+                                <h1 class="modal-title fw-bold fs-3 pb-3">STEP 3: </h1>
+                                <label class="col-sm-5 col-form-label">Confirm Registration for Student ID No:</label>
                                 <div class="col-sm-10">
-                                    <h3>Student ID: <div id='currentschoolid'></div></h3>
+                                    <h3> <div id='currentschoolid'></div></h3>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-dark" onclick='previousStep(2)'>Previous</button>
-                            <button type="button" id="regbuttontarget3" data-bs-dismiss="modal" class="btn btn-dark" onclick='registerRFID()'>Register</button>
+                            <button type="button" id="regbuttontarget3" data-bs-dismiss="modal" class="btn btn-primary" onclick='registerRFID()'>Register</button>
                         </div>
                     </div>
                 </div>
@@ -295,7 +290,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-dark" >Submit</button>
+                                <button type="button" class="btn btn-primary" >Submit</button>
                             </div>
                         </div>
                     </div>

@@ -13,42 +13,40 @@
 
         <div class="dashboard-content px-3 pt-4">
             <h2 class="fs-1 ps-3 pb-3 fw-bold">Account</h2>
+            
         </div>
             <div class="row" style="margin: 15px;">
                 <div class="col-sm-8 mb-3 mb-sm-0">
                     <div class="card border-3">
                         <div class="card-body">
+                            <fieldset disabled>
                             <div class="mb-3 row">
-                                <label for="idNo" class="col-sm-2 col-form-label">Student ID No.</label>
+                                <label for="idNo" class="col-sm-2 col-form-label">Student ID</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="idNo">
+                                    <input type="text" class="form-control" id="idNo"  placeholder="{{ request.user.enduser.school_id }}">
                                 </div>
                             </div>
-            
                             <div class="mb-3 row">
                                 <label for="name" class="col-sm-2 col-form-label">Name</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="name">
+                                    <input type="text" class="form-control" id="name" placeholder="{{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}">
                                 </div>
                             </div>
 
                             <div class="mb-3 row">
                                 <label for="email" class="col-sm-2 col-form-label">Email</label>
                                 <div class="col-sm-10">
-                                    <input type="email" class="form-control" id="email">
+                                    <input type="email" class="form-control" id="email" placeholder="{{ request.user.email}}">
                                 </div>
                             </div>
             
                             <div class="mb-3 row">
                                 <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="contact">
+                                    <input type="text" class="form-control" id="contact" placeholder="{{ request.user.enduser.contact_number }}">
                                 </div>
                             </div>
-
-                            <a class="nav-link active float-end" aria-current="page" href="#"><button type="button"
-                                    class="btn fw-bold rounded-pill" style="background-color: #ff7070; width: 160px;"> Save Changes
-                                </button></a>
+                            </fieldset>
                         </div>
                     </div>
                 </div>
@@ -62,7 +60,7 @@
                         <div>
                             <a class="nav-link active d-flex align-items-center justify-content-center" aria-current="page"
                                 href="#"><button type="button" class="btn fw-bold rounded-pill"
-                                    style="background-color: #ff7070; width: 180px;">Edit Profile Picture</button></a>
+                                    style="background-color: #ff7070; width: 180px;">Edit Profile</button></a>
                         </div>
                     </div>
                 </div>
