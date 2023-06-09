@@ -1,11 +1,18 @@
 from me_pays_app.models.users import *
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 from django_cryptography.fields import *
+from me_pays_app.models.balance import *
 import hashlib
 
+def user_has_cashier_group(user):
+    return user.groups.filter(name='cashier').exists()
 
+
+
+@user_passes_test(user_has_cashier_group)
 @require_GET
 def validate_SID(request):
     student_id = request.GET.get('school_id')
@@ -22,7 +29,8 @@ def validate_SID(request):
     else:
     # Student ID does not exist in the database
         return JsonResponse({'exists': 0})
-
+    
+@user_passes_test(user_has_cashier_group)
 @require_GET
 def load_validate_SID(request):
     student_id = request.GET.get('school_id')
@@ -37,7 +45,7 @@ def load_validate_SID(request):
     # Student ID does not exist in the database
         return JsonResponse({'exists': 3})
 
-
+@user_passes_test(user_has_cashier_group)
 @require_POST
 def register_rfid_code(request):
     school_id = request.POST.get('school_id')
@@ -62,7 +70,7 @@ def register_rfid_code(request):
 
 
 
-
+@user_passes_test(user_has_cashier_group)
 @require_GET
 def validate_rfid(request):
     rfid = request.GET.get('rfid')
@@ -78,7 +86,7 @@ def validate_rfid(request):
     
 
 
-
+@user_passes_test(user_has_cashier_group)
 @require_POST
 def load_validate_rfid(request):
     rfid = request.POST.get('rfid')
@@ -90,7 +98,7 @@ def load_validate_rfid(request):
         # RFID code does not exist in the database
         return JsonResponse({'exists': 1})
     
-
+@user_passes_test(user_has_cashier_group)
 @require_GET
 def  load_rfid_creds(request):
     rfid = request.GET.get('rfid')
@@ -103,12 +111,15 @@ def  load_rfid_creds(request):
     }
     return JsonResponse(response)
 
+
+@user_passes_test(user_has_cashier_group)
 @require_GET
 def load_cred_amount(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.GET.get('amount')
     user=EndUser.objects.filter(rfid_code=rfid).first()
+    cashier = Cashier.objects.get(user=request.user)
     if user is not None:
         # Convert the amount to an integer if needed
         amount = int(amount)
@@ -117,6 +128,14 @@ def load_cred_amount(request):
         user.credit_balance += totalamount
         # Save the updated user object
         user.save()
+        # Save to Balance Logs
+        log = Balance_Logs.objects.create(
+            account_Owner = user,
+            cashier_sender = cashier,
+            amount = amount,
+            desc = "Cash In",
+        )  
+        log.save()
 
         return JsonResponse({'status': 'success', 'message': 'Payment Successful, Please Check Your Load Balance'})
     else:

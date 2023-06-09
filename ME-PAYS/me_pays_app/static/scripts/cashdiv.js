@@ -19,7 +19,10 @@ function load_validate_rfid() {
   var validateRFIDURL = "cashdiv_home/load_rfid_check";
   $.ajax({
     url: validateRFIDURL, // Replace with the URL of your Django view
-    method: "GET",
+    method: "POST",
+    headers: {
+        "X-CSRFToken": window.csrfTokenLoad, // Set the CSRF token in the headers
+      },
     data: {
       rfid: RFID,
     },
@@ -334,7 +337,7 @@ function registerRFID() {
     url: register_rfid, // Replace with your Django view URL
     method: "POST",
     headers: {
-      "X-CSRFToken": window.csrfToken, // Set the CSRF token in the headers
+      "X-CSRFToken": window.csrfTokenReg, // Set the CSRF token in the headers
     },
     data: {
       school_id: school_id,
