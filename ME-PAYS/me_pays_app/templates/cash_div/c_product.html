@@ -6,13 +6,13 @@
 {% block content%}
 <div class="main-container d-flex">
     {% include 'cash_div/c_sidebar.html' %}
-    <div class="content">
+    <div class="content"> 
         {% include 'cash_div/c_nav.html' %}
         <div class="dashboard-content px-3 pt-4">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Products</h1>
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Cashier Service List</h1>
             <div class="col-sm-8 m-auto">
                 {% comment %} search form input  {% endcomment %}
-                <form class="d-flex" role="search" action={% url "searchProduct"%}>
+                <form class="d-flex" method="GET" role="search" action={% url "searchServices"%}>
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name = "query">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
@@ -38,7 +38,7 @@
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
-                            <form class="row g-1 needs-validation" action={% url "insertMenu"%} method="post">
+                            <form class="row g-1 needs-validation" action={% url "insertServices"%} method="post">
                                 {% csrf_token %}
                                 <div class="modal-header" style="background-color: #fffb90;">
                                     <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Add Product</h1>
@@ -92,11 +92,11 @@
                             <tbody>
                                 {% comment %} start of iterations {% endcomment %}
                                 {% for item in page_obj %}
-                                <div class="modal fade" id="updateProduct{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                <div class="modal fade" id="updateServices{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
-                                            <form class="row g-1 needs-validation" action="{% url 'updateMenu' item.id %}" method="post">
+                                            <form class="row g-1 needs-validation" action="{% url 'updateServices' item.id %}" method="post">
                                                 {% csrf_token %}
 
                                                 <div class="modal-header" style="background-color: #A6D0DD;">
@@ -120,7 +120,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                                                    <button type="submit" name="insertMenu" class="btn btn-dark btn-sm">Update</button>
+                                                    <button type="submit"  class="btn btn-dark btn-sm">Update</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -128,11 +128,11 @@
                                 </div>
 
 
-                                <div class="modal fade" id="deleteProduct{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                <div class="modal fade" id="deleteServices{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
-                                            <form class="row g-1 needs-validation" action="{% url 'deleteMenu' item.id %}" method="post">
+                                            <form class="row g-1 needs-validation" action="{% url 'deleteServices' item.id %}" method="post">
                                                 {% csrf_token %}
 
                                                 <div class="modal-header" style="background-color: #FA9884;">
@@ -161,9 +161,9 @@
                                     <td>{{ item.menu_price }}</td>
                                     <td class="text-center">
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#updateProduct{{ item.id }}">Update</button>
+                                        data-bs-target="#updateServices{{ item.id }}">Update</button>
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteProduct{{ item.id }}">Delete</button>
+                                        data-bs-target="#deleteServices{{ item.id }}">Delete</button>
                                     </td>
                                 </tr>
                                 {% endfor %}

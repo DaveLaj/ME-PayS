@@ -16,7 +16,7 @@ def user_has_pos_group(user):
 @login_required(login_url='index')
 def insertMenu(request):
     if request.method == 'POST':
-        existing_menu_obj = menu.objects.filter(menu_name=request.POST['product'])
+        existing_menu_obj = menu.objects.filter(menu_name=request.POST['product'], menu_owner_id=request.user.id)
         if existing_menu_obj.exists():
             if existing_menu_obj.first().menu_is_active == 1:
                 messages.error(request, "Product Already Exists!")
@@ -27,7 +27,8 @@ def insertMenu(request):
                 menu_item.menu_name = insName
                 menu_item.menu_price = insPrice
                 menu_item.menu_is_active = 1
-                menu_item.save(update_fields=['menu_name', 'menu_price', 'menu_is_active'])
+                menu_item.menu_owner_id = request.user.id
+                menu_item.save(update_fields=['menu_name', 'menu_price', 'menu_is_active', 'menu_owner_id'])
                 messages.success(request, "Product Successfully Added!")
         else:
             insName = request.POST['product']

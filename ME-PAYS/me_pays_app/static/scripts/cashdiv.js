@@ -419,3 +419,175 @@ function handleKeyPress(event) {
 
 // Add event listener to the keydown event on the document
 document.addEventListener("keydown", handleKeyPress);
+
+
+
+
+
+
+
+// Payment Functions
+var pay_currentStep = 1;
+
+function pay_showStep(step) {
+  $(".modal").modal("hide");
+  $("#paystep" + step + "Modal").modal("show");
+}
+
+
+function tallyItemCost(){
+  sendSelectedValues();
+}
+
+function pay_nextStep(step) {
+  pay_currentStep = step;
+  pay_showStep(pay_currentStep);
+}
+function pay_previousStep(step) {
+  pay_currentStep = step;
+  pay_showStep(pay_currentStep);
+}
+
+
+
+function sendSelectedValues() {
+  var selectedValues = [];
+  $('.operator').each(function() {
+    var selectize = $(this)[0].selectize;
+    if (selectize && selectize.getValue() !== "") {
+      var value = selectize.getValue();
+      selectedValues.push(value);
+    }
+  });
+  
+  if (selectedValues.length === 0) {
+    // selectedValues is empty
+    var errorMessage = "Please Select an Entry";
+    var errorContainer = $("#pay_errorContainerRFID1");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(
+      errorMessage,
+      errorContainer,
+      displayDuration
+    );
+  } else {
+    // selectedValues is not empty
+    $.ajax({
+      url: "cashdiv_home/tallyItems",
+      method: "GET",
+      data: { selectedValues: JSON.stringify(selectedValues) },
+      success: function(response) {
+        // Handle the success response
+        // Parse the serialized data
+        var itemData = JSON.parse(response.itemlist);
+        // Process the item data as needed
+        var priceTotal = 0
+        $('#showTally').empty();
+        $('#totalAmount').empty();
+        $('#FinalTotalAmount').val('');
+        itemData.forEach(function(item) {
+          printTally(item.id, item.name, item.price, item.quantity);
+          // Perform operations with the item data
+          // total all prices
+          priceTotal += parseInt(item.price);
+        });
+        document.getElementById("totalAmount").innerText = "Php "+priceTotal.toString();
+        var TotalAmount = document.getElementById('FinalTotalAmount');
+        TotalAmount.value = parseInt(priceTotal);
+        pay_nextStep(2);
+      },
+      error: function(xhr, status, error) {
+        // Handle the error if the request fails
+        console.error("AJAX request failed:", error);
+      }
+    });
+    
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+function pay() {
+  $.ajax({
+    url: "your-api-endpoint-url",
+    method: "GET",
+    success: function (response) {
+        // Process the product data and generate the dynamic HTML content
+        var optionsHtml = '<option selected>Choose...</option>';
+        response.forEach(function (product) {
+            optionsHtml += '<option value="' + product.id + '">' + product.title + '</option>';
+        });
+
+        // Replace the placeholder in newRowAdd with the dynamic HTML content
+        newRowAdd = newRowAdd.replace('<option selected>Choose...</option>', optionsHtml);
+    },
+    error: function (xhr, status, error) {
+        // Handle errors if the request fails
+    }
+  });
+}
+
+
+
+
+
+
+
+
+function pay() {
+  // Get the data from the added rows
+  var rowData = [];
+  $(".row .form-select").each(function () {
+      var value = $(this).val();
+      if (value !== "Choose...") {
+          rowData.push(value);
+      }
+  });
+
+  // Send the data to the server using AJAX
+  $.ajax({
+      url: "your-post-endpoint-url",
+      method: "POST",
+      data: { rowData: rowData },
+      success: function (response) {
+          // Handle the response from the server if needed
+      },
+      error: function (xhr, status, error) {
+          // Handle errors if the request fails
+      }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+  
+

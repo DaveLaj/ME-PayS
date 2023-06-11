@@ -155,12 +155,6 @@ def cashdiv_account(request):
 
 
 
-
-@allowed_users(allowed_roles=['cashier'])
-@login_required(login_url='index')
-def cashdiv_product(request):
-    return render(request, "cash_div/c_product.html", {})
-
 @allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')
 def admin_home(request):

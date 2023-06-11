@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
+ 
 
 # ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 # ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
@@ -65,31 +65,58 @@ urlpatterns = [
     path("", index, name='index'),
     path("register", users_registerenduser, name='register'),
     path("home", home, name='home'),
+
+
+    # Balance Logs/History
     path("transactions", transactions, name='transactions'),
+
+    # Account Page
     path("account", account, name='account'),
 
 
 
     # Cashdiv workings
+
+    # Home Page (Filled with all main functions)
     path("cashdiv_home", cashdiv_home, name='cashdiv_home'),
     path("cashdiv_home/register_sid_check", validate_SID, name='validate_SID'),
     path("cashdiv_home/register_rfid_check", validate_rfid, name='validate_rfid'),
     path("cashdiv_home/register_rfid", register_rfid_code, name='register_rfid'),
+    
     path("cashdiv_home/load_rfid_check", load_validate_rfid, name='load_validate_rfid'),
     path("cashdiv_home/load_rfid_creds", load_rfid_creds, name='load_validate_creds'),
     path("cashdiv_home/load_amount", load_cred_amount, name='load_cred_amount'),
-    
+
+    path("cashdiv_home/fetchServices", FetchServices, name='fetchServices'),
+    path("cashdiv_home/tallyItems", tallyItems, name='tallyItems'),
+
+
+
+
+
+
 
     path("cashdiv_transaction", cashdiv_transaction, name='cashdiv_transaction'),
 
-    path("cashdiv_product", cashdiv_product, name='cashdiv_product'),
 
+    # Services Page
+    path("cashdiv_product", cashier_services, name='cashdiv_product'),
+    path("cashdiv_product/addService", insertServices, name='insertServices'),
+    path('cashdiv_product/updateService/<int:item_id>', updateServices, name='updateServices'),
+    path('cashdiv_product/deleteService/<int:item_id>', deleteServices, name='deleteServices'),
+    path('cashdiv_product/search', searchServices, name='searchServices'),
+
+
+
+
+
+    # Account Page
     path("cashdiv_account", cashdiv_account, name='cashdiv_account'),
    
 
 
 
-    # admin workings
+    # Admin Workings
     path("admin_home", admin_home, name='admin_home'),
     path("admin_addUser", admin_addUser, name='admin_adduser'),
     path("admin_listOfPOS", pos_list, name='admin_listOfPOS'),
@@ -111,6 +138,10 @@ urlpatterns = [
     path("canteen_history", canteen_history, name='canteen_history'),
 
     
+
+
+
+
 
 
     # Universal Logout
