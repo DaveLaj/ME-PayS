@@ -13,8 +13,10 @@ from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 import hashlib
+from datetime import date
 from datetime import datetime
-
+from django.db.models import Q
+from me_pays_app.forms import *
 # Rest of your code...
 
 
@@ -30,7 +32,16 @@ def cashdiv_home(request):
         menu_owner_id=request.user.id,
         menu_is_active=1 
     ).order_by('menu_name')
-    return render(request, "cash_div/c_home.html", {'services':services})
+    current_date = datetime.now().date()
+    cashier = Cashier.objects.get(user=request.user)
+    dailyCashIn = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Cash In', datetime__date=current_date).count()
+    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Payment', datetime__date=current_date).count()
+    context={
+        'dailyCashIn':dailyCashIn,
+        'dailyPay':dailyPay,
+        'services':services,
+    }
+    return render(request, "cash_div/c_home.html", context)
  
 
 @user_passes_test(user_has_cashier_group)
@@ -381,3 +392,60 @@ def pay_rfid(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'User does not have enough credits'})
 
+
+
+
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------------
+# Transaction Logs
+# ---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+@user_passes_test(user_has_cashier_group)
+@login_required(login_url='index')
+def cashdiv_transaction(request):
+    cashier = Cashier.objects.get(user=request.user)
+    loglist = Balance_Logs.objects.filter(cashier_sender=cashier).order_by('-id')
+    paginator = Paginator(loglist, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    count = loglist.count()
+    form = LogSearchForm()
+    context = {
+        'form': form,
+        'count' : count,
+        'page_obj': page_obj,
+    }
+    return render(request, "cash_div/c_transaction.html", context)
+
+
+
+
+
+
+@login_required(login_url='index')  
+@user_passes_test(user_has_cashier_group)
+def searchTransaction(request):
+    cashier = Cashier.objects.get(user=request.user)
+    search_string = request.GET.get('query')
+    
+    if search_string:
+       loglist = Balance_Logs.objects.filter(
+            Q(cashier_sender=cashier),
+            Q(id__icontains=search_string)
+        ).order_by('-id')
+    else:
+         loglist = Balance_Logs.objects.filter(cashier_sender=cashier).order_by('-id')
+    paginator = Paginator(loglist, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    count = loglist.count()
+    context = {
+        'count' : count,
+        'page_obj': page_obj,
+    }
+
+    return render(request, "cash_div/c_transaction.html", context)

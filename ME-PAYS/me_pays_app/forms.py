@@ -19,7 +19,11 @@ class RegisterForm(UserCreationForm):
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'school_id', 'contact_number')
 
 
-
+class LogSearchForm(forms.Form):
+    search_date = forms.DateField(
+        label='Search Date',
+        widget=forms.DateInput(attrs={'type': 'date'})
+    )
 
 
 

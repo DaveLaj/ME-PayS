@@ -89,7 +89,7 @@ urlpatterns = [
 
     path("cashdiv_home/fetchServices", FetchServices, name='fetchServices'),
     path("cashdiv_home/tallyItems", tallyItems, name='tallyItems'),
-     path("cashdiv_home/payRFID", pay_rfid, name='pay_rfid'),
+    path("cashdiv_home/payRFID", pay_rfid, name='pay_rfid'),
 
 
 
@@ -98,6 +98,7 @@ urlpatterns = [
 
 
     path("cashdiv_transaction", cashdiv_transaction, name='cashdiv_transaction'),
+    path("cashdiv_transaction/search", searchTransaction, name='searchTransaction'),
 
 
     # Services Page

@@ -143,10 +143,7 @@ def account(request):
 def cashdiv_home(request):
     return render(request, "cash_div/c_home.html", {})
 
-@allowed_users(allowed_roles=['cashier'])
-@login_required(login_url='index')
-def cashdiv_transaction(request):
-    return render(request, "cash_div/c_transaction.html", {})
+
 
 @allowed_users(allowed_roles=['cashier'])
 @login_required(login_url='index')

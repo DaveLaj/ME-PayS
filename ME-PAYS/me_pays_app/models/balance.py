@@ -1,8 +1,6 @@
 from django.db import models
 from me_pays_app.models.users import *
 
-from django.db import models
-
 class Balance_Logs(models.Model):
     account_Owner = models.ForeignKey(EndUser, on_delete=models.CASCADE, related_name='account_balance_logs')
     enduser_sender = models.ForeignKey(EndUser, null=True, blank=True, on_delete=models.CASCADE, related_name='sender_balance_logs')
