@@ -1,15 +1,13 @@
-// <!-- Add Document CashDiv Query -->
-
 var selectCount = 1;
 
-$("#addFile").click(function () {
+$("#addProduct").click(function () {
     $.ajax({
         url: "cashdiv_home/fetchServices",
         method: "GET",
         success: function (response) {
             // Process the product data and generate the dynamic HTML content
             var optionsHtml = '';
-            var selectClass = "select2" + selectCount;
+            var selectClass = "posselect2" + selectCount;
             response.services.forEach(function (product) {
                 optionsHtml += '<option value="' + product.id + '">' + product.menu_name + '</option>';
             });
@@ -25,7 +23,7 @@ $("#addFile").click(function () {
                 '</div>';
 
             // Append the updated newRowAdd to #newinput
-            $('#newinput').append(newRowAdd);
+            $('#newproduct').append(newRowAdd);
 
             // Initialize the selectize plugin for the newly added select element
             $('#' + selectClass).selectize({
@@ -49,69 +47,8 @@ $("#addFile").click(function () {
 });
 
 
-
 $(document).ready(function () {
-    $('.select2').selectize({
+    $('.select2pos').selectize({
         sortField: 'text'
     });
 });
-    
-$("body").on("click", "#DeleteRow", function () {
-    $(this).parents("#row").remove();
-})
-    
-
-    
-$(document).ready(function () {
-    $('input[type="radio"]').click(function () {
-      var inputValue = $(this).attr("value");
-      var targetBox = $("." + inputValue);
-  
-      var nextButton = $("#changebutton");
-  
-      if (inputValue === "MC-PayS") {
-        nextButton.text("Pay RFID");
-        nextButton.off("click").on("click", function () {
-          pay_nextStep(3); // Custom action for MC-PayS
-        });
-      } else if (inputValue === "Cash") {
-        nextButton.text("Pay Cash");
-        nextButton.off("click").on("click", function () {
-          // Custom action for Cash
-          console.log("Cash selected");
-          // Perform the desired action for Cash
-        });
-      } else {
-        nextButton.text("Next");
-        nextButton.off("click").on("click", function () {
-          // No option selected
-          console.log("No option selected");
-          // Handle the case when no option is selected
-        });
-      }
-    });
-  });
-  
-
-
-
-function printTally(id, name, price, qty) {
-    var newItemAdd = '<tr>' +
-                        '<td>'+ id +'</td>'+
-                       ' <td>'+ name +'</td>'+
-                       ' <td>'+ qty +'</td>'+
-                       '<td>'+ price +'</t>'+
-                     '</tr>';
-    $('#showTally').append(newItemAdd);
-}
-
-
-
-
-
-
-
-
-
-
-

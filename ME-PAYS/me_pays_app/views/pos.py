@@ -79,10 +79,23 @@ def deleteMenu(request, item_id):
     return redirect(request.META['HTTP_REFERER'])
 
 
+
+
+
+
+
+
+
+
 @user_passes_test(user_has_pos_group)
 @login_required(login_url='index')
 def canteen_home(request):
-    return render(request, "canteen/canteen_home.html", {})
+    # initialize available products
+    products = menu.objects.filter(
+        menu_owner_id=request.user.id,
+        menu_is_active=1 
+    ).order_by('menu_name')
+    return render(request, "canteen/canteen_home.html", {'products':products})
     
 
 

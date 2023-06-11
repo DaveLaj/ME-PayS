@@ -89,6 +89,7 @@ urlpatterns = [
 
     path("cashdiv_home/fetchServices", FetchServices, name='fetchServices'),
     path("cashdiv_home/tallyItems", tallyItems, name='tallyItems'),
+     path("cashdiv_home/payRFID", pay_rfid, name='pay_rfid'),
 
 
 

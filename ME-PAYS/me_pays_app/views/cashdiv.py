@@ -13,10 +13,14 @@ from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 import hashlib
+from datetime import datetime
+
+# Rest of your code...
+
+
 
 def user_has_cashier_group(user):
     return user.groups.filter(name='cashier').exists()
-
 
 @login_required(login_url='index')
 @user_passes_test(user_has_cashier_group)
@@ -284,7 +288,6 @@ def searchServices(request):
 
 
 @login_required(login_url='index')  
-@user_passes_test(user_has_cashier_group)
 def FetchServices(request):
     services = menu.objects.filter(
         menu_owner_id=request.user.id,
@@ -335,3 +338,46 @@ def tallyItems(request):
     serialized_data = json.dumps(item_data, cls=DjangoJSONEncoder)
 
     return JsonResponse({'itemlist': serialized_data})
+
+
+
+
+@user_passes_test(user_has_cashier_group)
+@require_POST
+def pay_rfid(request):
+    rfid = request.POST.get('rfid')
+    rfid = hashlib.sha256(rfid.encode()).hexdigest()
+    amount = request.POST.get('FinalTotalAmount')
+    user = EndUser.objects.filter(rfid_code=rfid).first()
+    cashier = Cashier.objects.get(user=request.user)
+    # Convert the amount to an integer if needed
+    amount = int(amount)
+    
+    if user.credit_balance > amount:
+        # Deduct the amount from the current credit_balance
+        user.credit_balance -= amount
+        # Save the updated user object
+        user.save()
+        
+        # Save to Balance Logs
+        log = Balance_Logs.objects.create(
+            account_Owner=user,
+            cashier_sender=cashier,
+            amount=-(amount),
+            desc="Payment",
+        )  
+        log.save()
+
+        current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        response_data = {
+            'status': 'success',
+            'message': 'Payment Successful, Please Check Your Load Balance',
+            'school_id': user.school_id,
+            'current_datetime': current_datetime
+        }
+        
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User does not have enough credits'})
+

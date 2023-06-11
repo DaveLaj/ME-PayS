@@ -1,6 +1,5 @@
 // For loading
 var load_currentStep = 1;
-
 function load_validateAndProceed() {
   var loadrfid = document.getElementById("loadrfid").value;
   if (loadrfid.trim() === "") {
@@ -191,6 +190,35 @@ $(document).ready(function () {
     }
   });
 });
+
+
+
+$(document).ready(function () {
+  $("#paystep1Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#paybuttontarget").click();
+    }
+  });
+});
+$(document).ready(function () {
+  $("#paystep2Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#changebutton").click();
+    }
+  });
+});
+$(document).ready(function () {
+  $("#paystep3Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#paybuttontarget3").click();
+    }
+  });
+});
+
+
 
 // for the registration
 var currentStep = 1;
@@ -442,6 +470,12 @@ function tallyItemCost(){
 function pay_nextStep(step) {
   pay_currentStep = step;
   pay_showStep(pay_currentStep);
+  if (step == 3) {
+    $("#paystep3Modal").on("shown.bs.modal", function () {
+      document.getElementById("payrfid").value = "";
+      document.getElementById("payrfid").focus();
+    });
+  }
 }
 function pay_previousStep(step) {
   pay_currentStep = step;
@@ -508,39 +542,116 @@ function sendSelectedValues() {
 
 
 
+function pay_validateAndProceed() {
+  var payrfid = document.getElementById("payrfid").value;
+  if (payrfid.trim() === "") {
+    var errorMessage = "RFID code is required";
+    var errorContainer = $("#pay_errorContainerRFID3");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+    return;
+  } else {
+    pay_validate_rfid();
+  }
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-function pay() {
+function pay_validate_rfid() {
+  var RFID = $("#payrfid").val();
+  var validateRFIDURL = "cashdiv_home/load_rfid_check";
   $.ajax({
-    url: "your-api-endpoint-url",
-    method: "GET",
+    url: validateRFIDURL, // Replace with the URL of your Django view
+    method: "POST",
+    headers: {
+      "X-CSRFToken": window.csrfTokenPay, // Set the CSRF token in the headers
+    },
+    data: {
+      rfid: RFID,
+    },
     success: function (response) {
-        // Process the product data and generate the dynamic HTML content
-        var optionsHtml = '<option selected>Choose...</option>';
-        response.forEach(function (product) {
-            optionsHtml += '<option value="' + product.id + '">' + product.title + '</option>';
-        });
+      if (response.exists == 0) {
+        // RFID exists in the database and is active
+        // Perform the desired action
+        // getCreds();
+        // load_nextStep(2);
+        RFIDpay(RFID);
+      } else {
+        // RFID does not exist in the database
+        // Perform the desired action
+        var errorMessage = "RFID code does not exist";
+        var errorContainer = $("#pay_errorContainerRFID3");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
+      }
+    },
+    error: function (xhr, errmsg, err) {
+      var errorMessage = "Please Enter Valid RFID code";
+      var errorContainer = $("#pay_errorContainerRFID3");
+      var displayDuration = 5000; // 5 seconds
+      displayErrorMessageWithTimer(
+        errorMessage,
+        errorContainer,
+        displayDuration
+      );
+    },
+  });
+}
 
-        // Replace the placeholder in newRowAdd with the dynamic HTML content
-        newRowAdd = newRowAdd.replace('<option selected>Choose...</option>', optionsHtml);
+
+// RFID pay
+function RFIDpay(rfid) {
+  var total = $("#FinalTotalAmount").val();
+  $.ajax({
+    url: "cashdiv_home/payRFID",
+    method: "POST",
+    headers: {
+      "X-CSRFToken": window.csrfTokenPayRFID, // Set the CSRF token in the headers
+    },
+    data: {
+      rfid: rfid,
+      FinalTotalAmount: total,
+    },
+    success: function (response) {
+       if (response.status=='success'){
+        var errorMessage = response.message;
+        var errorContainer = $("#statusContainer");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
+        
+        var doc = new jsPDF();
+        doc.text(`Amount: ${total}`, 10, 10);
+        doc.text(`School ID: ${response.school_id}`, 10, 20);
+        doc.text(`Date: ${response.current_datetime}`, 10, 30);
+        // Customize the receipt content as needed
+
+        var pdfData = doc.output('blob');
+        var blobUrl = URL.createObjectURL(pdfData);
+        var link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = 'receipt.pdf';
+        link.click();
+        URL.revokeObjectURL(blobUrl);
+        $('#paystep3Modal').modal('hide');
+       } else if (response.status=='error'){
+        if (response.status=='error'){
+          var errorMessage = response.message;
+          var errorContainer = $("#pay_errorContainerRFID3");
+          var displayDuration = 5000; // 5 seconds
+          displayErrorMessageWithTimer(
+            errorMessage,
+            errorContainer,
+            displayDuration
+          );
+        }
+      }
     },
     error: function (xhr, status, error) {
         // Handle errors if the request fails
@@ -549,45 +660,4 @@ function pay() {
 }
 
 
-
-
-
-
-
-
-function pay() {
-  // Get the data from the added rows
-  var rowData = [];
-  $(".row .form-select").each(function () {
-      var value = $(this).val();
-      if (value !== "Choose...") {
-          rowData.push(value);
-      }
-  });
-
-  // Send the data to the server using AJAX
-  $.ajax({
-      url: "your-post-endpoint-url",
-      method: "POST",
-      data: { rowData: rowData },
-      success: function (response) {
-          // Handle the response from the server if needed
-      },
-      error: function (xhr, status, error) {
-          // Handle errors if the request fails
-      }
-  });
-}
-
-
-
-
-
-
-
-
-
-
-
-  
 

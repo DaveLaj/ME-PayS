@@ -267,7 +267,7 @@
                                 <div class="row">
                                     <label for="inputDocument" class="col-sm-2 col-form-label">Document/s:</label>
                                     <div id="initInput" class=" mb-3  col-sm-10  d-flex">
-                                        <select id="select_page" style="width:200px;" class="operator select2" > 
+                                        <select id="select_page" style="width:1200px;" class="operator select2" > 
                                             <option value="">Select an item</option>
                                             {% for item in services %}
                                                 <option value="{{ item.id }}">{{ item.menu_name }}</option>
@@ -286,7 +286,7 @@
                                 <div id="pay_errorContainerRFID1"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="tallyItemCost()">Next</button>
+                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="tallyItemCost()">Next</button>
                             </div>
                         </div>
                     </div>
@@ -325,7 +325,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <input type="hidden" id="FinalTotalAmount" value=0>
+                                    <input type="hidden" id="FinalTotalAmount" value="">
                                     <label class="col-sm-2 col-form-label">Payment Method:</label>
                                     <div class="col m-3">
                                         <div class="form-check form-check-inline">
@@ -342,8 +342,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="pay_previousStep(1)">Previous</button>
-                                <button type="button" class="btn btn-primary" onclick="pay_previousStep(3)">Next</button>
+                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(1)">Previous</button>
+                                <button type="button" class="btn btn-primary" id="changebutton" onclick="">Next</button>
                             </div>
                         </div>
                     </div>
@@ -365,13 +365,15 @@
                                     <h1 class="modal-title fw-bold fs-3 pb-3">MC-PayS Method:</h1>
                                     <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                     <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="rfid">
+                                        <input type="password" class="form-control" id="payrfid">
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="pay_previousStep(2)">Previous</button>
-                                <button type="button" id="changebutton" class="btn btn-primary" onclick="">Pay</button>
+                                <div id="pay_errorContainerRFID3"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" class="btn btn-secondary" onclick="pay_previousStep(2)">Previous</button>
+                                <button type="button" id="paybuttontarget3"  class="btn btn-primary" onclick="pay_validateAndProceed()">Pay</button>
                             </div>
                         </div>
                     </div>
@@ -432,6 +434,8 @@
     // Set the CSRF token as a global variable
     window.csrfTokenReg = '{{ csrf_token }}';
     window.csrfTokenLoad = '{{ csrf_token }}';
+    window.csrfTokenPay = '{{ csrf_token }}';
+    window.csrfTokenPayRFID = '{{ csrf_token }}';
 </script>
 
 

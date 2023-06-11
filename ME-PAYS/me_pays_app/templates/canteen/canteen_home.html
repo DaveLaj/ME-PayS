@@ -31,11 +31,11 @@
                             <div class="row">
                                 <label for="inputProduct" class="col-sm-2 col-form-label">Product/s:</label>
                                 <div class=" mb-3  col-sm-10  d-flex">
-                                    <select class="form-select" id="inputProductSelect">
-                                        <option selected>Choose Menu...</option>
-                                        <option value="1">Menu 1</option>
-                                        <option value="2">Option 2</option>
-                                        <option value="3">Categorys 2</option>
+                                    <select id="select_page" style="width:1200px;" class="operator select2pos" > 
+                                        <option value="">Select an item</option>
+                                        {% for item in products %}
+                                            <option value="{{ item.id }}">{{ item.menu_name }}</option>
+                                        {% endfor %}
                                     </select>
                                     <button id="addProduct" type="button" class="btn btn-dark d-flex"><i
                                             class="bi bi-plus-square-fill me-2"></i>Add</button>
