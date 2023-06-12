@@ -4,6 +4,12 @@ from me_pays_app.models.users import *
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxLengthValidator
+from django.utils.text import capfirst
+
+
+def uncapitalize_string(text):
+    return text.lower()
+
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter My.IIT email'}),required=True, help_text='Required.')
@@ -13,6 +19,23 @@ class RegisterForm(UserCreationForm):
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Confirm password'}))
     contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
     school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}),required=True, help_text='Required.')
+
+
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name:
+            first_name=capfirst(uncapitalize_string(first_name))
+            return first_name
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name:
+            last_name=capfirst(uncapitalize_string(last_name))
+            return last_name
+        return last_name
+
 
     class Meta:
         model = CustomUser
@@ -36,6 +59,24 @@ class EndUser_CreationForm(UserCreationForm):
     contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
     school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}), help_text='Required.')
 
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name:
+            first_name=capfirst(uncapitalize_string(first_name))
+            return first_name
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name:
+            last_name=capfirst(uncapitalize_string(last_name))
+            return last_name
+        return last_name
+
+
+
+
     class Meta:
         model = CustomUser
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'school_id', 'contact_number')
@@ -51,12 +92,15 @@ class POS_CreationForm(UserCreationForm):
     location = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'maxlength': '100'}),required=True, help_text='Required.')
     description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows':'5'}), required=False)
 
+
+
     class Meta:
         model = CustomUser
         fields = ('email', 'store_name', 'password1', 'password2', 'contact_number', 'location', 'description')
 
 
 class Cashier_CreationForm(UserCreationForm):
+
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control form-control-sm', 'maxlength':'100', 'placeholder':'Enter New My.IIT Email'}),required=True, help_text='Required.')
     first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter the first name', 'maxlength': '30'}),required=True, help_text='Required.')
     last_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter the last name', 'maxlength': '30'}),required=True, help_text='Required.')
@@ -65,6 +109,23 @@ class Cashier_CreationForm(UserCreationForm):
     contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm limit-length',  'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
     location = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'maxlength': '60'}),required=True, help_text='Required.')
 
+
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name:
+            first_name=capfirst(uncapitalize_string(first_name))
+            return first_name
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name:
+            last_name=capfirst(uncapitalize_string(last_name))
+            return last_name
+        return last_name
+    
+    
     class Meta:
         model = CustomUser
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'contact_number', 'location')

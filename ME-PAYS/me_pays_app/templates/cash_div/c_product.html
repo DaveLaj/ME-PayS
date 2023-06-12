@@ -13,7 +13,7 @@
             <div class="col-sm-8 m-auto">
                 {% comment %} search form input  {% endcomment %}
                 <form class="d-flex" method="GET" role="search" action={% url "searchServices"%}>
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name = "query">
+                    <input class="form-control me-2" type="search" placeholder="Search by Name" aria-label="Search" name = "query">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </form>
             </div>
@@ -171,29 +171,29 @@
                         </table>
                         <!-- End Table with hoverable rows -->
 
-                        <nav aria-label="Page navigation" class="d-flex justify-content-center" >
+                        <nav aria-label="Page navigation" class="d-flex justify-content-center">
                             <ul class="pagination step-links">
-                                <li class="page-item">
-                                    <a class="page-link bg-white" href="?page=1">First</a>
-                                </li>
-                                <li class="d-flex page-item">
-                                    {% if page_obj.has_previous %}
-                                    <a class="page-link bg-white" href="?page={{ page_obj.previous_page_number }}">Prev</a>
-                                    {% endif %}
-                                </li> 
-                                <li class="page-item">
-                                    <a class="page-link current-page bg-primary text-white">{{ page_obj.number }}</a></li>
-                                </li>
-                                <li class="page-item d-flex">
-                                    {% if page_obj.has_next %}
-                                    <a class="page-link bg-white" href="?page={{ page_obj.next_page_number }}">Next</a>
-                                    {% endif %}
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link bg-white" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
-                                </li>
+                              <li class="page-item">
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;page=1">First</a>
+                              </li>
+                              <li class="d-flex page-item">
+                                {% if page_obj.has_previous %}
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;page={{ page_obj.previous_page_number }}">Prev</a>
+                                {% endif %}
+                              </li> 
+                              <li class="page-item">
+                                <a class="page-link current-page bg-primary text-white">{{ page_obj.number }}</a>
+                              </li>
+                              <li class="page-item d-flex">
+                                {% if page_obj.has_next %}
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;page={{ page_obj.next_page_number }}">Next</a>
+                                {% endif %}
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;page={{ page_obj.paginator.num_pages }}">Last</a>
+                              </li>
                             </ul>
-                        </nav>
+                          </nav>
 
 
                     </div>

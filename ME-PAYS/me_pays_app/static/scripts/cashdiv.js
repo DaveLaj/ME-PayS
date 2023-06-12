@@ -109,6 +109,7 @@ function loadCredAmount(rfid, amount) {
         setTimeout(function () {
           $("#statusContainer").empty();
         }, displayDuration);
+        update_Stats();
       } else {
         // Handle error response
         var Message = response.message;
@@ -626,19 +627,8 @@ function RFIDpay(rfid) {
           displayDuration
         );
         
-        var doc = new jsPDF();
-        doc.text(`Amount: ${total}`, 10, 10);
-        doc.text(`School ID: ${response.school_id}`, 10, 20);
-        doc.text(`Date: ${response.current_datetime}`, 10, 30);
-        // Customize the receipt content as needed
-
-        var pdfData = doc.output('blob');
-        var blobUrl = URL.createObjectURL(pdfData);
-        var link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = 'receipt.pdf';
-        link.click();
-        URL.revokeObjectURL(blobUrl);
+      
+        update_Stats();
         $('#paystep3Modal').modal('hide');
        } else if (response.status=='error'){
         if (response.status=='error'){
@@ -659,5 +649,24 @@ function RFIDpay(rfid) {
   });
 }
 
+
+
+
+function update_Stats() {
+  $.ajax({
+      url: 'cashdiv_home/updateStats',  // Replace with the URL of your AJAX endpoint
+      method: 'GET',
+      success: function(response) {
+          // Update the values with the response data
+          $('#cash-in-count').text(response.dailyCashInCount);
+          $('#total-cash-in').text(response.dailyTotalCashIn.toFixed(1));
+          $('#pay-count').text(response.dailyPayCount);
+          $('#total-pay').text(response.dailyTotalPay.toFixed(1));
+      },
+      error: function() {
+          console.log('Error occurred during AJAX request.');
+      }
+  });
+}
 
 

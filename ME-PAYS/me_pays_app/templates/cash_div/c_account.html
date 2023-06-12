@@ -10,7 +10,7 @@
         {% include 'cash_div/c_nav.html' %}
 
         <div class="dashboard-content px-3 pt-4">
-            <h2 class="fs-1 ps-3 pb-3 fw-bold">Account</h2>
+            <h2 class="fs-1 ps-3 pb-3 fw-bold">My Account</h2>
                 <div class="row" style="margin: 15px;">
                     <div class="col-sm-8 mb-3 mb-sm-0">
                         <div class="card border-3">
@@ -18,28 +18,28 @@
                                 <div class="mb-3 row">
                                     <label for="name" class="col-sm-2 col-form-label">Name</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="name">
+                                        <input type="text"  value="{{cashier.first_name}} {{cashier.last_name}}"class="form-control" id="name" disabled>
                                     </div>
                                 </div>
 
                                 <div class="mb-3 row">
                                     <label for="email" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="email">
+                                        <input type="email" value="{{cashier.user.email}}" class="form-control" id="email" disabled>
                                     </div>
                                 </div>
             
                                 <div class="mb-3 row">
                                     <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="contact">
+                                        <input type="text" value="+63 {{cashier.contact_number}}" class="form-control" id="contact" disabled>
                                     </div>
                                 </div>
             
                                 <div class="mb-3 row">
-                                    <label for="address" class="col-sm-2 col-form-label">Role</label>
+                                    <label for="address" class="col-sm-2 col-form-label">Address</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="address">
+                                        <input type="text" value="{{cashier.location}}"class="form-control" id="address" disabled>
                                     </div>
                                 </div>
                             </div>

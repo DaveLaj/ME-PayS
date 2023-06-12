@@ -88,7 +88,9 @@ def registerenduser(request):
                 enduser.save()
 
                 # Login the user
-                login(request, user,  backend = 'django.contrib.auth.backends.ModelBackend')
+                # login(request, user,  backend = 'django.contrib.auth.backends.ModelBackend')
+
+                
                 messages.success(request, "You're succesfully registered!")
                 return HttpResponseRedirect('register')
         else:
@@ -145,10 +147,7 @@ def cashdiv_home(request):
 
 
 
-@allowed_users(allowed_roles=['cashier'])
-@login_required(login_url='index')
-def cashdiv_account(request):
-    return render(request, "cash_div/c_account.html", {})
+
 
 
 

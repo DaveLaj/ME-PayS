@@ -13,16 +13,57 @@ from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 import hashlib
-from datetime import date
 from datetime import datetime
 from django.db.models import Q
 from me_pays_app.forms import *
+from django.db.models import Sum
 # Rest of your code...
 
 
 
 def user_has_cashier_group(user):
     return user.groups.filter(name='cashier').exists()
+
+
+@login_required(login_url='index')
+@user_passes_test(user_has_cashier_group)
+def cashdiv_account(request):
+
+
+    UserAccount = CustomUser.objects.filter(id=request.user.id).first()
+    CashierCreds = Cashier.objects.filter(user=UserAccount).first()
+    context={
+        'cashier': CashierCreds
+    }
+    return render(request, "cash_div/c_account.html", context)
+
+
+
+def updateStats(request):
+    # initialize available services
+    current_date = datetime.now().date()
+    cashier = Cashier.objects.get(user=request.user)
+    dailyCashIn = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Cash In', datetime__date=current_date)
+    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Payment', datetime__date=current_date)
+    # Initializes the Counts
+    dailyCashInCount = dailyCashIn.count()
+    dailyPayCount = dailyPay.count()
+    # Initializes the Total Amounts
+    totalCashIn = dailyCashIn.aggregate(total_amount=Sum('amount'))['total_amount']
+    totalPay = -(dailyPay.aggregate(total_amount=Sum('amount'))['total_amount'])
+    context={
+        'dailyCashInCount': dailyCashInCount,
+        'dailyPayCount': dailyPayCount,
+        'dailyTotalCashIn': totalCashIn,
+        'dailyTotalPay': totalPay,
+    }
+    return JsonResponse(context)
+
+
+
+
+
+
 
 @login_required(login_url='index')
 @user_passes_test(user_has_cashier_group)
@@ -34,12 +75,23 @@ def cashdiv_home(request):
     ).order_by('menu_name')
     current_date = datetime.now().date()
     cashier = Cashier.objects.get(user=request.user)
-    dailyCashIn = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Cash In', datetime__date=current_date).count()
-    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Payment', datetime__date=current_date).count()
+    dailyCashIn = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Cash In', datetime__date=current_date)
+    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Payment', datetime__date=current_date)
+    # Initializes the Counts
+    dailyCashInCount = dailyCashIn.count()
+    dailyPayCount = dailyPay.count()
+    # Initializes the Total Amounts
+    totalCashIn = dailyCashIn.aggregate(total_amount=Sum('amount'))['total_amount']
+    totalPay = dailyPay.aggregate(total_amount=Sum('amount'))['total_amount']
+    UserAccount = CustomUser.objects.filter(id=request.user.id).first()
+    CashierCreds = Cashier.objects.filter(user=UserAccount).first()
     context={
-        'dailyCashIn':dailyCashIn,
-        'dailyPay':dailyPay,
+        'dailyCashInCount':dailyCashInCount,
+        'dailyPayCount':dailyPayCount,
         'services':services,
+        'dailyTotalCashIn': totalCashIn,
+        'dailyTotalPay': totalPay,
+        'cashier': CashierCreds
     }
     return render(request, "cash_div/c_home.html", context)
  
@@ -289,7 +341,8 @@ def searchServices(request):
     context = {
         'count' : count,
         'page_obj': page_obj,
-        'menu_data': menu_data
+        'menu_data': menu_data,
+        'search_string': search_string
     }
 
     return render(request, "cash_div/c_product.html", context)
@@ -426,26 +479,37 @@ def cashdiv_transaction(request):
 
 
 
-@login_required(login_url='index')  
+from datetime import datetime
+
+@login_required(login_url='index')
 @user_passes_test(user_has_cashier_group)
 def searchTransaction(request):
     cashier = Cashier.objects.get(user=request.user)
     search_string = request.GET.get('query')
+    date_string = request.GET.get('date')
+    
+    loglist = Balance_Logs.objects.filter(cashier_sender=cashier).order_by('-id')
     
     if search_string:
-       loglist = Balance_Logs.objects.filter(
-            Q(cashier_sender=cashier),
-            Q(id__icontains=search_string)
-        ).order_by('-id')
-    else:
-         loglist = Balance_Logs.objects.filter(cashier_sender=cashier).order_by('-id')
+        loglist = loglist.filter(Q(id=search_string))
+    
+    if date_string:
+        try:
+            date = datetime.strptime(date_string, '%Y-%m-%d').date()
+            loglist = loglist.filter(datetime__date=date)
+        except ValueError:
+            pass
+    
     paginator = Paginator(loglist, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     count = loglist.count()
+    
     context = {
-        'count' : count,
+        'count': count,
         'page_obj': page_obj,
+        'search_string': search_string,  # Pass the search query back to the template
+        'date_string': date_string,      # Pass the date input back to the template
     }
-
     return render(request, "cash_div/c_transaction.html", context)
+

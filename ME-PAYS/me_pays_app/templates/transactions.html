@@ -20,50 +20,53 @@
                             <thead class="text-center">
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Type</th>
+                                    <th scope="col">DateTime</th>
+                                    <th scope="col">Transaction Description</th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col">Balance</th>
+                                    <th scope="col">Sender</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% load custom_filters %}
+                                {% for item in page_obj %}
                                 <tr>
-                                    <th scope="row">1</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                                    <td>{{item.id}}</td>
+                                    <td>{{item.datetime}}</td>
+                                    <td>{{item.desc}}</td>
+                                    {% if item.amount < 0 %}
+                                        <td>{{ item.amount|neg }}</td>
+                                    {% else %}
+                                        <td>{{ item.amount }}</td>
+                                    {% endif %}
+                                    <td>{{item.account_Owner.school_id}}</td>
+                                </tr> 
+                                {% endfor %}
                             </tbody>
                         </table>
+                        <!-- End Table with hoverable rows -->
+                        <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                            <ul class="pagination step-links">
+                              <li class="page-item">
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page=1">First</a>
+                              </li>
+                              <li class="d-flex page-item">
+                                {% if page_obj.has_previous %}
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.previous_page_number }}">Prev</a>
+                                {% endif %}
+                              </li> 
+                              <li class="page-item">
+                                <a class="page-link current-page bg-primary text-white">{{ page_obj.number }}</a>
+                              </li>
+                              <li class="page-item d-flex">
+                                {% if page_obj.has_next %}
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.next_page_number }}">Next</a>
+                                {% endif %}
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.paginator.num_pages }}">Last</a>
+                              </li>
+                            </ul>
+                          </nav>
                         <!-- End Table with hoverable rows -->
             
                     </div>
