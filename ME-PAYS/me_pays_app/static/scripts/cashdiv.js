@@ -91,7 +91,6 @@ function loadCredAmount(rfid, amount) {
     rfid: rfid,
     amount: amount,
   };
-
   // Make the AJAX request
   $.ajax({
     url: "cashdiv_home/load_amount",
@@ -626,10 +625,8 @@ function RFIDpay(rfid) {
           errorContainer,
           displayDuration
         );
-        
-      
         update_Stats();
-        $('#paystep3Modal').modal('hide');
+        $('#cpaystep3Modal').modal('hide');
        } else if (response.status=='error'){
         if (response.status=='error'){
           var errorMessage = response.message;

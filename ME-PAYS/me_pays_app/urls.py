@@ -57,6 +57,7 @@ from me_pays_app.views.pos import *
 from me_pays_app.views.admin import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from me_pays_app.views.cashdiv import *
+from me_pays_app.views.enduser import *
 
 urlpatterns = [
 
@@ -65,8 +66,10 @@ urlpatterns = [
     path("", index, name='index'),
     path("register", users_registerenduser, name='register'),
     path("home", home, name='home'),
-
-
+    path("home/validateshare", share_validate_sid, name='validateshare'),
+    path("home/share_get_creds", share_sid_creds, name='share_sid_creds'),
+    path("home/share_send", shareAmount, name='shareAmount'),
+    path("home/get_balance", updateBalance, name='updateBalance'),
     # Balance Logs/History
     path("transactions", transactions, name='transactions'),
 
@@ -103,6 +106,7 @@ urlpatterns = [
 
 
     # Services Page
+
     path("cashdiv_product", cashier_services, name='cashdiv_product'),
     path("cashdiv_product/addService", insertServices, name='insertServices'),
     path('cashdiv_product/updateService/<int:item_id>', updateServices, name='updateServices'),
@@ -132,15 +136,16 @@ urlpatterns = [
     path("admin_listOfEndUser", enduser_list, name='admin_listOfEndUser'),
     
     # canteen product workings
-    path("canteen_home", canteen_home, name='canteen_home'),
-    path('canteen_products/', canteen_products, name='canteen_products'),
-    path('canteen_products/search', searchProduct, name='searchProduct'),
+    path("pos_home/payRFID", cpay_rfid, name='cpay_rfid'),
+    path("pos_home", canteen_home, name='canteen_home'),
+    path('pos_products/', canteen_products, name='canteen_products'),
+    path('pos_products/search', searchProduct, name='searchProduct'),
     path('updateMenu/<int:item_id>', updateMenu, name='updateMenu'),
     path('deleteMenu/<int:item_id>', deleteMenu, name='deleteMenu'),
     path("insertMenu", insertMenu, name="insertMenu"),
-    path("canteen_history", canteen_history, name='canteen_history'),
-
-    
+    path("pos_history", canteen_history, name='canteen_history'),
+    path("pos_home/load_rfid_check", cload_validate_rfid, name='cload_validate_rfid'),
+    path("pos_history/search", searchHistory, name='searchHistory'),
 
 
 

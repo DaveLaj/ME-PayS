@@ -50,7 +50,9 @@ def updateStats(request):
     dailyPayCount = dailyPay.count()
     # Initializes the Total Amounts
     totalCashIn = dailyCashIn.aggregate(total_amount=Sum('amount'))['total_amount']
-    totalPay = -(dailyPay.aggregate(total_amount=Sum('amount'))['total_amount'])
+    totalPay = dailyPay.aggregate(total_amount=Sum('amount'))['total_amount']
+    if totalPay is None:
+        totalPay=0
     context={
         'dailyCashInCount': dailyCashInCount,
         'dailyPayCount': dailyPayCount,
@@ -371,7 +373,6 @@ def FetchServices(request):
 
 
 @login_required(login_url='index')  
-@user_passes_test(user_has_cashier_group)
 def tallyItems(request):
     selectedValues = json.loads(request.GET.get('selectedValues'))
     quantityTracker = {}
@@ -405,8 +406,7 @@ def tallyItems(request):
 
 
 
-
-@user_passes_test(user_has_cashier_group)
+@login_required(login_url='index')
 @require_POST
 def pay_rfid(request):
     rfid = request.POST.get('rfid')
@@ -456,9 +456,8 @@ def pay_rfid(request):
 # ---------------------------------------------------------------------------------------------------------------------------------------
 
 
-
-@user_passes_test(user_has_cashier_group)
 @login_required(login_url='index')
+@user_passes_test(user_has_cashier_group)
 def cashdiv_transaction(request):
     cashier = Cashier.objects.get(user=request.user)
     loglist = Balance_Logs.objects.filter(cashier_sender=cashier).order_by('-id')

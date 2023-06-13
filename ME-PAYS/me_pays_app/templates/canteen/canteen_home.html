@@ -1,5 +1,5 @@
 {% extends 'base.html'%}
-
+{% load custom_filters %}
 {% load static %}
 {% block title %} Home {% endblock%}
 
@@ -11,14 +11,18 @@
 
         <div class="dashboard-content px-3 pt-4">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back!</h1>
+            <div class="d-flex justify-content-center col-12 ps-3">
+                <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
+                </div>
+            </div>
             <div class="row d-flex mt-3 ms-1" style="margin: 12px;">
                 <div class="col-sm-5 mb-3">
                     <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
                         <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Daily Earnings
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <h5 class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payments</h5>
+                            <p class="card-text">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></p>
                         </div>
                     </div>
                 </div>
@@ -26,10 +30,10 @@
                         <!-- PAY FEES -->
                     <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
                     style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;"
-                    data-bs-toggle="modal" data-bs-target="#paystep1Modal" >Pay fees</button>
+                    data-bs-toggle="modal" data-bs-target="#cpaystep1Modal" >Pay fees</button>
 
 
-                <div class="modal fade" id="paystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                <div class="modal fade" id="cpaystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
@@ -58,17 +62,17 @@
                                 
                             </div>
                             <div class="modal-footer">
-                                <div id="pay_errorContainerRFID1"
+                                <div id="cpay_errorContainerRFID1"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="tallyItemCost()">Next</button>
+                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="ctallyItemCost()">Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
 
-                <div class="modal fade" id="paystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                <div class="modal fade" id="cpaystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
@@ -101,24 +105,11 @@
                                 </div>
                                 <div class="row">
                                     <input type="hidden" id="FinalTotalAmount" value="">
-                                    <label class="col-sm-2 col-form-label">Payment Method:</label>
-                                    <div class="col m-3">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions"
-                                                id="MC-PayS" value="MC-PayS">
-                                            <label class="form-check-label" for="MC-PayS">MC-PayS</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions" id="Cash"
-                                                value="Cash">
-                                            <label class="form-check-label" for="Cash">Cash</label>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(1)">Previous</button>
-                                <button type="button" class="btn btn-primary" id="changebutton" onclick="">Next</button>
+                                <button type="button" class="btn btn-secondary"  onclick="cpay_previousStep(1)">Previous</button>
+                                <button type="button" class="btn btn-primary"  onclick="cpay_nextStep(3)">Next</button>
                             </div>
                         </div>
                     </div>
@@ -126,7 +117,7 @@
 
 
 
-                <div class="modal fade" id="paystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                <div class="modal fade" id="cpaystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
@@ -140,15 +131,15 @@
                                     <h1 class="modal-title fw-bold fs-3 pb-3">MC-PayS Method:</h1>
                                     <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                     <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="payrfid">
+                                        <input type="password" class="form-control" id="cpayrfid">
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <div id="pay_errorContainerRFID3"
+                                <div id="cpay_errorContainerRFID3"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
-                                <button type="button" class="btn btn-secondary" onclick="pay_previousStep(2)">Previous</button>
-                                <button type="button" id="paybuttontarget3"  class="btn btn-primary" onclick="pay_validateAndProceed()">Pay</button>
+                                <button type="button" class="btn btn-secondary" onclick="cpay_previousStep(2)">Previous</button>
+                                <button type="button" id="cpaybuttontarget3"  class="btn btn-primary" onclick="cpay_validateAndProceed()">Pay</button>
                             </div>
                         </div>
                     </div>
@@ -160,4 +151,13 @@
             </div>
 
         </div>
-    </div>{% endblock %}
+
+
+
+    </div>
+    <script>
+        // Set the CSRF token as a global variable
+        window.csrfTokenCPay = '{{ csrf_token }}';
+        window.csrfTokenCPayRFID = '{{ csrf_token }}';
+    </script>
+    {% endblock %}

@@ -23,22 +23,28 @@
                                     <th scope="col">DateTime</th>
                                     <th scope="col">Transaction Description</th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col">Sender</th>
+                                    <th scope="col">Transactor</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% load custom_filters %}
-                                {% for item in page_obj %}
+                                {% for log in page_obj %}
                                 <tr>
-                                    <td>{{item.id}}</td>
-                                    <td>{{item.datetime}}</td>
-                                    <td>{{item.desc}}</td>
-                                    {% if item.amount < 0 %}
-                                        <td>{{ item.amount|neg }}</td>
+                                    <td>{{log.id}}</td>
+                                    <td>{{log.datetime}}</td>
+                                    <td>{{log.desc}}</td>
+                                    {% if log.amount < 0 %}
+                                        <td>{{ log.amount }}</td>
                                     {% else %}
-                                        <td>{{ item.amount }}</td>
+                                        <td>{{ log.amount }}</td>
                                     {% endif %}
-                                    <td>{{item.account_Owner.school_id}}</td>
+                                    {% if log.enduser_sender%}
+                                      <td>{{log.enduser_sender.school_id}}</td>
+                                    {% elif log.cashier_sender%}
+                                      <td>{{log.cashier_sender.user.email}}</td>
+                                    {% elif log.pos_sender%}
+                                    <td>{{log.pos_sender.user.email}}</td>
+                                    {% endif %}
                                 </tr> 
                                 {% endfor %}
                             </tbody>

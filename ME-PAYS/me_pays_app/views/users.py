@@ -124,10 +124,7 @@ def registerenduser(request):
 
 
 
-@login_required(login_url='index')
-@allowed_users(allowed_roles=['enduser'])
-def home(request):
-    return render(request, "home.html", {})
+
 
 @allowed_users(allowed_roles=['enduser'])
 @login_required(login_url='index')

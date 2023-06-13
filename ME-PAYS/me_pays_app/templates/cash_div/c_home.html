@@ -17,7 +17,6 @@
             </div>
             <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
 
-
                 <!-- Cash IN -->
                 <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
                     style="background-color: rgb(153, 185, 255); width: 300px;" data-bs-toggle="modal"
@@ -405,7 +404,7 @@
                             Daily Cash-ins</div>
                         <div class="card-body">
                             <h5 class="card-title" ><span id="cash-in-count">{{ dailyCashInCount }}</span> Transactions</h5>
-                            <p class="card-text">Php <span id="total-cash-in">{{ dailyTotalCashIn }}</span></p>
+                            <p class="card-text">Php <span id="total-cash-in">{{ dailyTotalCashIn|none2zero }}</span></p>
                         </div>
                     </div>
                 </div>
