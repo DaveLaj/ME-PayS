@@ -57,7 +57,7 @@ def updateStats(request):
         'dailyCashInCount': dailyCashInCount,
         'dailyPayCount': dailyPayCount,
         'dailyTotalCashIn': totalCashIn,
-        'dailyTotalPay': totalPay,
+        'dailyTotalPay': -totalPay,
     }
     return JsonResponse(context)
 
