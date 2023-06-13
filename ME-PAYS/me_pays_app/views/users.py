@@ -92,7 +92,7 @@ def registerenduser(request):
 
                 
                 messages.success(request, "You're succesfully registered!")
-                return HttpResponseRedirect('register')
+                return HttpResponseRedirect('home')
         else:
             errors = form.errors
             return render(request, template, {'form': form, 'errors': errors})
@@ -124,9 +124,8 @@ def registerenduser(request):
 
 
 
-
-@allowed_users(allowed_roles=['enduser'])
 @login_required(login_url='index')
+@allowed_users(allowed_roles=['enduser'])
 def home(request):
     return render(request, "home.html", {})
 
