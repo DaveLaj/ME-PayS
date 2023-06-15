@@ -4,162 +4,168 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex">
+<div class="main-container d-flex" style="background-color: #e6f1fa;">
     {% include 'canteen/canteen_sidebar.html' %}
     <div class="content">
         {% include 'canteen/canteen_nav.html' %}
 
-        <div class="dashboard-content px-3 pt-4">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back!</h1>
+        <div class="dashboard-content px-3 pt-4 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back!</span></h1>
             <div class="d-flex justify-content-center col-12 ps-3">
                 <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
                 </div>
             </div>
             <div class="row d-flex mt-3 ms-1" style="margin: 12px;">
                 <div class="col-sm-5 mb-3">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
-                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Daily Earnings
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #343434;">
+                        <div class="card-header fw-bold fs-5.5 text-white" style="background-color: #343434;">Daily
+                            Earnings
                         </div>
                         <div class="card-body">
-                            <h4 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h4>
-                            <p class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payments</p>
-                            
+                            <h3 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h3>
+                            <h6 class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payment/s</h6>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-7">
-                        <!-- PAY ORDER -->
+                    <!-- PAY ORDER -->
                     <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
-                    style="background-color: rgb(153, 185, 255); width: 500px; margin-left: 30px;"
-                    data-bs-toggle="modal" data-bs-target="#cpaystep1Modal" >Pay Order/s</button>
+                        style="background-color: rgb(153, 185, 255); width: 500px; margin-left: 30px;"
+                        data-bs-toggle="modal" data-bs-target="#cpaystep1Modal">Pay Order/s</button>
 
 
-                <div class="modal fade" id="cpaystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 1</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body fw-bold">
-                                <div class="row">
-                                    <label for="inputDocument" class="col-sm-2 col-form-label">Product/s:</label>
-                                    <div id="initInput" class=" mb-3  col-sm-10  d-flex">
-                                        <select id="select_page" style="width:1200px;" class="operator select2" > 
-                                            <option value="">Select an item</option>
-                                            {% for item in products %}
+                    <div class="modal fade" id="cpaystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #fffb90;">
+                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 1</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fw-bold">
+                                    <div class="row">
+                                        <label for="inputDocument" class="col-sm-2 col-form-label">Product/s:</label>
+                                        <div id="initInput" class=" mb-3  col-sm-10  d-flex">
+                                            <select id="select_page" style="width:1200px;" class="operator select2">
+                                                <option value="">Select an item</option>
+                                                {% for item in products %}
                                                 <option value="{{ item.id }}">{{ item.menu_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <button id="addFile" type="button" class="btn btn-dark d-flex"><i
-                                                class="bi bi-plus-square-fill me-2"></i>Add</button>
-                                    </div>
-                                    <div id="newinput" class="m-1"></div>
+                                                {% endfor %}
+                                            </select>
+                                            <button id="addFile" type="button" class="btn btn-dark d-flex"><i
+                                                    class="bi bi-plus-square-fill me-2"></i>Add</button>
+                                        </div>
+                                        <div id="newinput" class="m-1"></div>
 
-                                    <br>
-                                
+                                        <br>
+
+                                    </div>
+
+
                                 </div>
-                            
-                                
-                            </div>
-                            <div class="modal-footer">
-                                <div id="cpay_errorContainerRFID1"
-                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="ctallyItemCost()">Next</button>
+                                <div class="modal-footer">
+                                    <div id="cpay_errorContainerRFID1"
+                                        class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" id="paybuttontarget" class="btn btn-primary"
+                                        onclick="ctallyItemCost()">Next</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
 
-                <div class="modal fade" id="cpaystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 2</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body fw-bold">
-                                <div>
-                                    <table class="table table-hover table-bordered">
-                                        <thead class="text-center">
-                                            <tr>
-                                                <th scope="col" style="width: 50px;">#</th>
-                                                <th scope="col">Name of Product</th>
-                                                <th scope="col">Qty</th>
-                                                <th scope="col">Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="showTally">
-                                        </tbody>
-                                    </table>
+                    <div class="modal fade" id="cpaystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #fffb90;">
+                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 2</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
-                                <div id="showTally" class="m-1"></div>
-                                <div class="row">
-                                    <h6 class="col-sm-2 fw-bold">Total:</h6>
-                                    <div class="col-sm-10">
-                                        <p id='totalAmount'></p>
+                                <div class="modal-body fw-bold">
+                                    <div>
+                                        <table class="table table-hover table-bordered">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <th scope="col" style="width: 50px;">#</th>
+                                                    <th scope="col">Name of Product</th>
+                                                    <th scope="col">Qty</th>
+                                                    <th scope="col">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="showTally">
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <input type="hidden" id="FinalTotalAmount" value="">
-                                    <label class="col-sm-2 col-form-label">Payment Method:</label>
-                                    <div class="col m-3">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions"
-                                                id="MC-PayS" value="MC-PayS">
-                                            <label class="form-check-label" for="MC-PayS">MC-PayS</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions" id="Cash"
-                                                value="Cash">
-                                            <label class="form-check-label" for="Cash">Cash</label>
+                                    <div id="showTally" class="m-1"></div>
+                                    <div class="row">
+                                        <h6 class="col-sm-2 fw-bold">Total:</h6>
+                                        <div class="col-sm-10">
+                                            <p id='totalAmount'></p>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"  onclick="cpay_previousStep(1)">Previous</button>
-                                <button type="button" class="btn btn-primary"  onclick="cpay_nextStep(3)">Next</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-
-                <div class="modal fade" id="cpaystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Pay</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body fw-bold">
-                                <div class="row fw-bold">
-                                    <h1 class="modal-title fw-bold fs-3 pb-3">MC-PayS Method:</h1>
-                                    <label class="col-sm-2 col-form-label fw-bold">Scan RFID:</label>
-                                    <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="cpayrfid">
+                                    <div class="row">
+                                        <input type="hidden" id="FinalTotalAmount" value="">
+                                        <label class="col-sm-2 col-form-label">Payment Method:</label>
+                                        <div class="col m-3">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="RadioOptions"
+                                                    id="MC-PayS" value="MC-PayS">
+                                                <label class="form-check-label" for="MC-PayS">MC-PayS</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="RadioOptions"
+                                                    id="Cash" value="Cash">
+                                                <label class="form-check-label" for="Cash">Cash</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <div id="cpay_errorContainerRFID3"
-                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
-                                <button type="button" class="btn btn-secondary" onclick="cpay_previousStep(2)">Previous</button>
-                                <button type="button" id="cpaybuttontarget3"  class="btn btn-primary" onclick="cpay_validateAndProceed()">Pay</button>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="cpay_previousStep(1)">Previous</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="cpay_nextStep(3)">Next</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+
+
+                    <div class="modal fade" id="cpaystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #fffb90;">
+                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Pay</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fw-bold">
+                                    <div class="row fw-bold">
+                                        <h1 class="modal-title fw-bold fs-3 pb-3">MC-PayS Method:</h1>
+                                        <label class="col-sm-2 col-form-label fw-bold">Scan RFID:</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="cpayrfid">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div id="cpay_errorContainerRFID3"
+                                        class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="cpay_previousStep(2)">Previous</button>
+                                    <button type="button" id="cpaybuttontarget3" class="btn btn-primary"
+                                        onclick="cpay_validateAndProceed()">Pay</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 

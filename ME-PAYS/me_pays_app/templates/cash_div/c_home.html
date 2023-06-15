@@ -4,12 +4,12 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex">
+<div class="main-container d-flex" style="background-color: #e6f1fa;">
     {% include 'cash_div/c_sidebar.html' %}
     <div class="content">
         {% include 'cash_div/c_nav.html' %}
 
-        <div class="dashboard-content px-3 pt-4">
+        <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{cashier.first_name}}!</h1>
             <div class="d-flex justify-content-center col-12 ps-3">
                 <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
@@ -403,8 +403,8 @@
                         <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total
                             Daily Cash-ins</div>
                         <div class="card-body">
-                            <h5 class="card-title" ><span id="cash-in-count">{{ dailyCashInCount }}</span> Transactions</h5>
-                            <p class="card-text">Php <span id="total-cash-in">{{ dailyTotalCashIn|none2zero }}</span></p>
+                            <h3 class="card-text fw-bold">Php <span id="total-cash-in">{{ dailyTotalCashIn|none2zero }}</span></h3>
+                            <p class="card-title" ><span id="cash-in-count">{{ dailyCashInCount }}</span> Transactions</p>
                         </div>
                     </div>
                 </div>
@@ -413,8 +413,8 @@
                         <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total
                             Daily Payments</div>
                         <div class="card-body">
-                            <h5 class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payments</h5>
-                            <p class="card-text">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></p>
+                            <h3 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h3>
+                            <p class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payments</p>
                         </div>
                     </div>
                 </div>
