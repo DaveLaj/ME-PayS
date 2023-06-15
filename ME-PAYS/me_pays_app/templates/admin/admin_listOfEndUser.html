@@ -4,12 +4,12 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex">
+<div class="main-container d-flex" style="background-color: #e6f1fa">
     {% include 'admin/admin_sidebar.html' %}
     <div class="content">
         {% include 'admin/admin_nav.html' %}
 
-        <div class="dashboard-content pt-4">
+        <div class="dashboard-content pt-4 m-4 border-5 border-top border-bottom rounded border-secondary" style="background-color: #ffffff">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">List of End User Accounts</h1>
             <div class="col-sm-8 m-auto p-2">
                 <form class="d-flex p-2" role="search" action={% url 'admin_listOfEndUser' %} method="GET">
@@ -19,7 +19,7 @@
             </div>
             <div class="mt-3 ms-5">
                 <div class="d-flex align-items-middle">
-                    <button type="button" class="btn btn-primary fw-bold rounded-pill p-3" data-bs-toggle="modal"
+                    <button type="button" class="btn  rounded p-2 text-white border border-dark" style="background-color: #3388e6;" data-bs-toggle="modal"
                         data-bs-target="#addenduser"><i class="bi bi-plus-circle-fill"></i> Add End User</button>
                     <!-- id="msg" -->
                     <div class="col-6 ps-3">
@@ -142,28 +142,26 @@
 
                     <div class="card-body">
                         <!-- Table with hoverable rows -->
-                        <table class="table table-hover table-bordered">
+                        <table class="table table-sm table-hover table-bordered table-responsive">
                             <thead class="text-center">
                                 <tr>
-                                    <th scope="col" style="width: 50px;">#</th>
-                                    <th scope="col" style="width: 150px;">Email</th> 
-                                    <th scope="col">School Id</th>   
+                                    <th scope="col">School Id</th>
+                                    <th scope="col">Email</th> 
                                     <th scope="col">RFID Registered</th>   
                                     <th scope="col">Name</th>
                                       
-                                    <th scope="col" style="width: 150px;">Contact #</th>
-                                    <th scope="col" style="width: 150px;">Date Joined</th>
-                                    <th scope="col" style="width: 150px;">Last Login</th>
+                                    <th scope="col">Contact #</th>
+                                    <th scope="col">Date Joined</th>
+                                    <th scope="col">Last Login</th>
         
-                                    <th scope="col" style="width: 150px;">Options</th>
+                                    <th scope="col">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for person in page_obj %}
                                 <tr>
-                                    <th scope="row">{{ person.id }}</th>
-                                    <td>{{ person.email }}</td>
                                     <td>{{ person.enduser.school_id }}</td>
+                                    <td class="fs-6">{{ person.email }}</td>
                                     {% if person.enduser %}
                                         {% if person.enduser.rfid_code is not null %}
                                             <td>Registered</td>
@@ -182,9 +180,9 @@
                                     <td>{{ person.last_login }}</td>
                                     {% endif %}
                                     <td class="d-grid mx-auto">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#update{{ person.id }}">Update</button>
-                                        <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#delete{{ person.id }}">Delete</button>
-                                        <button type="button" class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#changepass{{ person.id }}">Change Password</button>
+                                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#update{{ person.id }}">Update</button>
+                                        <button type="button" class="btn btn-sm btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#delete{{ person.id }}">Delete</button>
+                                        <button type="button" class="btn btn-sm btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#changepass{{ person.id }}">Change Password</button>
                                     </td>
                                 </tr>
                                 
