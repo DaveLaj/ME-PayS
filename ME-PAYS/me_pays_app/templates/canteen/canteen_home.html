@@ -15,23 +15,14 @@
                 <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
                 </div>
             </div>
-            <div class="row d-flex mt-3 ms-1" style="margin: 12px;">
-                <div class="col-sm-5 mb-3">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #343434;">
-                        <div class="card-header fw-bold fs-5.5 text-white" style="background-color: #343434;">Daily
-                            Earnings
-                        </div>
-                        <div class="card-body">
-                            <h3 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h3>
-                            <h6 class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payment/s</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-7">
+
+
+            <div class="row d-flex ms-1">
+                <div class="col">
                     <!-- PAY ORDER -->
-                    <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
-                        style="background-color: rgb(153, 185, 255); width: 500px; margin-left: 30px;"
-                        data-bs-toggle="modal" data-bs-target="#cpaystep1Modal">Pay Order/s</button>
+                    <button type="button" class="btn btn-primary fw-bold float-end"
+                        style="width: 200px; margin-right: 18px;"
+                        data-bs-toggle="modal" data-bs-target="#cpaystep1Modal"><i class="bi bi-cart-check-fill"></i> Pay Order/s</button>
 
 
                     <div class="modal fade" id="cpaystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -192,6 +183,20 @@
                 </div>
 
                 <!--  -->
+            </div>
+
+
+            <div class="container-fluid p-3 pb-4">
+                <div class="card text-center" style="border-color: #343434;">
+                    <div class="card-header text-white" style="background-color: #343434;">
+                        <h5 class="fw-bold">Total Daily Earnings</h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h1>
+                        <h5 class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payment/s</h5>
+                        <p>You can cashout your earnings at the Cashiering Division.</p>
+                    </div>
+                </div>
             </div>
 
         </div>

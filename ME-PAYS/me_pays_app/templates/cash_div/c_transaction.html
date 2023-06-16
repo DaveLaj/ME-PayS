@@ -68,15 +68,15 @@
                               </div>
                             </div>
                             <div class="mb-3 row">
-                              <label for="name" class="col-sm-2 col-form-label">Contact #</label>
+                              <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
                               <div class="col-sm-10">
                                 <input type="text" class="form-control" id="contact" value="+63{{item.account_Owner.contact_number}}">
                               </div>
                             </div>
                             <div class="mb-3 row">
-                              <label for="name" class="col-sm-2 col-form-label">Email</label>
+                              <label for="email" class="col-sm-2 col-form-label">Email</label>
                               <div class="col-sm-10">
-                                <input type="email" class="form-control" id="email" value=" ">
+                                <input type="email" class="form-control" id="email" value="{{item.account_Owner.user.email}}">
                               </div>
                             </div>
                     
@@ -89,6 +89,7 @@
                       </div>
                     </div>
                   </td>
+                  
                   <td>{{item.desc}}</td>
                   {% if item.amount < 0 %} <td>{{ item.amount|neg }}</td>
                     {% else %}
@@ -100,6 +101,7 @@
                 {% endfor %}
               </tbody>
             </table>
+            
             <!-- End Table with hoverable rows -->
             <nav aria-label="Page navigation" class="d-flex justify-content-center">
               <ul class="pagination step-links">
