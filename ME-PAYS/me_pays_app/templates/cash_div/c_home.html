@@ -263,20 +263,48 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
-                                <div class="row">
+                                <!-- <div class="row">
                                     <label for="inputDocument" class="col-sm-2 col-form-label">Document/s:</label>
-                                    <div id="initInput" class=" mb-3  col-sm-10  d-flex">
+                                    <div id="initInput" class=" mb-3  col-md-4  d-flex">
                                         <select id="select_page" style="width:1200px;" class="operator select2" > 
                                             <option value="">Select an item</option>
                                             {% for item in services %}
                                                 <option value="{{ item.id }}">{{ item.menu_name }}</option>
                                             {% endfor %}
                                         </select>
+                                    </div>
+                                    <label for="inputQTY" class="col-sm-2 col-form-label">QTY:</label>
+                                    <div id="initQTY" class=" mb-3  col-md-4  d-flex">
+
+                                        <input type="number" class="form-control" id="inputQTY">
+
                                         <button id="addFile" type="button" class="btn btn-dark d-flex"><i
-                                                class="bi bi-plus-square-fill me-2"></i>Add</button>
+                                                class="bi bi-plus-square-fill"></i>Add</button>
                                     </div>
                                     <div id="newinput" class="m-1"></div>
                                   
+                                </div> -->
+
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label for="inputDocument" class="form-label">Document/s:</label>
+                                        <select id="select_page" class="form-select">
+                                            <option value="">Select document</option>
+                                            {% for item in services %}
+                                            <option value="{{ item.id }}">{{ item.menu_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="inputQTY" class="form-label">Quantity</label>
+                                        <input type="text" class="form-control" id="inputQTY">
+                                    </div>
+                                    <div class="col-md-2 d-grid mx-auto pb-2">
+                                        <label for="" class="form-label">Add File</label>
+                                        <button id="addFile" type="button" class="btn btn-dark "><i class="bi bi-plus-square-fill"></i>  </button>
+                                    </div>
+                                    <div id="newinput" class="m-1"></div>
                                 </div>
                                
                                 
