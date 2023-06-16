@@ -83,6 +83,63 @@ class EndUser_CreationForm(UserCreationForm):
 
 
 
+
+
+
+
+
+
+
+
+class Registrar_CreationForm(UserCreationForm):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter New My.IIT Email'}),required=True, help_text='Required.')
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter first name', 'maxlength': '30'}),required=True, help_text='Required.')
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter last name'}),required=True, help_text='Required.')
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter password'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Confirm password'}))
+    contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
+    school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}), help_text='Required.')
+
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name:
+            first_name=capfirst(uncapitalize_string(first_name))
+            return first_name
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name:
+            last_name=capfirst(uncapitalize_string(last_name))
+            return last_name
+        return last_name
+
+
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'school_id', 'contact_number')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class POS_CreationForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class':'form-control form-control-sm', 'maxlength':'100', 'placeholder':'Enter New My.IIT Email'}),required=True, help_text='Required.')
     store_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter store name', 'maxlength': '30'}),required=True, help_text='Required.')
@@ -129,6 +186,13 @@ class Cashier_CreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'contact_number', 'location')
+
+
+
+
+
+
+
 # ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 # ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⢀⣴⠟⠉⠀⠀⠀⠈⠻⣦⡀⠀⠀⠀⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 # ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣷⣀⢀⣾⠿⠻⢶⣄⠀⠀⣠⣶⡿⠶⣄⣠⣾⣿⠗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀

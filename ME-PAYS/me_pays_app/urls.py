@@ -58,7 +58,7 @@ from me_pays_app.views.admin import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from me_pays_app.views.cashdiv import *
 from me_pays_app.views.enduser import *
-
+from me_pays_app.views.registrar import *
 urlpatterns = [
 
 
@@ -134,7 +134,8 @@ urlpatterns = [
     path("admin_listOfCashier", cashier_list, name='admin_listOfCashier'),
     path('admin_listOfEndUser/updateEndUser/<int:account_id>', update_enduser, name='updateEndUser'),
     path("admin_listOfEndUser", enduser_list, name='admin_listOfEndUser'),
-    
+    path("admin_listOfRegistrar", registrar_list, name='admin_listOfRegistrar'),
+    path("admin_listOfRegistrar/updateEndUser/<int:account_id>", update_registrar, name='updateRegistrar'),
     # canteen product workings
     path("pos_home/payRFID", cpay_rfid, name='cpay_rfid'),
     path("pos_home", canteen_home, name='canteen_home'),
@@ -149,6 +150,10 @@ urlpatterns = [
 
 
 
+    path("registrar_home", registrar_home, name='registrar_home'),
+    path("registrar_transaction", registrar_transaction, name='registrar_transaction'),
+    path("registrar_services", registrar_services, name='registrar_services'),
+    path("registrar_account", registrar_account, name='registrar_account'),
 
 
 

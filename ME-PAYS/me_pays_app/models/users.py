@@ -68,6 +68,12 @@ class CustomUserManager(BaseUserManager):
         user.groups.set([group])
         return user
     
+    def create_registrar(self, email, password=None, **extra_fields):
+        group = Group.objects.get(name='registrar')
+        user = self.create_user(email, password, **extra_fields)
+        user.groups.set([group])
+        return user
+    
 
 
     
@@ -129,7 +135,7 @@ class Cashier(models.Model):
     last_name = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=60)
     contact_number = models.CharField(max_length=10)
-
+    credit_balance = models.FloatField(default=0)
     
 
 
@@ -140,6 +146,7 @@ class POS(models.Model):
     contact_number = models.BigIntegerField()
     location = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
+    credit_balance = models.FloatField(default=0)
 
 class Admin(models.Model):
 
@@ -147,6 +154,20 @@ class Admin(models.Model):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     contact_number = models.BigIntegerField()
+
+
+
+
+
+
+class Registrar(models.Model):
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    contact_number = models.BigIntegerField()
+    school_id = models.IntegerField()
+
 
 
 

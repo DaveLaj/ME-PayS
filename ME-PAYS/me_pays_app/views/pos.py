@@ -18,8 +18,9 @@ logger = logging.getLogger(__name__)
 def user_has_pos_group(user):
     return user.groups.filter(name='pos').exists()
 
-@user_passes_test(user_has_pos_group)
+
 @login_required(login_url='index')
+@user_passes_test(user_has_pos_group)
 def insertMenu(request):
     if request.method == 'POST':
         existing_menu_obj = menu.objects.filter(menu_name=request.POST['product'], menu_owner_id=request.user.id)

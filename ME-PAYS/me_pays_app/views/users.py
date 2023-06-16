@@ -42,6 +42,8 @@ def index(request):
                 return redirect('cashdiv_home')
             elif user.groups.all()[0].name == 'pos':
                 return redirect('canteen_home')
+            elif user.groups.all()[0].name == 'registrar':
+                return redirect('registrar_home')
         else:
             # Incorrect credentials, let's throw an error to the screen.
             messages.error(request, "Incorrect username and / or password.")
