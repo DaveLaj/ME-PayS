@@ -90,7 +90,7 @@ urlpatterns = [
     path("cashdiv_home/load_rfid_creds", load_rfid_creds, name='load_validate_creds'),
     path("cashdiv_home/load_amount", load_cred_amount, name='load_cred_amount'),
 
-    path("cashdiv_home/fetchServices", FetchServices, name='fetchServices'),
+   
     path("cashdiv_home/tallyItems", tallyItems, name='tallyItems'),
     path("cashdiv_home/payRFID", pay_rfid, name='pay_rfid'),
 
@@ -107,10 +107,6 @@ urlpatterns = [
 
     # Services Page
 
-    path("cashdiv_product", cashier_services, name='cashdiv_product'),
-    path("cashdiv_product/addService", insertServices, name='insertServices'),
-    path('cashdiv_product/updateService/<int:item_id>', updateServices, name='updateServices'),
-    path('cashdiv_product/deleteService/<int:item_id>', deleteServices, name='deleteServices'),
     path('cashdiv_product/search', searchServices, name='searchServices'),
 
 
@@ -124,7 +120,7 @@ urlpatterns = [
 
 
     # Admin Workings
-    path("admin_home", admin_home, name='admin_home'),
+    path("admin_enable", admin_enable, name='admin_enable'),
     path("admin_addUser", admin_addUser, name='admin_adduser'),
     path("admin_listOfPOS", pos_list, name='admin_listOfPOS'),
     path('admin_list/deleteaccount/<int:account_id>', delete_user, name='delete'),
@@ -153,9 +149,15 @@ urlpatterns = [
     path("registrar_home", registrar_home, name='registrar_home'),
     path("registrar_transaction", registrar_transaction, name='registrar_transaction'),
     path("registrar_services", registrar_services, name='registrar_services'),
+    path("registrar_services/add", insertServices, name='insertServices'),
+    path("registrar_services/update/<int:item_id>", updateServices, name='updateServices'),
+    path("registrar_services/delete/<int:item_id>", deleteServices, name='deleteServices'),
+    path("registrar_services/search", searchServices, name='searchServices'),
+     
     path("registrar_account", registrar_account, name='registrar_account'),
-
-
+    
+    path("registrar_home/fetchServices", FetchServices, name='fetchServices'),
+    path("registrar_home/tallyItems", registrar_tallyItems),
 
     # Universal Logout
     path("logout", logout_request, name= "logout"), 

@@ -1,0 +1,210 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex" style="background-color: #e6f1fa">
+    {% include 'admin/admin_sidebar.html' %}
+    <div class="content">
+        {% include 'admin/admin_nav.html' %}
+
+        <div class="dashboard-content px-3 pt-4  m-4 border-5 border-top border-bottom rounded border-secondary" style="background-color: #ffffff">
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back Admin!</h1>
+
+            <div class="row row-cols-1 row-cols-md-2 g-4 pb-5">
+                
+              
+                <div class="col-md-8">
+                    <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
+                    </div>
+                    <div class="card h-90">
+                        <div class="card-header" style="background-color: #fffb90;">
+                            <h1 class="card-title fw-bold fs-3">Enable RFID Services</h1>
+                        </div>
+                        <div id="errorContainer" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                        <div class="card-body d-flex flex-column">
+                            <h1 class="card-title fw-bold fs-3 pb-3"></h1>
+                            <div class="row flex-grow-1">
+                                <label for="regStudentID" class="col-sm-2 col-form-label">Student ID:</label>
+                                <div class="mb-3 col-sm-10">
+                                    <input type="text" class="form-control" id="regStudentID">
+                                </div>
+                            </div>
+                        </div>
+                     
+                        <div class="card-footer">
+
+                            <button type="button" id="regbuttontarget" class="btn btn-primary" onclick="validateAndProceed()">Proceed</button>
+                        </div>
+                    </div>
+                    
+
+
+
+
+                    <div class="modal fade" id="regstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Servicess</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row fw-bold">
+                                    <h1 class="modal-title fw-bold fs-3 pb-3">STEP 2: </h1>
+                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="rfid">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div id="errorContainerRFID"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" id="regbuttontarget2" class="btn btn-primary"
+                                    onclick='validate_rfid()' autofocus>Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal fade" id="regstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row fw-bold">
+                                    <h1 class="modal-title fw-bold fs-3 pb-3">STEP 3: </h1>
+                                    <label class="col-sm-5 col-form-label">Confirm Registration for Student ID
+                                        No:</label>
+                                    <div class="col-sm-10">
+                                        <h3>
+                                            <div id='currentschoolid'></div>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-dark" onclick='previousStep(2)'>Previous</button>
+                                <button type="button" id="regbuttontarget3" data-bs-dismiss="modal"
+                                    class="btn btn-primary" onclick='registerRFID()'>Register</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-3" style="border-color: #f1ed71;">
+                        <div class="card-header fw-bold fs-4 rounded-0" style="background-color: #f1ed71;">
+                           Userbase Comparison
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center">
+                                <button type="button" class="btn" style="background-color: #f1ed71;" onclick="refreshPage()">Refresh Chart</button>
+                                <h5 class="card-title fw-bold mt-3">{{registered_enduser_count}}/{{all_enduser_count}}</h5>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <canvas id="stackedBarChart"></canvas>
+                            </div>
+                            </div>
+                    </div>
+                    <br>
+                   
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    // Get the data values from your Django template and convert them to JavaScript variables
+var registeredCount = {{ registered_enduser_count }};
+var unregisteredCount = {{ all_enduser_count }} - registeredCount;
+
+// Get the canvas element
+var ctx = document.getElementById('stackedBarChart').getContext('2d');
+
+// Create the chart
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Enduser'],
+    datasets: [
+      {
+        label: 'Registered',
+        data: [registeredCount],
+        backgroundColor: '#3cba9f'
+      },
+      {
+        label: 'Unregistered',
+        data: [unregisteredCount],
+        backgroundColor: '#ccc'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: {
+        padding: {
+          left: 20,  // Adjust the left padding value as needed
+          right: 20, // Adjust the right padding value as needed
+          top: 0,
+          bottom: 0
+        }
+      },
+    legend: {
+      display: true
+    },
+    scales: {
+      x: {
+        stacked: true,
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        stacked: true,
+        beginAtZero: true,
+        ticks: {
+          precision: 0
+        }
+      }
+    }
+  }
+});
+
+
+
+        // Set the CSRF token as a global variable
+        window.csrfTokenReg = '{{ csrf_token }}';
+    </script>
+    
+
+    <script>
+        function refreshPage() {
+        location.reload();
+        }
+    </script>
+    
+    
+    {% endblock %}

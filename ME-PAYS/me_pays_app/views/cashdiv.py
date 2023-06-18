@@ -353,23 +353,6 @@ def searchServices(request):
 
 
 
-@login_required(login_url='index')  
-def FetchServices(request):
-    services = menu.objects.filter(
-        menu_owner_id=request.user.id,
-        menu_is_active=1
-    ).order_by('menu_name')
-
-    # Serialize the QuerySet data to a list of dictionaries
-    serialized_services = serializers.serialize('python', services)
-
-    # Extract the fields from the serialized data
-    services_data = [item['fields'] for item in serialized_services]
-
-    # Include the 'id' field by using the values() method
-    services_with_ids = services.values('id', *services_data[0].keys())
-
-    return JsonResponse({'services': list(services_with_ids)})
 
 
 @login_required(login_url='index')  

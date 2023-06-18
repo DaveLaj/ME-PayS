@@ -29,6 +29,10 @@
     input[type="number"] {
       -moz-appearance: textfield;
     }
+    .chart-container {
+      height: 400px; /* Adjust the height as needed */
+    }
+  
   </style>
 
   <body>  
@@ -38,7 +42,7 @@
 
     {% endblock %}
 
-    
+   
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
@@ -48,6 +52,8 @@
     <script src="{% static 'scripts/pos_asText.js' %}"></script>
     <script src="{% static 'scripts/pos.js' %}"></script>
     <script src="{% static 'scripts/enduser.js' %}"></script>
+    <script src="{% static 'scripts/registrar_asText.js' %}"></script>
+    <script src="{% static 'scripts/registrar.js' %}"></script>
     <!-- Sidebar Query -->
     <script>
       $(".sidebar ul li").on('click', function () {

@@ -37,7 +37,7 @@ def index(request):
             if user.groups.all()[0].name == 'enduser':
                 return redirect('home')
             elif user.groups.all()[0].name == 'admin':
-                return redirect('admin_home')
+                return redirect('admin_enable')
             elif user.groups.all()[0].name == 'cashier':
                 return redirect('cashdiv_home')
             elif user.groups.all()[0].name == 'pos':
@@ -149,10 +149,7 @@ def cashdiv_home(request):
 
 
 
-@allowed_users(allowed_roles=['admin'])
-@login_required(login_url='index')
-def admin_home(request):
-    return render(request, "admin/admin_home.html", {})
+
 
 @allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')

@@ -35,8 +35,8 @@ function sendSelectedValuesCanteen() {
     $('.operator').each(function() {
         var selectize = $(this)[0].selectize;
         if (selectize && selectize.getValue() !== "") {
-        var value = selectize.getValue();
-        selectedValues.push(value);
+            var value = selectize.getValue();
+            selectedValues.push(value);
         }
     });
 
