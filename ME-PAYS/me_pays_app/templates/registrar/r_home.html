@@ -10,7 +10,7 @@
         {% include 'registrar/r_nav.html' %}
 
         <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{registrar.first_name}}!</h1>
+            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{request.user.registrar.first_name}}!</h1>
             <div class="d-flex justify-content-center col-12 ps-3">
                 <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
                 </div>
@@ -18,78 +18,43 @@
             <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
 
 
-                <!-- PAY FEES -->
-                <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
-                    style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;"
-                    data-bs-toggle="modal" data-bs-target="#paystep1Modal" >Pay fees</button>
 
-
-                <div class="modal fade" id="paystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                        <div class="modal-content">
-                            <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 1</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                    <div class="col-sm-7">
+                        <div class="card">
+                            <div class="card-header" style="background-color: #a41e22;">
+                                <h1 class="card-title fw-bold fs-3" style="color: white;">PAY</h1>
                             </div>
-                            <div class="modal-body fw-bold">
-                                <!-- <div class="row">
-                                    <label for="inputDocument" class="col-sm-2 col-form-label">Document/s:</label>
-                                    <div id="initInput" class=" mb-3  col-md-4  d-flex">
-                                        <select id="select_page" style="width:1200px;" class="operator select2" > 
-                                            <option value="">Select an item</option>
-                                            {% for item in services %}
-                                                <option value="{{ item.id }}">{{ item.menu_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <label for="inputQTY" class="col-sm-2 col-form-label">QTY:</label>
-                                    <div id="initQTY" class=" mb-3  col-md-4  d-flex">
-
-                                        <input type="number" class="form-control" id="inputQTY">
-
-                                        <button id="addFile" type="button" class="btn btn-dark d-flex"><i
-                                                class="bi bi-plus-square-fill"></i>Add</button>
-                                    </div>
-                                    <div id="newinput" class="m-1"></div>
-                                  
-                                </div> -->
-
+                            <div id="registrar_errorContainer1" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                            <div class="card-body fw-bold">
                                 <div class="row g-3">
                                     <div class="col-md-8">
-                                        <label for="inputDocument" class="form-label">Document/s:</label>
+                                        <label for="select1" class="form-label">Document/s:</label>
                                         <select id="select1" class="operator">
                                             <option value="">Select document</option>
                                             {% for item in services %}
                                             <option value="{{ item.id }}">{{ item.name }}</option>
                                             {% endfor %}
                                         </select>
-                                        
                                     </div>
                                     <div class="col-md-2">
                                         <label for="inputQTY" class="form-label">Quantity</label>
                                         <input type="text" class="form-control" id="select1qty">
                                     </div>
                                     <div class="col-md-2 d-grid mx-auto pb-2">
-                                        <label for="" class="form-label">Add File</label>
-                                        <button id="addService" type="button" class="btn btn-dark "><i class="bi bi-plus-square-fill"></i>  </button>
+                                        <label for="addService" class="form-label">Add File</label>
+                                        <button id="addService" type="button" class="btn btn-dark "><i class="bi bi-plus-square-fill"></i></button>
                                     </div>
-                                    
                                 </div>
-                                <div id="newinput" ></div>
-                                
-                                
+                                <div id="newinput"></div>
                             </div>
-                            <div class="modal-footer">
-                                <div id="registrar_errorContainer1"
-                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="sendSelectedValuesRegistrar()">Next</button>
+                            <div class="card-footer">
+                            
+                            
+                                <button type="button" id="paybuttontarget" class="btn btn-primary" onclick="sendSelectedValuesRegistrar()">Next</button>
                             </div>
                         </div>
                     </div>
-                </div>
+                    
 
 
                 <div class="modal fade" id="paystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -141,7 +106,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(1)">Previous</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="button" class="btn btn-primary" id="changebutton" onclick="">Next</button>
                             </div>
                         </div>
@@ -197,28 +162,7 @@
 
 
             </div>
-            <div class="row d-flex mt-5 align-items-center justify-content-center">
-                <div class="col-sm-5 mb-3 mt-1">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #3d3c3c;">
-                        <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total
-                            Daily Cash-ins</div>
-                        <div class="card-body">
-                            <h3 class="card-text fw-bold">Php <span id="total-cash-in">{{ dailyTotalCashIn|none2zero }}</span></h3>
-                            <p class="card-title" ><span id="cash-in-count">{{ dailyCashInCount }}</span> Transactions</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-5 mb-3 mt-1">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #3d3c3c;">
-                        <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total
-                            Daily Payments</div>
-                        <div class="card-body">
-                            <h3 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h3>
-                            <p class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payments</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
 
         </div>
 
