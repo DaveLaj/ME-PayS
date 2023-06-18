@@ -1,11 +1,11 @@
 from django.db import models
 import json
 import random
-from me_pays_app.models.order import EndUser
+from me_pays_app.models.users import EndUser
 class Order(models.Model):
     items = models.TextField()
     reference_number = models.CharField(max_length=20, unique=True, null=True)
-    enduser = models.OneToOneField(EndUser, on_delete=models.CASCADE)
+    enduser = models.OneToOneField(EndUser, on_delete=models.CASCADE, null=True)
     paid = models.BooleanField(default=False)
     def set_items(self, items):
         self.items = json.dumps(items)
