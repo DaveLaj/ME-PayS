@@ -19,14 +19,14 @@
 
 
 
-                    <div class="col-sm-7">
+                    <div class="col-sm-9 pb-4">
                         <div class="card">
-                            <div class="card-header" style="background-color: #a41e22;">
-                                <h1 class="card-title fw-bold fs-3" style="color: white;">PAY</h1>
+                            <div class="card-header" style="background-color: #f1ed71;">
+                                <h1 class="card-title fw-bold fs-3 text-center" style="color: black;">PAY</h1>
                             </div>
                             <div id="registrar_errorContainer1" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                             <div class="card-body fw-bold">
-                                <div class="row g-3">
+                                <div class="row g-3 fs-5">
                                     <div class="col-md-8">
                                         <label for="select1" class="form-label">Document/s:</label>
                                         <select id="select1" class="operator">
@@ -36,21 +36,19 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-2 ">
                                         <label for="inputQTY" class="form-label">Quantity</label>
-                                        <input type="text" class="form-control" id="select1qty">
+                                        <input type="text" class="form-control" id="select1qty" style="height: 45px;">
                                     </div>
-                                    <div class="col-md-2 d-grid mx-auto pb-2">
+                                    <div class="col-md-2 d-grid mx-auto pb-3">
                                         <label for="addService" class="form-label">Add File</label>
-                                        <button id="addService" type="button" class="btn btn-dark "><i class="bi bi-plus-square-fill"></i></button>
+                                        <button id="addService" type="button" class="btn btn-dark" style="height: 45px;"><i class="bi bi-plus-square-fill"></i></button>
                                     </div>
                                 </div>
                                 <div id="newinput"></div>
                             </div>
                             <div class="card-footer">
-                            
-                            
-                                <button type="button" id="paybuttontarget" class="btn btn-primary" onclick="sendSelectedValuesRegistrar()">Next</button>
+                                <button type="button" id="paybuttontarget" class="btn btn-primary btn-lg float-end" onclick="sendSelectedValuesRegistrar()">Next</button>
                             </div>
                         </div>
                     </div>
