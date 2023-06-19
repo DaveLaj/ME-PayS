@@ -525,37 +525,7 @@ def cashier_order_info(request):
 
 
 
-@login_required(login_url='index')  
-def tallyItems(request):
-    selectedValues = json.loads(request.GET.get('selectedValues'))
-    quantityTracker = {}
-    item_data = []
 
-    # Count the quantity for each item
-    for item in selectedValues:
-        if item in quantityTracker:
-            quantityTracker[item] += 1
-        else:
-            quantityTracker[item] = 1
-
-    # Fetch the item details and add them to the item_data list
-    for item_id, quantity in quantityTracker.items():
-        try:
-            item = menu.objects.get(id=int(item_id), menu_is_active=1)
-            item_data.append({
-                'id': item_id,
-                'name': item.menu_name,
-                'price': item.menu_price * quantity,
-                'quantity': quantity,
-                # Add more fields as needed
-            })
-        except menu.DoesNotExist:
-            # Handle the case if the item is not found
-            pass
-
-    serialized_data = json.dumps(item_data, cls=DjangoJSONEncoder)
-
-    return JsonResponse({'itemlist': serialized_data})
 
 
 

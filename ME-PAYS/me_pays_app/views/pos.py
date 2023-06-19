@@ -13,8 +13,9 @@ from django.http import JsonResponse
 from me_pays_app.models.balance import Balance_Logs
 from datetime import datetime
 from django.db.models import Sum
-logger = logging.getLogger(__name__)
-
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
+import json
 def user_has_pos_group(user):
     return user.groups.filter(name='pos').exists()
 
@@ -84,8 +85,49 @@ def deleteMenu(request, item_id):
         messages.success(request, "Product Deleted!")
     return redirect(request.META['HTTP_REFERER'])
 
+@login_required(login_url='index')  
+def tallyItems(request):
+    selectedValues = json.loads(request.GET.get('selectedValues'))
+    item_data = []
+    print (selectedValues)
+    # Fetch the item details and add them to the item_data list
+    for item in selectedValues:
+        item_id = item[0]
+        quantity = int(item[1])
+        try:
+            item = menu.objects.get(id=int(item_id), menu_is_active=1)
+            item_data.append({
+                'id': item_id,
+                'name': item.menu_name,
+                'price': item.menu_price * quantity,
+                'quantity': quantity,
+                # Add more fields as needed
+            })
+        except menu.DoesNotExist:
+            # Handle the case if the item is not found
+            pass
+
+    serialized_data = json.dumps(item_data, cls=DjangoJSONEncoder)
+
+    return JsonResponse({'itemlist': serialized_data})
 
 
+@login_required(login_url='index') 
+@user_passes_test(user_has_pos_group)
+def FetchProducts(request):
+    services = menu.objects.filter(
+        menu_is_active=1, menu_owner=request.user
+    ).order_by('menu_name')
+
+    # Serialize the QuerySet data to a list of dictionaries
+    serialized_services = serializers.serialize('python', services)
+
+    # Extract the fields from the serialized data
+    services_data = [item['fields'] for item in serialized_services]
+
+    # Include the 'id' field by using the values() method
+    services_with_ids = services.values('id', *services_data[0].keys())
+    return JsonResponse({'services': list(services_with_ids)})
 
 
 @login_required(login_url='index')

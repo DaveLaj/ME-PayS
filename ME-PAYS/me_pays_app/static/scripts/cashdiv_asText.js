@@ -31,6 +31,12 @@ $(document).ready(function () {
   });
   
 
+  $(document).ready(function () {
+    $('#select2').selectize({
+        sortField: 'text'
+    });
+});
+
 
 
 function printTally(id, name, price, qty) {

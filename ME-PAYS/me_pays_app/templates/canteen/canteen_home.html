@@ -56,7 +56,7 @@
                                     <div class="row g-3">
                                         <div class="col-md-8">
                                             <label for="inputDocument" class="form-label">Product/s:</label>
-                                            <select id="select_page" class="form-select">
+                                            <select id="posselect1" class="operator">
                                                 <option value="">Select an item</option>
                                                 {% for item in products %}
                                                 <option value="{{ item.id }}">{{ item.menu_name }}</option>
@@ -65,16 +65,16 @@
                                     
                                         </div>
                                         <div class="col-md-2">
-                                            <label for="inputQTY" class="form-label">Quantity</label>
-                                            <input type="text" class="form-control" id="inputQTY">
+                                            <label for="qty1" class="form-label">Quantity</label>
+                                            <input type="text" class="form-control" id="posselect1qty">
                                         </div>
                                         <div class="col-md-2 d-grid mx-auto pb-2">
                                             <label for="" class="form-label">Add</label>
-                                            <button id="addFile" type="button" class="btn btn-secondary " style="background-color: #3388e6;"><i class="bi bi-plus-square"></i> </button>
+                                            <button id="addProduct" type="button" class="btn btn-secondary " style="background-color: #3388e6;"><i class="bi bi-plus-square"></i> </button>
                                         </div>
-                                        <div id="newinput" class="m-1"></div>
+                                        
                                     </div>
-
+                                    <div id="newproduct" class="m-1"></div>
 
                                 </div>
                                 <div class="modal-footer">
@@ -83,7 +83,7 @@
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
                                     <button type="button" id="paybuttontarget" class="btn btn-primary"
-                                        onclick="ctallyItemCost()">Next</button>
+                                        onclick="sendSelectedValuesCanteen()">Next</button>
                                 </div>
                             </div>
                         </div>

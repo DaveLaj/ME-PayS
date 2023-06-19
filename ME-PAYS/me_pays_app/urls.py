@@ -148,8 +148,23 @@ urlpatterns = [
     path("admin_listOfRegistrar", registrar_list, name='admin_listOfRegistrar'),
     path("admin_listOfRegistrar/updateEndUser/<int:account_id>", update_registrar, name='updateRegistrar'),
     # canteen product workings
+
+
+    path("pos_home/fetchProducts", FetchProducts),
     path("pos_home/payRFID", cpay_rfid, name='cpay_rfid'),
     path("pos_home", canteen_home, name='canteen_home'),
+
+
+
+
+
+
+
+
+
+
+
+
     path('pos_products/', canteen_products, name='canteen_products'),
     path('pos_products/search', searchProduct, name='searchProduct'),
     path('updateMenu/<int:item_id>', updateMenu, name='updateMenu'),

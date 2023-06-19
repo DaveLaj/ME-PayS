@@ -22,10 +22,8 @@ function cpay_previousStep(step) {
 }
 
 
-function ctallyItemCost(){
-    sendSelectedValuesCanteen();
-}
-  
+
+
 
 
 
@@ -36,10 +34,13 @@ function sendSelectedValuesCanteen() {
         var selectize = $(this)[0].selectize;
         if (selectize && selectize.getValue() !== "") {
             var value = selectize.getValue();
-            selectedValues.push(value);
+            var divId = $(this).attr('id');
+            var qty = $('#' + divId + 'qty').val(); 
+            selectedValues.push([value, qty]);
         }
     });
-
+    
+    console.log(selectedValues);
     if (selectedValues.length === 0) {
         // selectedValues is empty
         var errorMessage = "Please Select an Entry";
