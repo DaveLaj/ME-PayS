@@ -8,7 +8,7 @@
     {% include 'cash_div/c_sidebar.html' %}
     <div class="content">
         {% include 'cash_div/c_nav.html' %}
-
+      
         <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{cashier.first_name}}!</h1>
             <div class="d-flex justify-content-center col-12 ps-3">
@@ -98,7 +98,7 @@
 
 
 
-
+                
 
                 <div class="modal fade" id="loadstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -111,21 +111,9 @@
                             </div>
                             <div class="modal-body fw-bold">
                                 <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Load Top Up:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <p id="basetopup"></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Bonus 5&percnt;</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <p id="bonustopup"></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Total:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <p id="totaltopup"></p>
+                                    <h5 class="col-sm-2 ">Load Top Up:</h5>
+                                    <div class="col-sm-10">
+                                        <h7>Php <span id='basetopup'></span></h7>
                                     </div>
                                 </div>
                             </div>
@@ -146,18 +134,18 @@
 
 
                 <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
-                    style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;"
-                    data-bs-toggle="modal" data-bs-target="#paystep1Modal" >Cash Out</button>
+                    style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;" 
+                     onclick="cashout_nextStep(1)">Cash Out</button>
                
 
+                  
 
-
-                <div class="modal fade" id="loadstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                <div class="modal fade" id="cashoutstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false"
                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Cashout Card</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
@@ -165,29 +153,29 @@
                                 <div class="row">
                                     <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                     <div class="mb-3 col-sm-10">
-                                        <input type="password" class="form-control" id="loadrfid">
+                                        <input type="password" class="form-control" id="cashoutrfid">
 
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
-                                <div id="load_errorContainerRFID"
+                                <div id="cashout_errorContainerRFID1"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" id="loadbuttontarget" class="btn btn-primary"
-                                    onclick="load_validateAndProceed()">Next</button>
+                                <button type="button" id="cashoutbuttontarget" class="btn btn-primary"
+                                    onclick="cashout_validateAndProceed()">Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="modal fade" id="loadstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                <div class="modal fade" id="cashoutstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false"
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Cashout Card</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
@@ -195,30 +183,30 @@
                                 <div class="row">
                                     <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
                                     <div class="mb-3 col-sm-10">
-                                        <p id="personID"></p>
+                                        <p id="personID_cashout"></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <label for="amount" class="col-sm-2 col-form-label">Student Name:</label>
                                     <div class="mb-3 col-sm-10">
-                                        <p id="fullname"></p>
+                                        <p id="fullname_cashout"></p>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Amount to be Loaded</label>
+                                    <label for="amount" class="col-sm-2 col-form-label">Amount to Withdraw</label>
                                     <div class="mb-3 col-sm-10">
-                                        <input type="number" class="form-control" id="amountload">
+                                        <input type="number" class="form-control" id="cashout_amountload">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
-                                <div id="load_errorContainer2"
+                                <div id="cashout_errorContainerRFID2"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" id="prev1" class="btn btn-secondary"
-                                    onclick='load_previousStep(1)'>Back</button>
-                                <button type="button" id="loadbuttontarget2" class="btn btn-primary"
-                                    onclick='load_nextStep(3)'>Next</button>
+                                    onclick='cashout_previousStep(1)'>Back</button>
+                                <button type="button" id="cashoutbuttontarget2" class="btn btn-primary"
+                                    onclick='validate_balance()'>Next</button>
                             </div>
                         </div>
                     </div>
@@ -229,51 +217,48 @@
 
 
 
-                <div class="modal fade" id="loadstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                <div class="modal fade" id="cashoutstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Cashout Card</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
                                 <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Load Top Up:</label>
+                                    <label for="amount" class="col-sm-2 col-form-label">Cashout Status:</label>
                                     <div class="mb-3 col-sm-10">
-                                        <p id="basetopup"></p>
+                                        <p>Php <span id="basetopup_cashout"></span> to be cashed out from current balance of Php <span id='currentbal_cashout'></span></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Bonus 5&percnt;</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <p id="bonustopup"></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Total:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <p id="totaltopup"></p>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <div class="modal-footer">
-                                <div id="load_errorContainer2"
+                                <div id="cashout_errorContainer3"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" id="prev1" class="btn btn-secondary"
-                                    onclick='load_previousStep(3)'>Back</button>
-                                <button type="button" id="loadbuttontarget3" class="btn btn-primary"
-                                    data-bs-dismiss="modal" onclick='payLoad()'>Pay</button>
+                                    onclick='cashout_previousStep(3)'>Back</button>
+                                <button type="button" id="cashoutbuttontarget3" class="btn btn-primary"
+                                    data-bs-dismiss="modal" onclick='cashout()'>Cash Out</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
+
+
+
+
+
+
+
+
                 <!-- PAY FEES -->
                 <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
                     style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;"
-                    data-bs-toggle="modal" data-bs-target="#paystep1Modal" >Pay fees</button>
+                    data-bs-toggle="modal" data-bs-target="#paystep1Modal" onclick="clearRefNum()" >Pay Fees</button>
 
 
                 <div class="modal fade" id="paystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -286,57 +271,19 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
-                                <!-- <div class="row">
-                                    <label for="inputDocument" class="col-sm-2 col-form-label">Document/s:</label>
-                                    <div id="initInput" class=" mb-3  col-md-4  d-flex">
-                                        <select id="select_page" style="width:1200px;" class="operator select2" > 
-                                            <option value="">Select an item</option>
-                                            {% for item in services %}
-                                                <option value="{{ item.id }}">{{ item.menu_name }}</option>
-                                            {% endfor %}
-                                        </select>
+                                <div class="row fw-bold">
+                                    
+                                    <label class="col-sm-2 col-form-label">Ref No:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="refnum">
                                     </div>
-                                    <label for="inputQTY" class="col-sm-2 col-form-label">QTY:</label>
-                                    <div id="initQTY" class=" mb-3  col-md-4  d-flex">
-
-                                        <input type="number" class="form-control" id="inputQTY">
-
-                                        <button id="addFile" type="button" class="btn btn-dark d-flex"><i
-                                                class="bi bi-plus-square-fill"></i>Add</button>
-                                    </div>
-                                    <div id="newinput" class="m-1"></div>
-                                  
-                                </div> -->
-
-                                <div class="row g-3">
-                                    <div class="col-md-8">
-                                        <label for="inputDocument" class="form-label">Document/s:</label>
-                                        <select id="select_page" class="form-select">
-                                            <option value="">Select document</option>
-                                            {% for item in services %}
-                                            <option value="{{ item.id }}">{{ item.menu_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="inputQTY" class="form-label">Quantity</label>
-                                        <input type="text" class="form-control" id="inputQTY">
-                                    </div>
-                                    <div class="col-md-2 d-grid mx-auto pb-2">
-                                        <label for="" class="form-label">Add File</label>
-                                        <button id="addFile" type="button" class="btn btn-dark "><i class="bi bi-plus-square-fill"></i>  </button>
-                                    </div>
-                                    <div id="newinput" class="m-1"></div>
                                 </div>
-                               
-                                
                             </div>
                             <div class="modal-footer">
                                 <div id="pay_errorContainerRFID1"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="tallyItemCost()">Next</button>
+                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="validate_refnum()">Next</button>
                             </div>
                         </div>
                     </div>
@@ -353,6 +300,8 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Reference Number:     <span id='show_refnum'></span></h1>
+                                <br>
                                 <div>
                                     <table class="table table-hover table-bordered">
                                         <thead class="text-center">
@@ -372,6 +321,12 @@
                                     <h5 class="col-sm-2 ">Total:</h5>
                                     <div class="col-sm-10">
                                         <p id='totalAmount'></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h5 class="col-sm-2 ">School ID:</h5>
+                                    <div class="col-sm-10">
+                                        <p id='show_sid'></p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -423,7 +378,7 @@
                                 <div id="pay_errorContainerRFID3"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" onclick="pay_previousStep(2)">Previous</button>
-                                <button type="button" id="paybuttontarget3"  class="btn btn-primary"  data-bs-dismiss="modal" onclick="pay_validateAndProceed()">Pay</button>
+                                <button type="button" id="paybuttontarget3"  class="btn btn-primary"  onclick="pay_validateAndProceed()">Pay</button>
                             </div>
                         </div>
                     </div>
@@ -469,8 +424,23 @@
                         </div>
                     </div>
                 </div>
+                
+                
             </div>
-
+            <div class="row d-flex mt-5 align-items-center justify-content-center">
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="cashInHistogramChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="feePaymentHistogramChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <br>
+           
         </div>
 
     </div>
@@ -480,14 +450,111 @@
 
 <script>
     // Set the CSRF token as a global variable
+    window.csrfTokenRefNum = '{{ csrf_token }}';
     window.csrfTokenLoad = '{{ csrf_token }}';
     window.csrfTokenPay = '{{ csrf_token }}';
     window.csrfTokenPayRFID = '{{ csrf_token }}';
+    window.csrfTokenCashout ='{{ csrf_token }}';
+    window.csrfTokenCashoutFinal ='{{ csrf_token }}';
+    window.csrfTokenCashoutCreds ='{{ csrf_token }}';
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+     
+        var ctxCashIn = document.getElementById('cashInHistogramChart').getContext('2d');
+        var ctxFeePayment = document.getElementById('feePaymentHistogramChart').getContext('2d');
+     
+
+        var cashInDates = {{ cash_in_dates|safe }};
+        var cashInCounts = {{ cash_in_counts|safe }};
+        
+        var feePaymentDates = {{ fee_payment_dates|safe }};
+        var feePaymentCounts = {{ fee_payment_counts|safe }};
 
 
 
+        var cashInChartData = {
+            labels: cashInDates,
+            datasets: [{
+                label: 'Cash In Transaction Count',
+                data: cashInCounts,
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+       
+            }]
+        };
+        
 
+
+        var feePaymentChartData = {
+            labels: feePaymentDates,
+            datasets: [{
+                label: 'Fee Payment Transaction Count',
+                data: feePaymentCounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+            
+            }]
+        };
+ 
+        var chartOptionsCount = {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            };
+        
+
+            var chartOptions = {
+                responsive: true,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    precision: 0
+                  },
+                  x: {
+                    type: 'time',
+                    time: {
+                      unit: 'day',
+                      displayFormats: {
+                        day: 'MMM D'
+                      }
+                    }
+                  }
+                },
+                dataset: {
+                  barPercentage: 0.8
+                }
+              };
+            
+              
+              
+            
+
+
+        var cashInChart = new Chart(ctxCashIn, {
+            type: 'bar',
+            data: cashInChartData,
+            options: chartOptionsCount
+        });
+ 
+        var feePaymentChart = new Chart(ctxFeePayment, {
+            type: 'bar',
+            data: feePaymentChartData,
+            options: chartOptionsCount
+        });
+    });
+ </script>
+ 
+ 
 
 
 

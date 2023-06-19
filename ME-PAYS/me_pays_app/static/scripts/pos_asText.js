@@ -52,3 +52,14 @@ $(document).ready(function () {
         sortField: 'text'
     });
 });
+
+
+function printTally(id, name, price, qty) {
+    var newItemAdd = '<tr>' +
+                        '<td>'+ id +'</td>'+
+                       ' <td>'+ name +'</td>'+
+                       ' <td>'+ qty +'</td>'+
+                       '<td>'+ price +'</t>'+
+                     '</tr>';
+    $('#showTally').append(newItemAdd);
+}

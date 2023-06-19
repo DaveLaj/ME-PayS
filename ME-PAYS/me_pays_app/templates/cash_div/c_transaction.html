@@ -41,9 +41,9 @@
                 <tr>
                   <td>{{item.account_Owner.school_id}}
                     <button class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
-                      data-bs-target="#studentInfo"> Student Info</button>
+                      data-bs-target="#studentInfo{{ item.id }}"> Student Info</button>
                       
-                    <div class="modal fade" id="studentInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    <div class="modal fade" id="studentInfo{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                       aria-labelledby="staticBackdropLabel" aria-hidden="true">
                       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">

@@ -16,3 +16,10 @@ def none2zero(value):
         return value
     else:
         return 0
+    
+
+
+@register.filter
+def replace(value, args):
+    old, new = args.split(',')
+    return value.replace(old, new)

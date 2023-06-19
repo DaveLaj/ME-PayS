@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from django_cryptography.fields import *
 from me_pays_app.models.balance import *
 from me_pays_app.models.pos import *
+from me_pays_app.models.order import *
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
@@ -17,6 +18,9 @@ from datetime import datetime
 from django.db.models import Q
 from me_pays_app.forms import *
 from django.db.models import Sum
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from datetime import date, timedelta
 # Rest of your code...
 
 
@@ -44,7 +48,7 @@ def updateStats(request):
     current_date = datetime.now().date()
     cashier = Cashier.objects.get(user=request.user)
     dailyCashIn = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Cash In', datetime__date=current_date)
-    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Payment', datetime__date=current_date)
+    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Fee Payment', datetime__date=current_date)
     # Initializes the Counts
     dailyCashInCount = dailyCashIn.count()
     dailyPayCount = dailyPay.count()
@@ -78,7 +82,7 @@ def cashdiv_home(request):
     current_date = datetime.now().date()
     cashier = Cashier.objects.get(user=request.user)
     dailyCashIn = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Cash In', datetime__date=current_date)
-    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Payment', datetime__date=current_date)
+    dailyPay = Balance_Logs.objects.filter(cashier_sender=cashier, desc='Fee Payment', datetime__date=current_date)
     # Initializes the Counts
     dailyCashInCount = dailyCashIn.count()
     dailyPayCount = dailyPay.count()
@@ -87,7 +91,40 @@ def cashdiv_home(request):
     totalPay = dailyPay.aggregate(total_amount=Sum('amount'))['total_amount']
     UserAccount = CustomUser.objects.filter(id=request.user.id).first()
     CashierCreds = Cashier.objects.filter(user=UserAccount).first()
-    context={
+
+
+    end_date = date.today()
+    start_date = end_date - timedelta(days=6)  # Retrieve data for the last 7 days
+
+
+
+
+    # Query the database for "Cash In" transactions within the specified date range
+    cash_in_logs = Balance_Logs.objects.filter(cashier_sender=request.user.cashier,desc='Cash In', datetime__date__range=[start_date, end_date]) \
+        .annotate(date=TruncDate('datetime')).values('date') \
+        .annotate(count=Count('id'))
+
+    # Query the database for "Fee Payment" transactions within the specified date range
+    fee_payment_logs = Balance_Logs.objects.filter(cashier_sender=request.user.cashier,desc='Fee Payment', datetime__date__range=[start_date, end_date]) \
+        .annotate(date=TruncDate('datetime')).values('date') \
+        .annotate(count=Count('id'))
+
+    cash_in_dates = [entry['date'].strftime('%Y-%m-%d') for entry in cash_in_logs]
+    cash_in_counts = [entry['count'] for entry in cash_in_logs]
+    
+    fee_payment_dates = [entry['date'].strftime('%Y-%m-%d') for entry in fee_payment_logs]
+    fee_payment_counts = [entry['count'] for entry in fee_payment_logs]
+
+    context = {
+        'cash_in_dates': cash_in_dates,
+        'cash_in_counts': cash_in_counts,
+        'fee_payment_dates': fee_payment_dates,
+        'fee_payment_counts': fee_payment_counts,
+
+        
+
+
+
         'dailyCashInCount':dailyCashInCount,
         'dailyPayCount':dailyPayCount,
         'services':services,
@@ -184,6 +221,19 @@ def load_validate_rfid(request):
         # RFID code does not exist in the database
         return JsonResponse({'exists': 1})
     
+
+@user_passes_test(user_has_cashier_group)
+@require_POST
+def cashout_validate_rfid(request):
+    rfid = request.POST.get('rfid')
+    rfid = hashlib.sha256(rfid.encode()).hexdigest()
+    if EndUser.objects.filter(rfid_code=rfid, user__is_active=1).exists():
+        return JsonResponse({'exists': 0})
+    else:
+        return JsonResponse({'exists': 1})
+
+
+
 @user_passes_test(user_has_cashier_group)
 @require_GET
 def  load_rfid_creds(request):
@@ -198,6 +248,40 @@ def  load_rfid_creds(request):
     return JsonResponse(response)
 
 
+
+
+@user_passes_test(user_has_cashier_group)
+@require_GET
+def cashout_rfid_creds(request):
+    rfid = request.GET.get('rfid')
+    rfid = hashlib.sha256(rfid.encode()).hexdigest()
+    user=EndUser.objects.filter(rfid_code=rfid).first()
+    fullname = user.first_name+" "+user.last_name
+    response = {
+        'fullname': fullname,
+        'personID': user.school_id,
+        'balance' : user.credit_balance
+    }
+    return JsonResponse(response)
+
+
+@user_passes_test(user_has_cashier_group)
+@require_GET
+def cashout_validate_balance(request):
+    rfid = request.GET.get('rfid')
+    rfid = hashlib.sha256(rfid.encode()).hexdigest()
+    amount = request.GET.get('amount')
+    user=EndUser.objects.filter(rfid_code=rfid).first()
+    print(user.credit_balance)
+    if user.credit_balance > float(amount):
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Cannot Withdraw Exceeding Amount'})
+
+
+
+
+
 @user_passes_test(user_has_cashier_group)
 @require_GET
 def load_cred_amount(request):
@@ -209,9 +293,9 @@ def load_cred_amount(request):
     if user is not None:
         # Convert the amount to an integer if needed
         amount = int(amount)
-        totalamount = amount*1.05
+        
         # Add the amount to the current credit_balance
-        user.credit_balance += totalamount
+        user.credit_balance += amount
         # Save the updated user object
         user.save()
         # Save to Balance Logs
@@ -224,6 +308,41 @@ def load_cred_amount(request):
         log.save()
 
         return JsonResponse({'status': 'success', 'message': 'Payment Successful, Please Check Your Load Balance'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User not found, Contact Admin Immediately'})
+
+
+
+
+@user_passes_test(user_has_cashier_group)
+@require_GET
+def cashout_cred_amount(request):
+    rfid = request.GET.get('rfid')
+    rfid = hashlib.sha256(rfid.encode()).hexdigest()
+    amount = request.GET.get('amount')
+    user=EndUser.objects.filter(rfid_code=rfid).first()
+    cashier = Cashier.objects.get(user=request.user)
+    
+    if user is not None:
+        if user.credit_balance > float(amount):
+            # Convert the amount to an integer if needed
+            amount = int(amount)
+            
+            # Add the amount to the current credit_balance
+            user.credit_balance -= amount
+            # Save the updated user object
+            user.save()
+            # Save to Balance Logs
+            log = Balance_Logs.objects.create(
+                account_Owner = user,
+                cashier_sender = cashier,
+                amount = -amount,
+                desc = "Cash Out",
+            )  
+            log.save()
+        else:
+            return JsonResponse({'status': 'success', 'message': 'You sneaky dude :/'})
+        return JsonResponse({'status': 'success', 'message': 'Cash Out Successful, Please Check Your Load Balance'})
     else:
         return JsonResponse({'status': 'error', 'message': 'User not found, Contact Admin Immediately'})
 
@@ -355,6 +474,57 @@ def searchServices(request):
 
 
 
+
+@user_passes_test(user_has_cashier_group)
+@require_POST
+def validate_refnum(request):
+    refnum = request.POST.get('refnum')
+    
+    if Order.objects.filter(paid=1, reference_number=refnum).exists():
+        return JsonResponse({'exists': 2})
+    elif Order.objects.filter(paid=0, reference_number=refnum).exists():
+        return JsonResponse({'exists': 1})
+    else:
+        return JsonResponse({'exists': 0})
+
+
+
+@login_required(login_url='index') 
+@user_passes_test(user_has_cashier_group)
+@require_GET
+def cashier_order_info(request):
+    refnum = request.GET.get('refnum')
+    order = Order.objects.filter(reference_number=refnum).first()
+    student_id = order.enduser.school_id
+    orderlist = order.get_items()
+    total_price=0
+    refnum = order.reference_number
+    item_details = []
+    for item in orderlist:
+        item_id = item[0]
+        qty = int(item[1])
+        service_obj = service.objects.filter(id=item_id).first()
+        if service_obj:
+            price = service_obj.price
+            name = service_obj.name
+            item_data = {
+                'id': item_id,
+                'name': name,
+                'price': price*qty,
+                'qty': qty
+            }
+            item_details.append(item_data)
+            total_price += int(price * qty)
+    item_details = json.dumps(item_details, cls=DjangoJSONEncoder)
+    return JsonResponse({'cart': item_details, 'total_price': total_price, 'student_id': student_id, 'reference_number': refnum})
+
+
+
+
+
+
+
+
 @login_required(login_url='index')  
 def tallyItems(request):
     selectedValues = json.loads(request.GET.get('selectedValues'))
@@ -395,8 +565,10 @@ def pay_rfid(request):
     rfid = request.POST.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.POST.get('FinalTotalAmount')
+    refnum = request.POST.get('refnum')
     user = EndUser.objects.filter(rfid_code=rfid).first()
     cashier = Cashier.objects.get(user=request.user)
+    order = Order.objects.get(reference_number=refnum)
     # Convert the amount to an integer if needed
     amount = int(amount)
     
@@ -406,12 +578,18 @@ def pay_rfid(request):
         # Save the updated user object
         user.save()
         
+        cashier.credit_balance += amount
+        cashier.save()
+
+        order.paid = 1
+        order.save()
+        
         # Save to Balance Logs
         log = Balance_Logs.objects.create(
             account_Owner=user,
             cashier_sender=cashier,
             amount=-(amount),
-            desc="Payment",
+            desc="Fee Payment",
         )  
         log.save()
 
@@ -473,7 +651,7 @@ def searchTransaction(request):
     loglist = Balance_Logs.objects.filter(cashier_sender=cashier).order_by('-id')
     
     if search_string:
-        loglist = loglist.filter(Q(id=search_string))
+        loglist = loglist.filter(Q(account_Owner__school_id=search_string))
     
     if date_string:
         try:

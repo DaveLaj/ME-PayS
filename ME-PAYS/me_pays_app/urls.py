@@ -89,10 +89,25 @@ urlpatterns = [
     path("cashdiv_home/load_rfid_check", load_validate_rfid, name='load_validate_rfid'),
     path("cashdiv_home/load_rfid_creds", load_rfid_creds, name='load_validate_creds'),
     path("cashdiv_home/load_amount", load_cred_amount, name='load_cred_amount'),
-
-   
+    
+    
+    path("cashdiv_home/cashout_rfid_check", cashout_validate_rfid, name='cashout_validate_rfid'),
+    path("cashdiv_home/cashout_rfid_creds", cashout_rfid_creds, ),
+    path("cashdiv_home/verify_bal", cashout_validate_balance),
+    path("cashdiv_home/cashout_amount", cashout_cred_amount),
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    path("cashdiv_home/validate_refnum", validate_refnum),
     path("cashdiv_home/tallyItems", tallyItems, name='tallyItems'),
     path("cashdiv_home/payRFID", pay_rfid, name='pay_rfid'),
+    path("cashdiv_home/order_info", cashier_order_info),
 
     path("cashdiv_home/updateStats", updateStats, name='updateStats'),
 

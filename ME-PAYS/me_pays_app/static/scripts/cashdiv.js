@@ -1,4 +1,4 @@
-// For loading
+// For loading ===========================================================================================================
 var load_currentStep = 1;
 function load_validateAndProceed() {
   var loadrfid = document.getElementById("loadrfid").value;
@@ -129,8 +129,6 @@ function loadCredAmount(rfid, amount) {
 function showTotal_TopUp() {
   var amountload = parseFloat($("#amountload").val());
   $("#basetopup").text(amountload);
-  $("#bonustopup").text(amountload * 0.05);
-  $("#totaltopup").text(amountload * 1.05);
 }
 
 function displayErrorMessageWithTimer(
@@ -219,8 +217,229 @@ $(document).ready(function () {
 });
 
 
+// For cashout ========================================================================================================================
 
-// for the registration
+var cashout_currentStep = 1;
+
+
+function cashout_showStep(step) {
+  $(".modal").modal("hide");
+  $("#cashoutstep" + step + "Modal").modal("show");
+}
+
+function cashout_nextStep(step) {
+  cashout_currentStep = step;
+  cashout_showStep(cashout_currentStep);
+  if (step == 1) {
+    $("#cashoutstep1Modal").on("shown.bs.modal", function () {
+      document.getElementById("cashoutrfid").value = "";
+      document.getElementById("cashoutrfid").focus();
+    });
+  } else if (step == 3) {
+    cashout_showTotal_TopUp();
+  }
+}
+
+function cashout_showTotal_TopUp() {
+  var amountload = parseFloat($("#cashout_amountload").val());
+  $("#basetopup_cashout").text(amountload);
+}
+
+
+
+function cashout_previousStep(step) {
+  cashout_currentStep = step;
+  cashout_showStep(cashout_currentStep);
+}
+
+
+function cashout_validateAndProceed() {
+  var cashoutrfid = document.getElementById("cashoutrfid").value;
+  if (cashoutrfid.trim() === "") {
+    var errorMessage = "RFID code is required";
+    var errorContainer = $("#cashout_errorContainerRFID1");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+    return;
+  } else {
+    cashout_validate_rfid();
+  }
+}
+
+
+
+function cashout_validate_rfid() {
+  var RFID = $("#cashoutrfid").val();
+  var validateRFIDURL = "cashdiv_home/cashout_rfid_check";
+  $.ajax({
+    url: validateRFIDURL, // Replace with the URL of your Django view
+    method: "POST",
+    headers: {
+      "X-CSRFToken": window.csrfTokenCashout, // Set the CSRF token in the headers
+    },
+    data: {
+      rfid: RFID,
+    },
+    success: function (response) {
+      if (response.exists == 0) {
+        // RFID exists in the database and is active
+        // Perform the desired action
+        cashout_getCreds();
+        cashout_nextStep(2);
+      } else {
+        // RFID does not exist in the database
+        // Perform the desired action
+        var errorMessage = "RFID code does not exist";
+        var errorContainer = $("#cashout_errorContainerRFID1");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
+      }
+    },
+    error: function (xhr, errmsg, err) {
+      var errorMessage = "Please Enter Valid RFID code";
+      var errorContainer = $("#cashout_errorContainerRFID1");
+      var displayDuration = 5000; // 5 seconds
+      displayErrorMessageWithTimer(
+        errorMessage,
+        errorContainer,
+        displayDuration
+      );
+    },
+  });
+}
+
+function cashout_getCreds() {
+  var RFID = $("#cashoutrfid").val();
+  var URL = "cashdiv_home/cashout_rfid_creds";
+  $.ajax({
+    url: URL, // Replace with the URL of your Django view
+    method: "GET",
+    data: {
+      rfid: RFID,
+    },
+    success: function (response) {
+      // Fetches the credentials of people referenced by RFID code
+      var balance = response.balance;
+      $("#currentbal_cashout").text(balance);
+      var fullname = response.fullname;
+      $("#fullname_cashout").text(fullname);
+      var personID = response.personID;
+      $("#personID_cashout").text(personID);
+    },
+    error: function (xhr, errmsg, err) {
+      alert("Error, please contact admin.");
+    },
+  });
+}
+
+
+function validate_balance () {
+  var rfid = $("#cashoutrfid").val();
+  var amount = parseFloat($("#cashout_amountload").val());
+  var requestData = {
+    rfid: rfid,
+    amount: amount,
+  };
+  $.ajax({
+    url: "cashdiv_home/verify_bal",
+    method: "GET",
+    data: requestData,
+    success: function (response) {
+      if (response.status === "success") {
+        // Handle success response
+        cashout_nextStep(3);
+      } else {
+        var Message = response.message;
+        $("#cashout_errorContainerRFID2").text(Message);
+        var displayDuration = 5000;
+        setTimeout(function () {
+          $("#cashout_errorContainerRFID2").empty();
+        }, displayDuration);
+      }
+    },
+    error: function (xhr, status, error) {
+      // Handle AJAX error
+      console.error("AJAX Error:", error);
+    },
+  });
+  
+}
+
+
+
+
+
+
+
+
+
+function cashout() {
+  var RFID = $("#cashoutrfid").val();
+  var amountcashout = parseFloat($("#cashout_amountload").val());
+  cashoutCredAmount(RFID, amountcashout);
+}
+
+function cashoutCredAmount(rfid, amount) {
+  // Prepare the data to be sent in the AJAX request
+  var requestData = {
+    rfid: rfid,
+    amount: amount,
+  };
+  // Make the AJAX request
+  $.ajax({
+    url: "cashdiv_home/cashout_amount",
+    method: "GET",
+    headers: {
+      "X-CSRFToken": window.csrfTokenCashoutFinal, // Set the CSRF token in the headers
+    },
+    data: requestData,
+    success: function (response) {
+      if (response.status === "success") {
+        // Handle success response
+        var Message = response.message;
+        $("#statusContainer").text(Message);
+        var displayDuration = 5000;
+        setTimeout(function () {
+          $("#statusContainer").empty();
+        }, displayDuration);
+      } else {
+        // Handle error response
+        var Message = response.message;
+        $("#statusContainer").text(Message);
+        var displayDuration = 5000;
+        setTimeout(function () {
+          $("#statusContainer").empty();
+        }, displayDuration);
+      }
+    },
+    error: function (xhr, status, error) {
+      // Handle AJAX error
+      console.error("AJAX Error:", error);
+    },
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// for the registration================================================================================================================
 var currentStep = 1;
 function validateAndProceed() {
   var regStudentID = document.getElementById("regStudentID").value;
@@ -454,7 +673,7 @@ document.addEventListener("keydown", handleKeyPress);
 
 
 
-// Payment Functions
+// Payment Functions ===========================================================================================
 var pay_currentStep = 1;
 
 function pay_showStep(step) {
@@ -463,9 +682,7 @@ function pay_showStep(step) {
 }
 
 
-function tallyItemCost(){
-  sendSelectedValues();
-}
+
 
 function pay_nextStep(step) {
   pay_currentStep = step;
@@ -482,61 +699,107 @@ function pay_previousStep(step) {
   pay_showStep(pay_currentStep);
 }
 
-
-
-function sendSelectedValues() {
-  var selectedValues = [];
-  $('.operator').each(function() {
-    var selectize = $(this)[0].selectize;
-    if (selectize && selectize.getValue() !== "") {
-      var value = selectize.getValue();
-      selectedValues.push(value);
-    }
+function clearRefNum() {
+  $("#paystep1Modal").on("shown.bs.modal", function () {
+    document.getElementById("refnum").value = "";
+    document.getElementById("refnum").focus();
   });
-  
-  if (selectedValues.length === 0) {
-    // selectedValues is empty
-    var errorMessage = "Please Select an Entry";
-    var errorContainer = $("#pay_errorContainerRFID1");
-    var displayDuration = 5000; // 5 seconds
-    displayErrorMessageWithTimer(
-      errorMessage,
-      errorContainer,
-      displayDuration
-    );
-  } else {
-    // selectedValues is not empty
-    $.ajax({
-      url: "cashdiv_home/tallyItems",
-      method: "GET",
-      data: { selectedValues: JSON.stringify(selectedValues) },
-      success: function(response) {
-        // Handle the success response
-        // Parse the serialized data
-        var itemData = JSON.parse(response.itemlist);
-        // Process the item data as needed
-        var priceTotal = 0
-        $('#showTally').empty();
-        $('#totalAmount').empty();
-        $('#FinalTotalAmount').val('');
-        itemData.forEach(function(item) {
-          printTally(item.id, item.name, item.price, item.quantity);
-          // Perform operations with the item data
-          // total all prices
-          priceTotal += parseInt(item.price);
-        });
-        document.getElementById("totalAmount").innerText = "Php "+priceTotal.toString();
-        var TotalAmount = document.getElementById('FinalTotalAmount');
-        TotalAmount.value = parseInt(priceTotal);
-        pay_nextStep(2);
-      },
-      error: function(xhr, status, error) {
-        // Handle the error if the request fails
-        console.error("AJAX request failed:", error);
+}
+
+function validate_refnum() {
+  var refnum = $("#refnum").val();
+  var validateRFIDURL = "cashdiv_home/validate_refnum";
+  $.ajax({
+    url: validateRFIDURL, // Replace with the URL of your Django view
+    method: "POST",
+    headers: {
+      "X-CSRFToken": window.csrfTokenRefNum, // Set the CSRF token in the headers
+    },
+    data: {
+      refnum: refnum,
+    },
+    success: function (response) {
+      if (response.exists == 1) {
+        // not yet paid
+        cashier_order_info();
+      } else if(response.exists == 2){
+        // already paid
+        var errorMessage = "Cart with ref number already paid";
+        var errorContainer = $("#pay_errorContainerRFID1");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
+
+
+      }  else {
+        // RFID does not exist in the database
+        // Perform the desired action
+        var errorMessage = "Reference number does not exist";
+        var errorContainer = $("#pay_errorContainerRFID1");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
       }
-    });
-    
-  }
+    },
+    error: function (xhr, errmsg, err) {
+      var errorMessage = "Please Enter a valid reference number";
+      var errorContainer = $("#pay_errorContainerRFID1");
+      var displayDuration = 5000; // 5 seconds
+      displayErrorMessageWithTimer(
+        errorMessage,
+        errorContainer,
+        displayDuration
+      );
+    },
+  });
+}
+
+function cashier_order_info() {
+  var refnum = $("#refnum").val();
+  funcURL = "cashdiv_home/order_info";
+  $.ajax({
+    url: funcURL, // Replace with the URL of your Django view
+    method: "GET",
+    data: {
+      refnum: refnum,
+    },
+    success: function (response) {
+      $('#showTally').empty();
+      $('#totalAmount').empty();
+      $('#FinalTotalAmount').val('');
+      document.getElementById("totalAmount").innerText = response.total_price;
+      document.getElementById("show_refnum").innerText = response.reference_number;
+      document.getElementById("show_sid").innerText = response.student_id;
+      $('#FinalTotalAmount').val(response.total_price);
+      var cart = JSON.parse(response.cart);
+      for (var i = 0; i < cart.length; i++) {
+        var item = cart[i];
+        var id = item.id;
+        var name = item.name;
+        var price = item.price;
+        var qty = item.qty;
+        printTally(id, name, price, qty)
+      }
+      pay_nextStep(2);
+    },
+    error: function (xhr, errmsg, err) {
+      var errorMessage = "Error please call admin";
+      var errorContainer = $("#pay_errorContainerRFID2");
+      var displayDuration = 5000; // 5 seconds
+      displayErrorMessageWithTimer(
+        errorMessage,
+        errorContainer,
+        displayDuration
+      );
+    },
+  });
+
 }
 
 
@@ -604,6 +867,7 @@ function pay_validate_rfid() {
 
 // RFID pay
 function RFIDpay(rfid) {
+  var refnum = $("#refnum").val();
   var total = $("#FinalTotalAmount").val();
   $.ajax({
     url: "cashdiv_home/payRFID",
@@ -614,6 +878,7 @@ function RFIDpay(rfid) {
     data: {
       rfid: rfid,
       FinalTotalAmount: total,
+      refnum : refnum,
     },
     success: function (response) {
        if (response.status=='success'){
@@ -626,7 +891,7 @@ function RFIDpay(rfid) {
           displayDuration
         );
         update_Stats();
-        $('#cpaystep3Modal').modal('hide');
+        $('#paystep3Modal').modal('hide');
        } else if (response.status=='error'){
         if (response.status=='error'){
           var errorMessage = response.message;
