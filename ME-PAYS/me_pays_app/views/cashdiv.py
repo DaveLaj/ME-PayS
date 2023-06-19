@@ -100,28 +100,38 @@ def cashdiv_home(request):
 
 
     # Query the database for "Cash In" transactions within the specified date range
-    cash_in_logs = Balance_Logs.objects.filter(cashier_sender=request.user.cashier,desc='Cash In', datetime__date__range=[start_date, end_date]) \
+    cash_in_logs = Balance_Logs.objects.filter(cashier_sender=request.user.cashier, desc='Cash In', datetime__date__range=[start_date, end_date]) \
         .annotate(date=TruncDate('datetime')).values('date') \
-        .annotate(count=Count('id'))
+        .annotate(count=Count('id')).order_by('date')
+
 
     # Query the database for "Fee Payment" transactions within the specified date range
     fee_payment_logs = Balance_Logs.objects.filter(cashier_sender=request.user.cashier,desc='Fee Payment', datetime__date__range=[start_date, end_date]) \
         .annotate(date=TruncDate('datetime')).values('date') \
-        .annotate(count=Count('id'))
+        .annotate(count=Count('id')).order_by('date')
+
+    cash_in_logs_amount = Balance_Logs.objects.filter(cashier_sender=request.user.cashier, desc='Cash In', datetime__date__range=[start_date, end_date])\
+    .values('datetime__date') \
+    .annotate(total_amount=Sum('amount')) \
+    .order_by('datetime__date')
+    fee_payment_logs_amount = Balance_Logs.objects.filter(cashier_sender=request.user.cashier, desc='Fee Payment', datetime__date__range=[start_date, end_date]) \
+    .values('datetime__date') \
+    .annotate(total_amount=Sum('amount')) \
+    .order_by('datetime__date')
 
     cash_in_dates = [entry['date'].strftime('%Y-%m-%d') for entry in cash_in_logs]
     cash_in_counts = [entry['count'] for entry in cash_in_logs]
-    
+    cash_in_amounts = [entry['total_amount'] for entry in cash_in_logs_amount]
     fee_payment_dates = [entry['date'].strftime('%Y-%m-%d') for entry in fee_payment_logs]
     fee_payment_counts = [entry['count'] for entry in fee_payment_logs]
-
+    fee_payment_amounts = [-entry['total_amount'] for entry in fee_payment_logs_amount]
     context = {
         'cash_in_dates': cash_in_dates,
         'cash_in_counts': cash_in_counts,
         'fee_payment_dates': fee_payment_dates,
         'fee_payment_counts': fee_payment_counts,
-
-        
+        'fee_payment_amounts': fee_payment_amounts,
+        'cash_in_amounts':cash_in_amounts,
 
 
 
@@ -541,7 +551,7 @@ def pay_rfid(request):
     order = Order.objects.get(reference_number=refnum)
     # Convert the amount to an integer if needed
     amount = int(amount)
-    
+    amount = abs(amount)
     if user.credit_balance > amount:
         # Deduct the amount from the current credit_balance
         user.credit_balance -= amount

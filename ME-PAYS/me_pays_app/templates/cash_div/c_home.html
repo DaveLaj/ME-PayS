@@ -439,6 +439,18 @@
                     </div>
                 </div>
             </div>
+            <div class="row d-flex mt-5 align-items-center justify-content-center">
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="cashInEarningHistogramChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="feePaymentEarningHistogramChart"></canvas>
+                    </div>
+                </div>
+            </div>
             <br>
            
         </div>
@@ -466,28 +478,39 @@
     document.addEventListener("DOMContentLoaded", function() {
      
         var ctxCashIn = document.getElementById('cashInHistogramChart').getContext('2d');
+        var ctxCashInAmount = document.getElementById('cashInEarningHistogramChart').getContext('2d');
         var ctxFeePayment = document.getElementById('feePaymentHistogramChart').getContext('2d');
-     
+        var ctxFeePaymentAmount = document.getElementById('feePaymentEarningHistogramChart').getContext('2d');
 
         var cashInDates = {{ cash_in_dates|safe }};
         var cashInCounts = {{ cash_in_counts|safe }};
-        
+        var cashInEarnings = {{ cash_in_amounts|safe }};
+        var feePaymentEarnings = {{ fee_payment_amounts|safe }};
         var feePaymentDates = {{ fee_payment_dates|safe }};
         var feePaymentCounts = {{ fee_payment_counts|safe }};
 
 
 
-        var cashInChartData = {
+        var cashInEarningsData = {
             labels: cashInDates,
             datasets: [{
-                label: 'Cash In Transaction Count',
-                data: cashInCounts,
+                label: 'Cash In Earnings',
+                data: cashInEarnings,
                 backgroundColor: 'rgba(0, 123, 255, 0.5)',
                 borderColor: 'rgba(0, 123, 255, 1)',
        
             }]
         };
-        
+        var feePaymentEarningsData = {
+            labels: feePaymentDates,
+            datasets: [{
+                label: 'Fee Payment Earnings',
+                data: feePaymentEarnings,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+       
+            }]
+        };
 
 
         var feePaymentChartData = {
@@ -497,6 +520,18 @@
                 data: feePaymentCounts,
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
                 borderColor: 'rgba(255, 99, 132, 1)',
+            
+            }]
+        };
+
+
+        var cashInChartData = {
+            labels: cashInDates,
+            datasets: [{
+                label: 'Cash In Transaction Count',
+                data: cashInCounts,
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
             
             }]
         };
@@ -545,7 +580,19 @@
             data: cashInChartData,
             options: chartOptionsCount
         });
- 
+        
+        var cashInEarningsChart = new Chart(ctxCashInAmount, {
+            type: 'bar',
+            data: cashInEarningsData,
+            options: chartOptionsCount
+        });
+
+        var feePaymentEarningsChart = new Chart(ctxFeePaymentAmount, {
+            type: 'bar',
+            data: feePaymentEarningsData,
+            options: chartOptionsCount
+        });
+
         var feePaymentChart = new Chart(ctxFeePayment, {
             type: 'bar',
             data: feePaymentChartData,

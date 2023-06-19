@@ -198,15 +198,84 @@
                     </div>
                 </div>
             </div>
+            <div class="row d-flex mt-5 align-items-center justify-content-center">
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="PaymentHistogramChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="PaymentEarningHistogramChart"></canvas>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
 
 
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+    <script>
+        var ctxPayment = document.getElementById('PaymentHistogramChart').getContext('2d');
+        var ctxPaymentAmount = document.getElementById('PaymentEarningHistogramChart').getContext('2d');
+
+        var PaymentEarnings = {{ payment_amounts|safe }};
+        var PaymentDates = {{ payment_dates|safe }};
+        var PaymentCounts = {{ payment_counts|safe }};
+
+
+        var PaymentEarningsData = {
+            labels: PaymentDates,
+            datasets: [{
+                label: 'Payment Earnings',
+                data: PaymentEarnings,
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+       
+            }]
+        };
+       
+        var PaymentChartData = {
+            labels: PaymentDates,
+            datasets: [{
+                label: 'Payment Transaction Count',
+                data: PaymentCounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+            
+            }]
+        };
+        var chartOptions = {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 100, // Specify the desired step size for the ticks
+                        maxTicksLimit: 5 // Set the maximum number of ticks to be displayed
+                    }
+                }]
+            }
+        };
+        var PaymentEarningsChart = new Chart(ctxPaymentAmount, {
+            type: 'bar',
+            data: PaymentEarningsData,
+            options: chartOptions
+        });
+
+        var PaymentChart = new Chart(ctxPayment, {
+            type: 'bar',
+            data: PaymentChartData,
+            options: chartOptions
+        });
+    </script>
     <script>
         // Set the CSRF token as a global variable
         window.csrfTokenCPay = '{{ csrf_token }}';
         window.csrfTokenCPayRFID = '{{ csrf_token }}';
     </script>
-    {% endblock %}
+
+{% endblock %}

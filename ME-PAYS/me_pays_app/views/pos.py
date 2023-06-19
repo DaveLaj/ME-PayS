@@ -16,6 +16,9 @@ from django.db.models import Sum
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 import json
+from django.db.models import Count
+from django.db.models.functions import TruncDate
+from datetime import date, timedelta
 def user_has_pos_group(user):
     return user.groups.filter(name='pos').exists()
 
@@ -89,7 +92,6 @@ def deleteMenu(request, item_id):
 def tallyItems(request):
     selectedValues = json.loads(request.GET.get('selectedValues'))
     item_data = []
-    print (selectedValues)
     # Fetch the item details and add them to the item_data list
     for item in selectedValues:
         item_id = item[0]
@@ -141,7 +143,7 @@ def cpay_rfid(request):
     pos = POS.objects.get(user=request.user)
     # Convert the amount to an integer if needed
     amount = int(amount)
-    
+    amount = abs(amount)
     if user.credit_balance > amount:
         # Deduct the amount from the current credit_balance
         user.credit_balance -= amount
@@ -210,7 +212,29 @@ def canteen_home(request):
     totalPay = dailyPay.aggregate(total_amount=Sum('amount'))['total_amount']
     UserAccount = CustomUser.objects.filter(id=request.user.id).first()
     POSCreds = POS.objects.filter(user=UserAccount).first()
+
+    end_date = date.today()
+    start_date = end_date - timedelta(days=6) 
+
+
+    payment_logs = Balance_Logs.objects.filter(pos_sender=request.user.pos, desc='POS Transaction', datetime__date__range=[start_date, end_date]) \
+        .annotate(date=TruncDate('datetime')).values('date') \
+        .annotate(count=Count('id')).order_by('date')
+    payment_logs_amount = Balance_Logs.objects.filter(pos_sender=request.user.pos, desc='POS Transaction', datetime__date__range=[start_date, end_date]) \
+    .values('datetime__date') \
+    .annotate(total_amount=Sum('amount')) \
+    .order_by('datetime__date')
+
+    payment_dates = [entry['date'].strftime('%Y-%m-%d') for entry in payment_logs]
+    payment_counts = [entry['count'] for entry in payment_logs]
+    payment_amounts = [-entry['total_amount'] for entry in payment_logs_amount]
     context={
+        'payment_dates': payment_dates,
+        'payment_counts': payment_counts,
+        'payment_amounts': payment_amounts,
+
+
+
         'dailyPayCount':dailyPayCount,
         'products':products,
         'dailyTotalPay': totalPay,
@@ -316,7 +340,7 @@ def searchHistory(request):
     loglist = Balance_Logs.objects.filter(pos_sender=pos).order_by('-id')
     
     if search_string:
-        loglist = loglist.filter(Q(id=search_string))
+        loglist = loglist.filter(Q(account_Owner__school_id__icontains=search_string))
     
     if date_string:
         try:
