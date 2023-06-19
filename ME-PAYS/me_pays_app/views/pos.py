@@ -147,7 +147,9 @@ def cpay_rfid(request):
         user.credit_balance -= amount
         # Save the updated user object
         user.save()
-        
+        pos.credit_balance+=amount
+        pos.save()
+
         # Save to Balance Logs
         log = Balance_Logs.objects.create(
             account_Owner=user,
