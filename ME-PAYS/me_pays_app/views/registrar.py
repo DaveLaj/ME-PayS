@@ -12,7 +12,9 @@ from django.shortcuts import render, redirect
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 import json
+from me_pays_app.models.order import *
 import hashlib
+from django.shortcuts import get_object_or_404
 from datetime import datetime
 from django.db.models import Q
 from me_pays_app.forms import *
@@ -46,10 +48,27 @@ def registrar_account(request):
     return render(request, "registrar/r_account.html", {})
 
 
+
+
+
+
+
+
 @login_required(login_url='index')
 @user_passes_test(user_has_registrar_group)
 def registrar_transaction(request):
-    return render(request, "registrar/r_transaction.html", {})
+    orderlist = Order.objects.filter().order_by('paid')
+    paginator = Paginator(orderlist, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    count = orderlist.count()
+    form = LogSearchForm()
+    context = {
+        'form': form,
+        'count' : count,
+        'page_obj': page_obj,
+    }
+    return render(request, "registrar/r_transaction.html", context)
 
 
 
@@ -57,12 +76,71 @@ def registrar_transaction(request):
 
 
 
+@login_required(login_url='index')
+@user_passes_test(user_has_registrar_group)
+def search_RegistrarTransaction(request):
+    search_string = request.GET.get('query')
+    date_string = request.GET.get('date')
+    
+    orderlist = Order.objects.filter().order_by('paid')
+    
+    if search_string:
+        orderlist = orderlist.filter(reference_number__icontains=search_string).order_by('paid')
+    
+    if date_string:
+        try:
+            date = datetime.strptime(date_string, '%Y-%m-%d').date()
+            orderlist = orderlist.filter(datetime__date=date)
+        except ValueError:
+            pass
+    
+    paginator = Paginator(orderlist, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    count = orderlist.count()
+    
+    context = {
+        'count': count,
+        'page_obj': page_obj,
+        'search_string': search_string,  # Pass the search query back to the template
+        'date_string': date_string,      # Pass the date input back to the template
+    }
+    return render(request, "registrar/r_transaction.html", context)
 
 
 
+@login_required(login_url='index') 
+@user_passes_test(user_has_registrar_group)
+def registrar_transaction_info(request, order_id):
+    order = Order.objects.filter(id=order_id).first()
+    student_id = order.enduser.school_id
+    orderlist = order.get_items()
+    total_price=0
+    refnum = order.reference_number
+    item_details = []
+    for item in orderlist:
+        item_id = item[0]
+        qty = int(item[1])
+        service_obj = service.objects.filter(id=item_id).first()
+        if service_obj:
+            price = service_obj.price
+            name = service_obj.name
+            item_data = {
+                'id': item_id,
+                'name': name,
+                'price': price*qty,
+                'qty': qty
+            }
+            item_details.append(item_data)
+            total_price += int(price * qty)
 
-
-
+    context = {
+        'cart': item_details,
+        'total_price': total_price,
+        'student_id': student_id,
+        'reference_number': refnum
+    }
+    return render(request, "registrar/r_transinfo.html", context)
 
 
 
@@ -382,7 +460,6 @@ def searchServices(request):
 
 
 
-
 @login_required(login_url='index') 
 @user_passes_test(user_has_registrar_group)
 def FetchServices(request):
@@ -398,40 +475,69 @@ def FetchServices(request):
 
     # Include the 'id' field by using the values() method
     services_with_ids = services.values('id', *services_data[0].keys())
-
     return JsonResponse({'services': list(services_with_ids)})
 
 
+
+
+
+
+@login_required(login_url='index') 
+@user_passes_test(user_has_registrar_group)
+@require_GET
+def registrar_validate_SID(request):
+    student_id = request.GET.get('school_id')
+    if EndUser.objects.filter(school_id=student_id, user__is_active=1).exists():
+        # Student ID is active and doesn't have an associated RFID
+        return JsonResponse({'exists': 1})
+    else:
+    # Student ID does not exist in the database
+        return JsonResponse({'exists': 0})
+
+
+@login_required(login_url='index') 
+@user_passes_test(user_has_registrar_group)
+@require_POST
+def registrar_sendItems(request):
+    school_id = request.POST.get('school_id')
+    enduser = get_object_or_404(EndUser, school_id=school_id)
+
+    order = Order.objects.create(
+        enduser=enduser,
+        items=request.POST.get('selectedValues'),
+    )
+
+    refnum = order.reference_number
+
+    return JsonResponse({'refnum': refnum})
+
+
+
+
 @login_required(login_url='index')  
+@require_GET
 def registrar_tallyItems(request):
     selectedValues = json.loads(request.GET.get('selectedValues'))
-    quantityTracker = {}
     item_data = []
-
-    # Count the quantity for each item
-    for item in selectedValues:
-        if item in quantityTracker:
-            quantityTracker[item] += 1
-        else:
-            quantityTracker[item] = 1
-
+    
     # Fetch the item details and add them to the item_data list
-    for item_id, quantity in quantityTracker.items():
+    for item in selectedValues:
+        item_id = item[0]
+        quantity = item[1]
         try:
-            item = menu.objects.get(id=int(item_id), menu_is_active=1)
+            service_item = service.objects.get(id=int(item_id), is_active=1)
             item_data.append({
                 'id': item_id,
-                'name': item.menu_name,
-                'price': item.menu_price * quantity,
-                'quantity': quantity,
+                'name': service_item.name,
+                'price': service_item.price * int(quantity),
+                'quantity': int(quantity),
                 # Add more fields as needed
             })
-        except menu.DoesNotExist:
+        except service.DoesNotExist:
             # Handle the case if the item is not found
             pass
 
     serialized_data = json.dumps(item_data, cls=DjangoJSONEncoder)
-
     return JsonResponse({'itemlist': serialized_data})
 
 

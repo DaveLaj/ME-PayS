@@ -145,9 +145,10 @@ urlpatterns = [
     path("pos_history/search", searchHistory, name='searchHistory'),
 
 
-
+    
     path("registrar_home", registrar_home, name='registrar_home'),
     path("registrar_transaction", registrar_transaction, name='registrar_transaction'),
+    path("registrar_transaction/info/<int:order_id>", registrar_transaction_info, name='registrar_transaction_info'),
     path("registrar_services", registrar_services, name='registrar_services'),
     path("registrar_services/add", insertServices, name='insertServices'),
     path("registrar_services/update/<int:item_id>", updateServices, name='updateServices'),
@@ -158,6 +159,9 @@ urlpatterns = [
     
     path("registrar_home/fetchServices", FetchServices, name='fetchServices'),
     path("registrar_home/tallyItems", registrar_tallyItems),
+    path("registrar_home/validateSID", registrar_validate_SID),
+    path("registrar_home/sendItems", registrar_sendItems),
+    path("registrar_home/searchTransaction", search_RegistrarTransaction, name='search_RegistrarTransaction'),
 
     # Universal Logout
     path("logout", logout_request, name= "logout"), 

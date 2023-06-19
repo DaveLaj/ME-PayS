@@ -4,9 +4,10 @@ import random
 from me_pays_app.models.users import EndUser
 class Order(models.Model):
     items = models.TextField()
-    reference_number = models.CharField(max_length=20, unique=True, null=True)
-    enduser = models.OneToOneField(EndUser, on_delete=models.CASCADE, null=True)
+    reference_number = models.CharField(max_length=20, null=True)
+    enduser = models.ForeignKey(EndUser, on_delete=models.CASCADE, null=True)
     paid = models.BooleanField(default=False)
+    datetime = models.DateTimeField(auto_now_add=True, null=True) 
     def set_items(self, items):
         self.items = json.dumps(items)
 

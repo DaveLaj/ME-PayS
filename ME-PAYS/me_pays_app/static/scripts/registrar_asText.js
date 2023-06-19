@@ -1,4 +1,20 @@
-// <!-- Add Document CashDiv Query -->
+
+
+function printTallyRegistrar(id, name, price, qty) {
+    var newItemAdd = '<tr>' +
+                        '<td>'+ id +'</td>'+
+                       ' <td>'+ name +'</td>'+
+                       ' <td>'+ qty +'</td>'+
+                       '<td>'+ price +'</t>'+
+                     '</tr>';
+    $('#showTally').append(newItemAdd);
+}
+
+
+
+
+
+
 
 var selectCount = 2;
 
@@ -16,18 +32,18 @@ $("#addService").click(function () {
 
             // Replace the placeholder in newRowAdd with the dynamic HTML content
             var newRowAdd = 
-                '<div id="row" class="row g-3" ">' +
+                '<div id="row" class="row g-3 fs-5" >' +
                     ' <div class="col-md-8">' +
                         '<select id="' + selectClass + '"  class="operator">' +
-                            ' <option value="">Select an item</option>' +
+                            ' <option value="">Select document</option>' +
                             optionsHtml +
                         '</select>' +
                     '</div>' +
                     '<div class="col-md-2">' +
-                        '<input type="text" class=" form-control " id="'+selectClass+'qty">' +
+                        '<input type="text" class=" form-control " id="'+selectClass+'qty"  style="height: 45px;">' +
                     '</div>' +
-                    '<div class="col-md-2 d-grid mx-auto pb-2">' +
-                        '<button class="btn btn-danger" id="DeleteRow" type="button"> Cancel</button>' +
+                    '<div class="col-md-2 d-grid mx-auto pb-3">' +
+                        '<button class="btn btn-danger" id="DeleteRow" type="button"  style="height: 45px;"> Cancel</button>' +
                     '</div>'+
                 '</div>';
 
