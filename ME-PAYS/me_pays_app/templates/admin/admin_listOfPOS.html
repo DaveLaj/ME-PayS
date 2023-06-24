@@ -4,12 +4,12 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex" style="background-color: #e6f1fa">
+<div class="main-container d-flex" style="background-color: #EEEBDD">
     {% include 'admin/admin_sidebar.html' %}
     <div class="content">
         {% include 'admin/admin_nav.html' %}
 
-        <div class="dashboard-content pt-4 m-4 border-5 border-top border-bottom rounded border-secondary" style="background-color: #ffffff">
+        <div class="dashboard-content pt-4 m-4 border-5 border-top border-bottom rounded border-secondary" style="background-color: #D8B6A4">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">List of Point of Sale Accounts</h1>
             <div class="col-sm-8 m-auto p-2">
                 <form class="d-flex p-2" role="search" action={% url 'admin_listOfPOS' %} method="GET">
@@ -155,7 +155,7 @@
                                     <th scope="col" style="width: 150px;">Options</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-light">
                                 {% for person in page_obj %}
                                 <tr>
                                     <td>{{ person.pos.store_name }}</td>

@@ -4,12 +4,12 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex" style="background-color: #e6f1fa">
+<div class="main-container d-flex" style="background-color: #EEEBDD">
     {% include 'admin/admin_sidebar.html' %}
     <div class="content">
         {% include 'admin/admin_nav.html' %}
 
-        <div class="dashboard-content px-3 pt-4  m-4 border-5 border-top border-bottom rounded border-secondary" style="background-color: #ffffff">
+        <div class="dashboard-content px-3 pt-4  m-4 border-5 border-top border-bottom rounded border-secondary" style="background-color: #D8B6A4">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back Admin!</h1>
 
             <div class="row row-cols-1 row-cols-md-2 g-4 pb-5">
@@ -18,8 +18,8 @@
                 <div class="col-md-8">
                     <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
                     </div>
-                    <div class="card h-90">
-                        <div class="card-header" style="background-color: #fffb90;">
+                    <div class="card h-90 border-3">
+                        <div class="card-header bg-dark text-white">
                             <h1 class="card-title fw-bold fs-3">Enable RFID Services</h1>
                         </div>
                         <div id="errorContainer" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
@@ -47,7 +47,7 @@
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color: #fffb90;">
+                            <div class="modal-header bg-dark">
                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Servicess</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
@@ -77,7 +77,7 @@
                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
-                            <div class="modal-header" style="background-color: #fffb90;">
+                            <div class="modal-header bg-dark">
                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Enable RFID Services</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
@@ -112,13 +112,13 @@
 
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-3" style="border-color: #f1ed71;">
-                        <div class="card-header fw-bold fs-4 rounded-0" style="background-color: #f1ed71;">
+                    <div class="card border-3 border-dark">
+                        <div class="card-header fw-bold fs-4 rounded-0 bg-dark text-white">
                            Userbase Composition
                         </div>
                         <div class="card-body">
                             <div class="text-center">
-                                <button type="button" class="btn" style="background-color: #f1ed71;" onclick="refreshPage()">Refresh Chart</button>
+                                <button type="button" class="btn bg-dark text-white" onclick="refreshPage()">Refresh Chart</button>
                                 <h5 class="card-title fw-bold mt-3">{{registered_enduser_count}}/{{all_enduser_count}}</h5>
                             </div>
                             
