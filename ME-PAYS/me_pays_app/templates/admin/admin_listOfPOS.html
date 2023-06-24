@@ -265,8 +265,10 @@
                                                      <div class="row mb-4">
                                                         <label for="contact_number" class="col-sm-2 col-form-label">Contact #:</label>
                                                         <div class="col-sm-10">
-                                                            <span class="input-group-text" id="basic-addon1">+63</span>
-                                                            <input type="number" class="form-control limit-length" name="contact_number" placeholder="{{ person.pos.contact_number }}" oninput="this.value = this.value.slice(0, 10);">
+                                                            <div class="input-group input-group-sm">
+                                                                <span class="input-group-text" id="basic-addon1">+63</span>
+                                                                <input type="number" class="form-control limit-length" name="contact_number" placeholder="{{ person.pos.contact_number }}" oninput="this.value = this.value.slice(0, 10);">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row mb-4">
@@ -366,12 +368,11 @@
         integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA=" 
         crossorigin="anonymous"></script>
     <script>
-        $('input[name="school_id"]').mask('0/0'); 
-
-      </script>
+        $('input[name="school_id"]').mask('0000-0000'); 
+    </script>
       
     
     
     
     
-    {% endblock %}
+{% endblock %}

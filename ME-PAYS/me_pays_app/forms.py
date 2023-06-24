@@ -18,8 +18,15 @@ class RegisterForm(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter password'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Confirm password'}))
     contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
-    school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}),required=True, help_text='Required.')
-
+    school_id = forms.CharField(
+    widget=forms.TextInput(attrs={
+        'class': 'form-control form-control-sm',
+        'placeholder': '2019-0001',
+        'id': 'school_id',
+        'name': 'school_id'
+    }),
+    help_text='Required.'
+    )
 
 
     def clean_first_name(self):
@@ -57,8 +64,15 @@ class EndUser_CreationForm(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter password'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Confirm password'}))
     contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
-    school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}), help_text='Required.')
-
+    school_id = forms.CharField(
+    widget=forms.TextInput(attrs={
+        'class': 'form-control form-control-sm',
+        'placeholder': '2019-0001',
+        'id': 'school_id',
+        'name': 'school_id'
+    }),
+    help_text='Required.'
+    )
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
@@ -98,8 +112,7 @@ class Registrar_CreationForm(UserCreationForm):
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter password'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Confirm password'}))
     contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
-    school_id= forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm', 'placeholder':'20190001'}), help_text='Required.')
-
+    
 
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
@@ -118,7 +131,7 @@ class Registrar_CreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'school_id', 'contact_number')
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2', 'contact_number')
 
 
 
@@ -146,7 +159,7 @@ class POS_CreationForm(UserCreationForm):
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Enter password'}))
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control form-control-sm', 'placeholder':'Confirm password'}))
-    contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm limit-length',  'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"formatNumberInput(this)"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
+    contact_number = forms.CharField(widget=forms.NumberInput(attrs={'class':'form-control form-control-sm limit-length',  'placeholder':'9xxxxxxxxx', 'id': 'contact_number', 'oninput':"this.value = this.value.slice(0, 10);"}),required=True, validators=[MaxLengthValidator(10, message='Please enter a 10-digit contact number.')], help_text='Required.')
     location = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm', 'maxlength': '100'}),required=True, help_text='Required.')
     description = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control form-control-sm', 'rows':'5'}), required=False)
     school_id = forms.CharField(
@@ -157,7 +170,7 @@ class POS_CreationForm(UserCreationForm):
         'name': 'school_id'
     }),
     help_text='Required.'
-)
+    )
 
 
     class Meta:

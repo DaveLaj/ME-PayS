@@ -53,7 +53,7 @@
                                 {% csrf_token %}
                                
                                 <div class="modal-header" style="background-color: #fffb90;">
-                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Add Point of Sale Account</h1>
+                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Add Registrar Account</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body fw-bold">
@@ -116,12 +116,7 @@
                                             Please Confirm password!
                                         </div>
                                     </div>
-                                    <div class="col-12">
-                                        <label for="school_id" class="col-sm-2 col-form-label">School ID:</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" name="school_id" oninput="this.value = this.value.slice(0, 8);" placeholder="{{ person.enduser.school_id }}" >
-                                        </div>
-                                    </div>
+                                    
 
             
                 
