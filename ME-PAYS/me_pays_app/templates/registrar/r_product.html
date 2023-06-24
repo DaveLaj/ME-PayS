@@ -4,11 +4,11 @@
 {% block title %} Services {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex" style="background-color: #e6f1fa;">
+<div class="main-container d-flex" style="background-color: #FA9884;">
     {% include 'registrar/r_sidebar.html' %}
     <div class="content">
         {% include 'registrar/r_nav.html' %}
-        <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
+        <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #DBDFEA;">
             <h1 class="fs-1 ps-3 pb-3 fw-bold">Cashier Service List</h1>
             <div class="col-sm-8 m-auto">
                 {% comment %} search form input {% endcomment %}
@@ -49,7 +49,7 @@
                         <div class="float-end pe-4">
                             <button type="button" class="btn btn-primary btn-lg p-2 px-5"
                                 data-bs-toggle="modal" data-bs-target="#addProduct"><i
-                                    class="bi bi-plus-circle-fill"></i> Add Product</button>
+                                    class="bi bi-plus-circle-fill"></i> Add Service(s)</button>
                             
                         </div>
                         <div class="modal fade" id="addProduct" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -110,12 +110,12 @@
                             <thead class="text-center">
                                 <tr>
 
-                                    <th scope="col">Name of Product</th>
+                                    <th scope="col">Name ofService</th>
                                     <th scope="col">Price</th>
                                     <th scope="col" style="width: 300px;">Edit</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-light">
                                 {% comment %} start of iterations {% endcomment %}
                                 {% for item in page_obj %}
                                 <div class="modal fade" id="updateServices{{ item.id }}" data-bs-backdrop="static"

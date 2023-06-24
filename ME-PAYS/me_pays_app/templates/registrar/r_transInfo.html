@@ -4,11 +4,11 @@
 {% block title %} Transaction {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex" style="background-color: #e6f1fa;">
+<div class="main-container d-flex" style="background-color: #FA9884;">
   {% include 'registrar/r_sidebar.html' %}
   <div class="content">
     {% include 'registrar/r_nav.html' %}
-    <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
+    <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #DBDFEA;">
       <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{request.user.registrar.first_name}}!</h1>
       <div class="d-flex justify-content-center col-12 ps-3">
         <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
@@ -42,7 +42,7 @@
                                   <th scope="col">Price</th>
                               </tr>
                           </thead>
-                          <tbody>
+                          <tbody class="bg-light">
                             {% for item in cart %}
                             <tr>
                               <td>{{ item.id }}</td>

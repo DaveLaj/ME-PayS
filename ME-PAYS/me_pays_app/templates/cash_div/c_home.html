@@ -4,13 +4,19 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex" style="background-color: #e6f1fa;">
+<div class="main-container d-flex" style="background-color: #f1f1f1;">
     {% include 'cash_div/c_sidebar.html' %}
     <div class="content">
         {% include 'cash_div/c_nav.html' %}
       
         <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{cashier.first_name}}!</h1>
+            <div>
+                <h2 class="ps-3 fw-bold">Welcome <span class="fw-bolder" style="color: #D90D1E;">{{cashier.first_name}}!</span></h2>
+            </div>
+            <div>
+                <h6 class="ps-3 pb-4 fw-bold">from the <span class="fst-italic text-decoration-underline"
+                        style="color: #FFC107;">{{cashier.location}}</span></h6>
+            </div>
             <div class="d-flex justify-content-center col-12 ps-3">
                 <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
                 </div>
@@ -18,8 +24,8 @@
             <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
 
                 <!-- Cash IN -->
-                <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
-                    style="background-color: rgb(153, 185, 255); width: 300px;" data-bs-toggle="modal"
+                <button type="button" class="btn btn-danger fw-bold"
+                    style="width: 300px;" data-bs-toggle="modal"
                     data-bs-target="#loadstep1Modal" onclick="load_nextStep(1)">Cash In
                 </button>
                 
@@ -134,8 +140,8 @@
                 <!-- CASH OUT-->
 
 
-                <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
-                    style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;" 
+                <button type="button" class="btn btn-danger fw-bold"
+                    style="width: 300px; margin-left: 70px;" 
                      onclick="cashout_nextStep(1)">Cash Out</button>
                
 
@@ -257,8 +263,8 @@
 
 
                 <!-- PAY FEES -->
-                <button type="button" class="btn fw-bold rounded-pill border border-primary border-3"
-                    style="background-color: rgb(153, 185, 255); width: 300px; margin-left: 30px;"
+                <button type="button" class="btn btn-danger fw-bold"
+                    style="width: 300px; margin-left: 70px;"
                     data-bs-toggle="modal" data-bs-target="#paystep1Modal" onclick="clearRefNum()" >Pay Fees</button>
 
 

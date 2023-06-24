@@ -1,7 +1,7 @@
 {% load static %}
 
-<div class="sidebar " style="background-color: #343a40;" id="side_nav">
-    <div class="header-box ps-3 pt-2 pb-2 d-flex justify-content-center " style="background-color: #931e24" ;>
+<div class="sidebar " style="background-color: #630000;" id="side_nav">
+    <div class="header-box ps-3 pt-2 pb-2 d-flex justify-content-center " style="background-color: #000000" ;>
         <h1 class="fs-4">
             <span class="bg-white text-dark rounded shadow mx-auto pb-2 px-2">
                 <img src="{% static 'logo/LOGO2.png' %}" alt="" style="width: 110px; height: 27px;">
@@ -16,7 +16,7 @@
                 Users</a>
             <div class="dropdown-menu dropdown-menu-end">
                 <a href={% url "admin_listOfEndUser"%} class="dropdown-item p-2">End User Accounts</a>
-                <a href={% url "admin_listOfPOS"%} class="dropdown-item p-2">POS Accounts</a>
+                <a href={% url "admin_listOfPOS"%} class="dropdown-item p-2">Canteen Owner Accounts</a>
                 <a href={% url "admin_listOfCashier"%} class="dropdown-item p-2">Cashier Accounts</a>
                 <a href={% url "admin_listOfRegistrar"%} class="dropdown-item p-2">Registrar Accounts</a>
             </div>
