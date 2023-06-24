@@ -65,14 +65,15 @@ def shareAmount(request):
     recipient = EndUser.objects.filter(school_id=sid).first()
     sender = EndUser.objects.get(user=request.user)
     # Convert the amount to an integer if needed
-    amount = int(amount)
+    amount = float(amount)
+    amount = abs(amount)
     if recipient.rfid_code is None:
         response_data = {
             'status': 'error',
             'message': 'Recipient has not activated Wallet Pay Services',
         }
         return JsonResponse(response_data)
-    elif sender.credit_balance > amount:
+    elif sender.credit_balance >= amount:
         # Deduct the amount from the current credit_balance
         sender.credit_balance -= amount
         # Save the updated user object

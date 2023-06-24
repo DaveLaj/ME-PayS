@@ -4,7 +4,7 @@ function load_validateAndProceed() {
   var loadrfid = document.getElementById("loadrfid").value;
   if (loadrfid.trim() === "") {
     var errorMessage = "RFID code is required";
-    var errorContainer = $("#load_errorContainerRFID");
+    var errorContainer = $("#load_errorContainerRFID2");
     var displayDuration = 5000; // 5 seconds
     displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
     return;
@@ -30,12 +30,12 @@ function load_validate_rfid() {
         // RFID exists in the database and is active
         // Perform the desired action
         getCreds();
-        load_nextStep(2);
+        load_nextStep(3);
       } else {
         // RFID does not exist in the database
         // Perform the desired action
         var errorMessage = "RFID code does not exist";
-        var errorContainer = $("#load_errorContainerRFID");
+        var errorContainer = $("#load_errorContainerRFID2");
         var displayDuration = 5000; // 5 seconds
         displayErrorMessageWithTimer(
           errorMessage,
@@ -46,7 +46,7 @@ function load_validate_rfid() {
     },
     error: function (xhr, errmsg, err) {
       var errorMessage = "Please Enter Valid RFID code";
-      var errorContainer = $("#load_errorContainerRFID");
+      var errorContainer = $("#load_errorContainerRFID2");
       var displayDuration = 5000; // 5 seconds
       displayErrorMessageWithTimer(
         errorMessage,
@@ -78,6 +78,35 @@ function getCreds() {
     },
   });
 }
+
+
+
+function load_amountValidate() {
+  var amountload = parseFloat($("#amountload").val());
+  if (isNaN(amountload)) {
+    var errorMessage = "Please Enter an Amount";
+    var errorContainer = $("#load_errorContainerRFID");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+  }
+  else if (amountload < 0) {
+    var errorMessage = "Cannot Accept Negative Number";
+    var errorContainer = $("#load_errorContainerRFID");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(
+      errorMessage,
+      errorContainer,
+      displayDuration
+    );
+  } else {
+    load_nextStep(2);
+  }
+
+}
+
+
+
+
 
 function payLoad() {
   var RFID = $("#loadrfid").val();
@@ -150,8 +179,8 @@ function load_showStep(step) {
 function load_nextStep(step) {
   load_currentStep = step;
   load_showStep(load_currentStep);
-  if (step == 1) {
-    $("#loadstep1Modal").on("shown.bs.modal", function () {
+  if (step == 2) {
+    $("#loadstep2Modal").on("shown.bs.modal", function () {
       document.getElementById("loadrfid").value = "";
       document.getElementById("loadrfid").focus();
     });

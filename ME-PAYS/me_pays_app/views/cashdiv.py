@@ -281,9 +281,11 @@ def cashout_validate_balance(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.GET.get('amount')
+    amount = float(amount)
+    amount = abs(amount)
     user=EndUser.objects.filter(rfid_code=rfid).first()
     print(user.credit_balance)
-    if user.credit_balance > float(amount):
+    if user.credit_balance >= float(amount):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Cannot Withdraw Exceeding Amount'})
@@ -298,12 +300,15 @@ def load_cred_amount(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.GET.get('amount')
+    amount = float(amount)
     user=EndUser.objects.filter(rfid_code=rfid).first()
     cashier = Cashier.objects.get(user=request.user)
-    if user is not None:
+    if user is not None and amount < 0:
+        return JsonResponse({'status': 'success', 'message': 'Cannot Accept Negative Amount'})
+    elif user is not None:
         # Convert the amount to an integer if needed
-        amount = int(amount)
         
+        amount = abs(amount)
         # Add the amount to the current credit_balance
         user.credit_balance += amount
         # Save the updated user object
@@ -332,26 +337,26 @@ def cashout_cred_amount(request):
     amount = request.GET.get('amount')
     user=EndUser.objects.filter(rfid_code=rfid).first()
     cashier = Cashier.objects.get(user=request.user)
-    
-    if user is not None:
-        if user.credit_balance > float(amount):
-            # Convert the amount to an integer if needed
-            amount = int(amount)
-            
-            # Add the amount to the current credit_balance
-            user.credit_balance -= amount
-            # Save the updated user object
-            user.save()
-            # Save to Balance Logs
-            log = Balance_Logs.objects.create(
-                account_Owner = user,
-                cashier_sender = cashier,
-                amount = -amount,
-                desc = "Cash Out",
-            )  
-            log.save()
-        else:
-            return JsonResponse({'status': 'success', 'message': 'You sneaky dude :/'})
+    amount = float(amount)
+    if amount < 0:
+        return JsonResponse({'status': 'success', 'message': 'Cannot Accept Negative Amount'})
+    elif user.credit_balance >= float(amount):
+        # Convert the amount to an integer if needed
+        
+        amount = abs(amount)
+        # Add the amount to the current credit_balance
+        user.credit_balance -= amount
+        # Save the updated user object
+        user.save()
+        # Save to Balance Logs
+        log = Balance_Logs.objects.create(
+            account_Owner = user,
+            cashier_sender = cashier,
+            amount = -amount,
+            desc = "Cash Out",
+        )  
+        log.save()
+        
         return JsonResponse({'status': 'success', 'message': 'Cash Out Successful, Please Check Your Load Balance'})
     else:
         return JsonResponse({'status': 'error', 'message': 'User not found, Contact Admin Immediately'})
@@ -550,7 +555,7 @@ def pay_rfid(request):
     cashier = Cashier.objects.get(user=request.user)
     order = Order.objects.get(reference_number=refnum)
     # Convert the amount to an integer if needed
-    amount = int(amount)
+    amount = float(amount)
     amount = abs(amount)
     if user.credit_balance > amount:
         # Deduct the amount from the current credit_balance

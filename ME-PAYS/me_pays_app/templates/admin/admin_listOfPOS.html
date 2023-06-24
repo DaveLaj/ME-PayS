@@ -85,6 +85,15 @@
                                         </div>
                                     </div> 
                                     <div class="col-12">
+                                        <label for="{{ form.school_id.id_for_label }}"  class="form-label">School ID:</label>
+                                        <div class="col-md-12">
+                                            {{ form.school_id }}
+                                        </div>
+                                        <div class="invalid-feedback">
+                                            Please enter your School ID!
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
                                         <label for="{{ form.contact_number.id_for_label }}"  class="form-label">Contact Number:</label>
                                         <div class="col-md-12">
                                             <div class="input-group input-group-sm">
@@ -233,7 +242,7 @@
                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                                         <div class="modal-content">
-                                            <form id='form2' class="row g-1 needs-validation" action="{% url 'updatePOS' person.id %}" method="post">
+                                            <form id='form{{ person.id }}' class="row g-1 needs-validation" action="{% url 'updatePOS' person.id %}" method="post">
                                                 {% csrf_token %}
 
                                                 <div class="modal-header" style="background-color: #A6D0DD;">
@@ -351,4 +360,18 @@
             </div>
 
         </div>
-    </div>{% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js" 
+        integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA=" 
+        crossorigin="anonymous"></script>
+    <script>
+        $('input[name="school_id"]').mask('0/0'); 
+
+      </script>
+      
+    
+    
+    
+    
+    {% endblock %}

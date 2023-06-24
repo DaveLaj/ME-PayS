@@ -117,7 +117,7 @@ class EndUser(models.Model):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     contact_number = models.BigIntegerField()
-    school_id = models.IntegerField()
+    school_id = models.CharField(max_length=9)
     credit_balance = models.FloatField(default=0)
     loan_balance = models.FloatField(default=0)
 
@@ -147,7 +147,8 @@ class POS(models.Model):
     location = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     credit_balance = models.FloatField(default=0)
-
+    school_id = models.CharField(max_length=9)
+    rfid_code =models.CharField(max_length=100, blank=True, null=True)
 class Admin(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -166,15 +167,8 @@ class Registrar(models.Model):
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     contact_number = models.BigIntegerField()
-    school_id = models.IntegerField()
 
 
 
 
-
-# technique to create placeholder on creation of CustomUser instance
-# @receiver(post_save, sender=EndUser)
-# def create_enduser_profile(sender, instance, created, **kwargs):
-#     if created and instance.role == "ENDUSER":
-#         EndUser.objects.create(user=instance)
 

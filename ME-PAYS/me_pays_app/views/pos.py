@@ -142,9 +142,9 @@ def cpay_rfid(request):
     user = EndUser.objects.filter(rfid_code=rfid).first()
     pos = POS.objects.get(user=request.user)
     # Convert the amount to an integer if needed
-    amount = int(amount)
+    amount = float(amount)
     amount = abs(amount)
-    if user.credit_balance > amount:
+    if user.credit_balance >= amount:
         # Deduct the amount from the current credit_balance
         user.credit_balance -= amount
         # Save the updated user object

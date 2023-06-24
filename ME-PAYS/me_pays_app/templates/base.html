@@ -70,6 +70,9 @@
       $('.close-btn').on('click', function () {
         $('.sidebar').removeClass('active');
       })
+      function validateNumberInput(input) {
+        input.value = input.value.replace(/-/g, ''); // Remove hyphens from the input value
+      }
     </script>
 
     {% comment %} <!-- Add Document CashDiv Query -->

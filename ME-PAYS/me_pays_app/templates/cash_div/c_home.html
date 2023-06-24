@@ -33,11 +33,11 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
+                                
                                 <div class="row">
-                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <label for="amount" class="col-sm-2 col-form-label">Amount to be Loaded</label>
                                     <div class="mb-3 col-sm-10">
-                                        <input type="password" class="form-control" id="loadrfid">
-
+                                        <input type="number" class="form-control" id="amountload" oninput="validateNumberInput(this)">
                                     </div>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="button" id="loadbuttontarget" class="btn btn-primary"
-                                    onclick="load_validateAndProceed()">Next</button>
+                                    onclick="load_amountValidate()">Next</button>
                             </div>
                         </div>
                     </div>
@@ -63,33 +63,22 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
+                                
                                 <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
+                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
                                     <div class="mb-3 col-sm-10">
-                                        <p id="personID"></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Student Name:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <p id="fullname"></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Amount to be Loaded</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <input type="number" class="form-control" id="amountload">
+                                        <input type="password" class="form-control" id="loadrfid">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
-                                <div id="load_errorContainer2"
+                                <div id="load_errorContainerRFID2"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" id="prev1" class="btn btn-secondary"
                                     onclick='load_previousStep(1)'>Back</button>
                                 <button type="button" id="loadbuttontarget2" class="btn btn-primary"
-                                    onclick='load_nextStep(3)'>Next</button>
+                                    onclick='load_validateAndProceed()'>Next</button>
                             </div>
                         </div>
                     </div>
@@ -116,9 +105,21 @@
                                         <h7>Php <span id='basetopup'></span></h7>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="personID"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Student Name:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="fullname"></p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
-                                <div id="load_errorContainer2"
+                                <div id="load_errorContainerRFID3"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" id="prev1" class="btn btn-secondary"
                                     onclick='load_previousStep(3)'>Back</button>
