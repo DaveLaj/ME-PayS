@@ -17,7 +17,13 @@
             </a>
         </div>
         <li><a href={% url "cashdiv_home" %} class="text-decoration-none fw-bold px-3 py-2 d-block">Home</a></li>
-        <li><a href={% url "cashdiv_transaction" %} class="text-decoration-none fw-bold px-3 py-2 d-block">Transaction</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle text-decoration-none fw-bold px-3 py-2 d-block" data-bs-toggle="dropdown">Transactions</a>
+            <div class="dropdown-menu dropdown-menu-end">
+                <a href={% url "cashdiv_transaction" %} class="dropdown-item p-2">Recent</a>
+                <a href={} class="dropdown-item p-2">By Student</a>
+            </div>
+        </li>
         <li><a href={% url "cashdiv_account" %} class="text-decoration-none fw-bold px-3 py-2 d-block">Account</a></li>
     </ul>
 </div>

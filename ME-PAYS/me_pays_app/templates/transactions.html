@@ -43,11 +43,13 @@
                                 {% load custom_filters %}
                                 {% for log in page_obj %}
                                 <tr>
-                                    <td>{{log.desc}}</td>
-                                    {% if log.amount < 0 %}
-                                        <td>{{ log.amount }}</td>
+              
+                                    <td>{{log.desc}}</span></td>
+                                   
+                                    {% if log.desc == 'Cash In' or log.desc == 'Share' %}
+                                        <td><span style="color: green;">{{ log.amount }}</span></td>
                                     {% else %}
-                                        <td>{{ log.amount }}</td>
+                                        <td><span style="color: red;">{{ log.amount }}</span></td>
                                     {% endif %}
                                     {% if log.enduser_sender%}
                                       <td>[ <i class="bi bi-person"></i> STUDENT] {{log.enduser_sender.school_id}} </td>

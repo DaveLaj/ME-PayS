@@ -175,7 +175,7 @@ class POS_CreationForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'store_name', 'password1', 'password2', 'contact_number', 'location', 'description')
+        fields = ('email', 'store_name', 'password1', 'password2', 'contact_number', 'school_id', 'location', 'description')
 
 
 class Cashier_CreationForm(UserCreationForm):

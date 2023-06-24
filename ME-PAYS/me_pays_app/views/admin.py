@@ -246,6 +246,7 @@ def pos_list(request):
                 user=user,
                 store_name=form.cleaned_data['store_name'],
                 contact_number=form.cleaned_data['contact_number'],
+                school_id=form.cleaned_data['school_id'],
                 location=form.cleaned_data['location'],
                 description=form.cleaned_data['description'],
                 )
