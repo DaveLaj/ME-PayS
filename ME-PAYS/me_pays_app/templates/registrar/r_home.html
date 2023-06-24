@@ -4,13 +4,14 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex" style="background-color: #e6f1fa;">
+<div class="main-container d-flex" style="background-color: #FA9884 ;">
     {% include 'registrar/r_sidebar.html' %}
     <div class="content">
         {% include 'registrar/r_nav.html' %}
 
-        <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{request.user.registrar.first_name}}!</h1>
+        <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #DBDFEA;">
+            <h1 class="fs-1 ps-3 fw-bold">Welcome {{request.user.registrar.first_name}}!</h1>
+            <h6 class="ps-3 pb-4 fw-bold fst-italic text-decoration-underline text-warning">Registrar Officer</span></h6>
             <div class="d-flex justify-content-center col-12 ps-3">
                 <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
                 </div>
@@ -20,9 +21,9 @@
 
 
                     <div class="col-sm-9 pb-4">
-                        <div class="card">
-                            <div class="card-header" style="background-color: #f1ed71;">
-                                <h1 class="card-title fw-bold fs-3 text-center" style="color: black;">PAY</h1>
+                        <div class="card border-3 border-danger">
+                            <div class="card-header" style="background-color: #E74646;">
+                                <h1 class="card-title fw-bold fs-3 text-center text-white" style="color: black;">PAY</h1>
                             </div>
                             <div id="registrar_errorContainer1" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                             <div class="card-body fw-bold">
@@ -85,7 +86,7 @@
                                                 <th scope="col">Price</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="showTally">
+                                        <tbody class="bg-light" id="showTally">
                                         </tbody>
                                     </table>
                                 </div>
