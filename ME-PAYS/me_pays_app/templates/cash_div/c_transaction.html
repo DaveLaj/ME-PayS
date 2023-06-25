@@ -27,7 +27,7 @@
             <table class="table table-hover table-bordered">
               <thead class="text-center">
                 <tr>
-                  <th scope="col">Student ID Number</th>
+                  <th scope="col">School ID</th>
                   <th scope="col">Transaction Description</th>
                   <th scope="col">Amount</th>
                   <th scope="col">DateTime</th>
@@ -39,9 +39,10 @@
                 {% load custom_filters %}
                 {% for item in page_obj %}
                 <tr>
-                  <td>{{item.account_Owner.school_id}}
+                  {% if item.account_Owner.enduser %}
+                  <td>{{item.account_Owner.enduser.school_id}}
                     <button class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
-                      data-bs-target="#studentInfo{{ item.id }}"> Student Info</button>
+                      data-bs-target="#studentInfo{{ item.id }}">Info</button>
                       
                     <div class="modal fade" id="studentInfo{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                       aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -64,19 +65,19 @@
                               <label for="name" class="col-sm-2 col-form-label">Name</label>
                               <div class="col-sm-10">
                                 <input type="text" class="form-control" id="name"
-                                  value="{{item.account_Owner.first_name}} {{item.account_Owner.last_name}}">
+                                  value="{{item.account_Owner.enduser.first_name}} {{item.account_Owner.enduser.last_name}}">
                               </div>
                             </div>
                             <div class="mb-3 row">
                               <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
                               <div class="col-sm-10">
-                                <input type="text" class="form-control" id="contact" value="+63{{item.account_Owner.contact_number}}">
+                                <input type="text" class="form-control" id="contact" value="+63{{item.account_Owner.enduser.contact_number}}">
                               </div>
                             </div>
                             <div class="mb-3 row">
                               <label for="email" class="col-sm-2 col-form-label">Email</label>
                               <div class="col-sm-10">
-                                <input type="email" class="form-control" id="email" value="{{item.account_Owner.user.email}}">
+                                <input type="email" class="form-control" id="email" value="{{item.account_Owner.email}}">
                               </div>
                             </div>
                     
@@ -89,7 +90,58 @@
                       </div>
                     </div>
                   </td>
-                  
+                  {% elif item.account_Owner.pos %}
+                  <td>{{item.account_Owner.pos.school_id}}
+                    <button class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
+                      data-bs-target="#studentInfo{{ item.id }}">Info</button>
+                      
+                    <div class="modal fade" id="studentInfo{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                      aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header text-white" style="background-color: #931e24;">
+                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Student Information</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body fw-bold">
+                            <div class="row d-flex justify-content-center pb-2">
+                              <div class="col-md">
+                                <div class="text-center">
+                                  <a class="img logo rounded-circle"><img src="http://frontendfreecode.com/img/user.jpg" class="rounded-circle"
+                                      style="width: 150px;" alt="Avatar" /></a>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="name" class="col-sm-2 col-form-label">Name</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="name"
+                                  value="{{item.account_Owner.pos.store_name}}">
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="contact" value="+63{{item.account_Owner.pos.contact_number}}">
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="email" class="col-sm-2 col-form-label">Email</label>
+                              <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" value="{{item.account_Owner.email}}">
+                              </div>
+                            </div>
+                    
+                          </div>
+                    
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  {% endif %}
                   <td>{{item.desc}}</td>
                   {% if item.amount < 0 %} <td>{{ item.amount|neg }}</td>
                     {% else %}

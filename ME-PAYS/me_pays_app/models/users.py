@@ -42,12 +42,9 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
        
-        allgroup = []
-        groups = Group.objects.all
-        for group in groups():
-            allgroup.append(group)
+        group = Group.objects.get(name='admin')
         user = self.create_user(email, password, **extra_fields)
-        user.groups.set(allgroup)
+        user.groups.set([group])
         return user
     
     def create_enduser(self, email, password=None, **extra_fields):

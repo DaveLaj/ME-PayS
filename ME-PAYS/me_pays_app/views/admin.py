@@ -23,7 +23,15 @@ def user_has_admin_group(user):
 def admin_enable(request):
     registered_enduser_count = EndUser.objects.filter(user__is_active=1, rfid_code__isnull=False).count()
     all_enduser_count = EndUser.objects.filter(user__is_active=1).count()
-    return render(request, "admin/admin_enable.html", {'registered_enduser_count':registered_enduser_count, 'all_enduser_count': all_enduser_count})
+    registered_pos_count = POS.objects.filter(user__is_active=1, rfid_code__isnull=False).count()
+    all_pos_count = POS.objects.filter(user__is_active=1).count()
+
+    context = {'registered_enduser_count':registered_enduser_count, 
+               'all_enduser_count': all_enduser_count,
+               'registered_pos_count': registered_pos_count,
+               'all_pos_count': all_pos_count,
+    }
+    return render(request, "admin/admin_enable.html", context)
 
 
 
@@ -38,7 +46,7 @@ def admin_enable(request):
 # -------------------------------------------------------------------Enable RFID functions-------------------------------------------
 
 
-
+@login_required(login_url='index')
 @user_passes_test(user_has_admin_group)
 @require_GET
 def validate_SID(request):
@@ -53,6 +61,15 @@ def validate_SID(request):
     elif EndUser.objects.filter(school_id=student_id, user__is_active=0).exists():
         # Student ID is inactive
         return JsonResponse({'exists': 1})
+    elif POS.objects.filter(school_id=student_id, user__is_active=1, rfid_code__isnull=True).exists():
+        # Student ID is active and doesn't have an associated RFID
+        return JsonResponse({'exists': 2})
+    elif POS.objects.filter(school_id=student_id, user__is_active=1).exists():
+        # Student ID already has an RFID associated and is active
+        return JsonResponse({'exists': 3})
+    elif POS.objects.filter(school_id=student_id, user__is_active=0).exists():
+        # Student ID is inactive
+        return JsonResponse({'exists': 1})
     else:
     # Student ID does not exist in the database
         return JsonResponse({'exists': 0})
@@ -60,20 +77,8 @@ def validate_SID(request):
 
 
 
-@user_passes_test(user_has_admin_group)
-@require_GET
-def load_validate_SID(request):
-    student_id = request.GET.get('school_id')
-    
-    if EndUser.objects.filter(school_id=student_id, user__is_active=1, rfid_code__isnull=True).exists():
-        # Student ID is active and doesn't have an associated RFID
-        return JsonResponse({'exists': 2})
-    elif EndUser.objects.filter(school_id=student_id, user__is_active=1).exists():
-        # Student ID has an RFID associated
-        return JsonResponse({'exists': 1})
-    else:
-    # Student ID does not exist in the database
-        return JsonResponse({'exists': 3})
+
+
 
 @user_passes_test(user_has_admin_group)
 @require_POST
@@ -82,10 +87,14 @@ def register_rfid_code(request):
     rfid = request.POST.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     try:
-        end_user = EndUser.objects.get(school_id=school_id)
-        end_user.rfid_code = rfid
-        end_user.save()
-
+        if EndUser.objects.filter(school_id=school_id).exists():
+            end_user = EndUser.objects.get(school_id=school_id)
+            end_user.rfid_code = rfid
+            end_user.save()
+        else:
+            pos = POS.objects.get(school_id=school_id)
+            pos.rfid_code = rfid
+            pos.save()
         return JsonResponse({'success': True, 'message': 'Registration Successful'})
     except EndUser.DoesNotExist:
         return JsonResponse({'success': False, 'message': 'EndUser not found; Call the Administrator Immediately'})
@@ -106,8 +115,8 @@ def validate_rfid(request):
     rfid = request.GET.get('rfid')
     hashed_rfid = hashlib.sha256(rfid.encode()).hexdigest()
     end_user = EndUser.objects.filter(rfid_code=hashed_rfid, user__is_active=1).first()
-    
-    if end_user is not None:
+    pos = POS.objects.filter(rfid_code=hashed_rfid, user__is_active=1).first()
+    if end_user is not None or pos is not None:
         # RFID instance already exists
         return JsonResponse({'exists': 1})
     else:

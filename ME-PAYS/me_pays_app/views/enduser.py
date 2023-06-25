@@ -140,3 +140,34 @@ def transactions(request):
     }
     return render(request, "transactions.html", context)
 
+@login_required(login_url='index')
+@user_passes_test(user_has_enduser_group)
+def enduser_searchTransaction(request):
+    enduser = EndUser.objects.get(user=request.user)
+    search_string = request.GET.get('query')
+    date_string = request.GET.get('date')
+    
+    loglist = Balance_Logs.objects.filter(account_Owner=enduser).order_by('-id')
+    
+    if search_string:
+        loglist = loglist.filter(Q(desc__icontains=search_string))
+    
+    if date_string:
+        try:
+            date = datetime.strptime(date_string, '%Y-%m-%d').date()
+            loglist = loglist.filter(datetime__date=date)
+        except ValueError:
+            pass
+    
+    paginator = Paginator(loglist, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    count = loglist.count()
+    
+    context = {
+        'count': count,
+        'page_obj': page_obj,
+        'search_string': search_string,  # Pass the search query back to the template
+        'date_string': date_string,      # Pass the date input back to the template
+    }
+    return render(request, "transactions.html", context)

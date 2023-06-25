@@ -159,6 +159,7 @@
                                     <th scope="col">Location/Address</th>     
                                     <th scope="col" style="width: 150px;">Contact #</th>
                                     <th scope="col" style="width: 150px;">School ID</th>
+                                    <th scope="col" style="width: 150px;">RFID Registered</th>
                                     <th scope="col" style="width: 150px;">Date Joined</th>
                                     <th scope="col" style="width: 150px;">Last Login</th>
                                     <th scope="col" style="width: 150px;">Description</th>
@@ -173,6 +174,11 @@
                                     <td>{{ person.pos.location }}</td>
                                     <td>{{ person.pos.contact_number }}</td>
                                     <td>{{ person.pos.school_id }}</td>
+                                    {% if person.pos.rfid_code is not null %}
+                                        <td>Registered</td>
+                                    {% else %}
+                                        <td>Not Registered</td>
+                                    {% endif %}
                                     <td>{{ person.date_joined }}</td>
                                     {% if person.last_login is null %}
                                     <td>No Login Entry</td>

@@ -137,9 +137,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
     // Get the data values from your Django template and convert them to JavaScript variables
-var registeredCount = {{ registered_enduser_count }};
-var unregisteredCount = {{ all_enduser_count }} - registeredCount;
-
+var enduser_registeredCount = {{ registered_enduser_count }};
+var enduser_unregisteredCount = {{ all_enduser_count }} - enduser_registeredCount;
+var pos_registeredCount = {{ registered_pos_count }};
+var pos_unregisteredCount = {{ all_pos_count }} - pos_registeredCount;
 // Get the canvas element
 var ctx = document.getElementById('stackedBarChart').getContext('2d');
 
@@ -147,16 +148,16 @@ var ctx = document.getElementById('stackedBarChart').getContext('2d');
 new Chart(ctx, {
   type: 'bar',
   data: {
-    labels: ['Enduser'],
+    labels: ['Enduser','POS'],
     datasets: [
       {
         label: 'Registered',
-        data: [registeredCount],
+        data: [enduser_registeredCount, pos_registeredCount],
         backgroundColor: '#3cba9f'
       },
       {
         label: 'Unregistered',
-        data: [unregisteredCount],
+        data: [enduser_unregisteredCount, pos_unregisteredCount],
         backgroundColor: '#ccc'
       }
     ]

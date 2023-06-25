@@ -6,7 +6,7 @@ def redirect_if_logged_in(view_func):
     def wrapper(request, *args, **kwargs):
         if request.user.is_authenticated:
             if request.user.groups.all()[0].name=='admin':
-                return redirect('admin_home')
+                return redirect('admin_enable')
             elif request.user.groups.all()[0].name=='enduser':
                 return redirect('home')
             elif request.user.groups.all()[0].name=='cashier':

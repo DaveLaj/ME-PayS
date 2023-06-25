@@ -72,7 +72,8 @@ urlpatterns = [
     path("home/get_balance", updateBalance, name='updateBalance'),
     # Balance Logs/History
     path("transactions", transactions, name='transactions'),
-
+    path("transactions/search", enduser_searchTransaction, name='enduser_searchTransaction'),
+    
     # Account Page
     path("account", account, name='account'),
 
@@ -118,10 +119,18 @@ urlpatterns = [
 
     path("cashdiv_transaction", cashdiv_transaction, name='cashdiv_transaction'),
     path("cashdiv_transaction/search", searchTransaction, name='searchTransaction'),
+    path("cashdiv_transaction_user/<int:account_id>/<str:group>/search", cashdiv_transactions_user_search, name='cashdiv_transactions_user_search'),
+    path("cashdiv_transaction_user/<int:account_id>/<str:group>", cashdiv_transactions_user, name='cashdiv_transaction_user'),
+    
+    path("cashdiv_transaction_enduserlist", balances_enduser_list, name='cashdiv_transactions_enduserlist'),
+    path("cashdiv_transaction_poslist", balances_pos_list, name='cashdiv_transaction_poslist'),
+
+
+   
+
 
 
     # Services Page
-
     path('cashdiv_product/search', searchServices, name='searchServices'),
 
 

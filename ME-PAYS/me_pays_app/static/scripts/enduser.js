@@ -117,7 +117,8 @@ function SendAmount() {
           setTimeout(function () {
             $("#statusContainer").empty();
           }, displayDuration);
-        update_Balance();
+          update_Balance();
+          $('#sharestep2Modal').modal('hide');
         } else {
           // Handle error response
           var Message = response.message;
