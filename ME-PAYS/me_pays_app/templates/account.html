@@ -18,26 +18,26 @@
                 <div class="col-sm-8 mb-3 mb-sm-0">
                     <div class="card border-3">
                         <div class="card-body">
-                            <fieldset disabled>
+                            
                                 <div class="mb-3 row">
                                     <label for="idNo" class="col-sm-2 col-form-label">Student ID</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="idNo"
-                                            placeholder="{{ request.user.enduser.school_id }}">
+                                            placeholder="{{ request.user.enduser.school_id }}" disabled>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
                                     <label for="name" class="col-sm-2 col-form-label">Name</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="name"
-                                            placeholder="{{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}">
+                                            placeholder="{{ request.user.enduser.first_name }} {{ request.user.enduser.last_name }}" disabled>
                                     </div>
                                 </div>
             
                                 <div class="mb-3 row">
                                     <label for="email" class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-10">
-                                        <input type="email" class="form-control" id="email" placeholder="{{ request.user.email}}">
+                                        <input type="email" class="form-control" id="email" placeholder="{{ request.user.email}}" disabled>
                                     </div>
                                 </div>
             
@@ -45,10 +45,97 @@
                                     <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="contact"
-                                            placeholder="+63 {{ request.user.enduser.contact_number }}">
+                                            placeholder="+63 {{ request.user.enduser.contact_number }}" disabled>
                                     </div>
                                 </div>
-                            </fieldset>
+                                <div class="mb-3 row">
+                                    <label for="contact" class="col-sm-2 col-form-label">RFID Enabled</label>
+                                    <div class="col-sm-10">
+                                        {% if request.user.enduser.rfid_code is null %}
+                                        <input type="text" class="form-control" id="contact"
+                                            placeholder="Not Enabled" disabled>
+                                        {% else %}
+                                        <input type="text" class="form-control" id="contact"
+                                            placeholder="Enabled" disabled>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="mb-3 row justify-content-center">
+                                    <button type="button" class="btn border border-danger border-3 fw-bold  square-button"
+                                        style="background-color: #ff4d4d;; width: 50%;" data-bs-toggle="modal"
+                                            data-bs-target="#disable_rfid">
+                                            <i class="fas fa-exclamation-triangle me-2"></i> Disable RFID Service
+                                    </button>
+                                </div>
+                                
+                                <div class="modal fade" id="disable_rfid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #fffb90;">
+                                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Disable RFID</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body fw-bold">
+                                            <div class="row text-center">
+                                                <h1><i class="bi bi-exclamation-triangle"></i></h1>
+                                                <h3> Only disable RFID Services if you lost your Card!</h3>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                           
+                                            <button type="button"data-bs-toggle="modal"
+                                            data-bs-target="#disable_rfid2" data-bs-dismiss="modal" class="btn btn-primary">Continue</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="disable_rfid2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header" style="background-color: #fffb90;">
+                                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Disable RFID</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body fw-bold">
+                                            <div class="row text-center">
+                                                <h1>Reminder:</i></h1>
+                                                <h3>You can re-enable the RFID service at the ICTC Office</h3>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer text-center">
+                                            <button style="width: 35%" type="button" data-bs-toggle="modal" data-bs-target="#disable_rfid2" class="btn btn-warning mx-auto">
+                                                <i class="fas fa-exclamation-triangle me-2"></i> DISABLE
+                                            </button>
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                           
                         </div>
                     </div>
                 </div>
