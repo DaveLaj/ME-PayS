@@ -76,6 +76,7 @@ urlpatterns = [
     
     # Account Page
     path("account", account, name='account'),
+    path("account/disable_rfid<int:user_id>", disable_rfid, name='disable_rfid'),
 
 
 
@@ -164,9 +165,9 @@ urlpatterns = [
     path("pos_home", canteen_home, name='canteen_home'),
 
 
-
-
-
+    
+    path("pos_account", canteen_account, name='canteen_account'),
+    path("pos_account/disable_rfid<int:user_id>", pos_disable_rfid, name='pos_disable_rfid'),
 
 
 

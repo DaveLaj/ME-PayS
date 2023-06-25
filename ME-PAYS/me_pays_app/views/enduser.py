@@ -30,7 +30,13 @@ def user_has_enduser_group(user):
 def home(request):
     return render(request, "home.html", {})
 
-
+@login_required(login_url='index')
+@user_passes_test(user_has_enduser_group)
+def disable_rfid(request, user_id):
+    user = EndUser.objects.filter(id=user_id).first()
+    user.rfid_code = None
+    user.save()
+    return redirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='index')
 @require_POST
@@ -44,7 +50,8 @@ def share_validate_sid(request):
         return JsonResponse({'exists': 0})
     
 
-
+@login_required(login_url='index')
+@user_passes_test(user_has_enduser_group)
 @require_GET
 def  share_sid_creds(request):
     school_id = request.GET.get('school_id')
@@ -85,14 +92,14 @@ def shareAmount(request):
         
         # Save to Balance Logs
         receive_log = Balance_Logs.objects.create(
-            account_Owner=recipient,
+            account_Owner=recipient.user,
             enduser_sender=sender,
             amount=amount,
             desc="Share",
         )  
         receive_log.save()
         send_log = Balance_Logs.objects.create(
-            account_Owner=sender,
+            account_Owner=sender.user,
             enduser_sender=recipient,
             amount=-(amount),
             desc="Send",

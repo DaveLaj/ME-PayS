@@ -77,6 +77,30 @@ def updateMenu(request, item_id):
         return redirect(request.META.get('HTTP_REFERER'))
   
 
+
+@login_required(login_url='index') 
+@user_passes_test(user_has_pos_group)
+def canteen_account(request):
+    return render(request, "canteen/canteen_account.html")
+
+
+
+@login_required(login_url='index')
+@user_passes_test(user_has_pos_group)
+def pos_disable_rfid(request, user_id):
+    user = POS.objects.filter(id=user_id).first()
+    user.rfid_code = None
+    user.save()
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+
+
+
+
+
+
+
 @login_required(login_url='index') 
 @user_passes_test(user_has_pos_group)
 def deleteMenu(request, item_id):
