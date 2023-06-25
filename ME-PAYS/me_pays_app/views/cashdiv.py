@@ -182,14 +182,23 @@ def load_validate_rfid(request):
 @user_passes_test(user_has_cashier_group)
 @require_POST
 def cashout_validate_rfid(request):
+    amount = request.POST.get('amount')
     rfid = request.POST.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
-    if EndUser.objects.filter(rfid_code=rfid, user__is_active=1).exists():
-        # RFID instance already exists
-        return JsonResponse({'exists': 0})
-    if POS.objects.filter(rfid_code=rfid, user__is_active=1).exists():
-        # RFID instance already exists
-        return JsonResponse({'exists': 0})
+    enduser = EndUser.objects.filter(rfid_code=rfid, user__is_active=1).first()
+    pos = POS.objects.filter(rfid_code=rfid, user__is_active=1).first()
+    amount = float(amount)
+    amount = abs(amount)
+    if enduser:
+        if enduser.credit_balance >= amount:
+            return JsonResponse({'exists': 0})
+        else:
+            return JsonResponse({'exists': 3})
+    if pos:
+        if pos.credit_balance >= amount:
+            return JsonResponse({'exists': 0})
+        else:
+            return JsonResponse({'exists': 3})
     else:
         # RFID code does not exist in the database
         return JsonResponse({'exists': 1})

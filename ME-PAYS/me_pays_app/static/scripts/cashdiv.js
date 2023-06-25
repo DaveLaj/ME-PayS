@@ -254,6 +254,46 @@ $(document).ready(function () {
 });
 
 
+
+
+$(document).ready(function () {
+  $("#cashoutstep1Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#cashoutbuttontarget1").click();
+    }
+  });
+});
+
+
+$(document).ready(function () {
+  $("#cashoutstep2Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#cashoutbuttontarget2").click();
+    }
+  });
+});
+
+
+$(document).ready(function () {
+  $("#cashoutstep3Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#cashoutbuttontarget3").click();
+    }
+  });
+});
+
+
+$(document).ready(function () {
+  $("#cashoutstep4Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#cashoutbuttontarget4").click();
+    }
+  });
+});
 // For cashout ========================================================================================================================
 
 var cashout_currentStep = 1;
@@ -267,18 +307,18 @@ function cashout_showStep(step) {
 function cashout_nextStep(step) {
   cashout_currentStep = step;
   cashout_showStep(cashout_currentStep);
-  if (step == 1) {
-    $("#cashoutstep1Modal").on("shown.bs.modal", function () {
+  if (step == 2) {
+    $("#cashoutstep2Modal").on("shown.bs.modal", function () {
       document.getElementById("cashoutrfid").value = "";
       document.getElementById("cashoutrfid").focus();
     });
-  } else if (step == 3) {
+  } else if (step == 4) {
     cashout_showTotal_TopUp();
   }
 }
 
 function cashout_showTotal_TopUp() {
-  var amountload = parseFloat($("#cashout_amountload").val());
+  var amountload = parseFloat($("#amountcashout").val());
   $("#basetopup_cashout").text(amountload);
 }
 
@@ -288,6 +328,35 @@ function cashout_previousStep(step) {
   cashout_currentStep = step;
   cashout_showStep(cashout_currentStep);
 }
+
+
+function cashout_amountValidate() {
+  var amount = parseFloat($("#amountcashout").val());
+  if (isNaN(amount)) {
+    var errorMessage = "Please Enter an Amount";
+    var errorContainer = $("#cashout_errorContainerRFID");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+  }
+  else if (amount < 0) {
+    var errorMessage = "Cannot Accept Negative Number";
+    var errorContainer = $("#cashout_errorContainerRFID");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(
+      errorMessage,
+      errorContainer,
+      displayDuration
+    );
+  } else {
+    cashout_nextStep(2);
+  }
+
+}
+
+
+
+
+
 
 
 function cashout_validateAndProceed() {
@@ -307,6 +376,7 @@ function cashout_validateAndProceed() {
 
 function cashout_validate_rfid() {
   var RFID = $("#cashoutrfid").val();
+  var amount = parseFloat($("#amountcashout").val());
   var validateRFIDURL = "cashdiv_home/cashout_rfid_check";
   $.ajax({
     url: validateRFIDURL, // Replace with the URL of your Django view
@@ -316,14 +386,27 @@ function cashout_validate_rfid() {
     },
     data: {
       rfid: RFID,
+      amount: amount,
     },
     success: function (response) {
       if (response.exists == 0) {
         // RFID exists in the database and is active
         // Perform the desired action
         cashout_getCreds();
-        cashout_nextStep(2);
-      } else {
+        cashout_nextStep(3);
+      } 
+      else if (response.exists == 3){
+        var errorMessage = "Card does not have sufficient balance for Cashout";
+        var errorContainer = $("#cashout_errorContainerRFID1");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
+      }
+      
+      else {
         // RFID does not exist in the database
         // Perform the desired action
         var errorMessage = "RFID code does not exist";
@@ -416,7 +499,7 @@ function validate_balance () {
 
 function cashout() {
   var RFID = $("#cashoutrfid").val();
-  var amountcashout = parseFloat($("#cashout_amountload").val());
+  var amountcashout = parseFloat($("#amountcashout").val());
   cashoutCredAmount(RFID, amountcashout);
 }
 
@@ -826,7 +909,7 @@ function pay_validate_school_id() {
           errorContainer,
           displayDuration
         );
-      
+       
       } else if(response.exists == 2){
         getCart();
        
