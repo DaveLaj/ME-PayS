@@ -280,9 +280,9 @@
                             <div class="modal-body fw-bold">
                                 <div class="row fw-bold">
                                     
-                                    <label class="col-sm-2 col-form-label">Ref No:</label>
+                                    <label class="col-sm-2 col-form-label">School ID:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="refnum">
+                                        <input type="text" class="form-control" id="payfees_school_id">
                                     </div>
                                 </div>
                             </div>
@@ -290,12 +290,11 @@
                                 <div id="pay_errorContainerRFID1"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="validate_refnum()">Next</button>
+                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="pay_clean_school_id()">Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 <div class="modal fade" id="paystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -306,6 +305,72 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
+                            <div class="modal-body fw-bold">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">School ID: <span id='show_school_id'></span></h1>
+                                <br>
+                                <div>
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th scope="col" style="width: 50px;">Ref #</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Date and Time</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="showCart">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+    
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <div id="pay_errorContainerRFID2"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(1)">Previous</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="modal fade" id="paystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 2</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <input type="hidden" id="refnum">
+                            <input type="hidden" id="FinalTotalAmount">
                             <div class="modal-body fw-bold">
                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Reference Number:     <span id='show_refnum'></span></h1>
                                 <br>
@@ -336,26 +401,13 @@
                                         <p id='show_sid'></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <input type="hidden" id="FinalTotalAmount" value="">
-                                    <label class="col-sm-2 col-form-label">Payment Method:</label>
-                                    <div class="col m-3">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions"
-                                                id="MC-PayS" value="MC-PayS">
-                                            <label class="form-check-label" for="MC-PayS">MC-PayS</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions" id="Cash"
-                                                value="Cash">
-                                            <label class="form-check-label" for="Cash">Cash</label>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(1)">Previous</button>
-                                <button type="button" class="btn btn-primary" id="changebutton" onclick="">Next</button>
+                                <div id="pay_errorContainerRFID3"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(2)">Previous</button>
+                                <button type="button" class="btn btn-primary" id="paybuttontarget3" onclick="pay_nextStep(4)">Next</button>
                             </div>
                         </div>
                     </div>
@@ -363,7 +415,7 @@
 
 
 
-                <div class="modal fade" id="paystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                <div class="modal fade" id="paystep4Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
@@ -382,10 +434,10 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <div id="pay_errorContainerRFID3"
+                                <div id="pay_errorContainerRFID4"
                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
-                                <button type="button" class="btn btn-secondary" onclick="pay_previousStep(2)">Previous</button>
-                                <button type="button" id="paybuttontarget3"  class="btn btn-primary"  onclick="pay_validateAndProceed()">Pay</button>
+                                <button type="button" class="btn btn-secondary" onclick="pay_previousStep(3)">Previous</button>
+                                <button type="button" id="paybuttontarget4"  class="btn btn-primary"  onclick="pay_validateAndProceed()">Pay</button>
                             </div>
                         </div>
                     </div>
@@ -470,6 +522,7 @@
 <script>
     // Set the CSRF token as a global variable
     window.csrfTokenRefNum = '{{ csrf_token }}';
+    window.csrfTokengetCart = '{{ csrf_token }}';
     window.csrfTokenLoad = '{{ csrf_token }}';
     window.csrfTokenPay = '{{ csrf_token }}';
     window.csrfTokenPayRFID = '{{ csrf_token }}';
@@ -518,7 +571,7 @@
        
             }]
         };
-
+ 
 
         var feePaymentChartData = {
             labels: feePaymentDates,

@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.core import serializers
+from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 import hashlib
@@ -347,7 +348,7 @@ def cashout_cred_amount(request):
             desc = "Cash Out",
         )  
         log.save()
-        
+         
         return JsonResponse({'status': 'success', 'message': 'Cash Out Successful, Please Check Your Load Balance'})
     else:
         return JsonResponse({'status': 'error', 'message': 'User not found, Contact Admin Immediately'})
@@ -475,24 +476,27 @@ def searchServices(request):
     return render(request, "cash_div/c_product.html", context)
 
 
-
-
-
-
+@user_passes_test(user_has_cashier_group)
+@require_POST
+def getCart(request):
+    school_id = request.POST.get('school_id')
+    orderlist = Order.objects.filter(paid=False, enduser__school_id=school_id)
+    serialized_orderlist = serializers.serialize('python', orderlist)
+    return JsonResponse({'orderlist': serialized_orderlist})
 
 
 @user_passes_test(user_has_cashier_group)
 @require_POST
-def validate_refnum(request):
-    refnum = request.POST.get('refnum')
+def pay_validate_school_id(request):
+    school_id = request.POST.get('school_id')
     
-    if Order.objects.filter(paid=1, reference_number=refnum).exists():
+    if Order.objects.filter(paid=0, enduser__school_id=school_id).exists():
         return JsonResponse({'exists': 2})
-    elif Order.objects.filter(paid=0, reference_number=refnum).exists():
-        return JsonResponse({'exists': 1})
-    else:
+    elif Order.objects.filter(enduser__school_id=school_id).exists():
         return JsonResponse({'exists': 0})
-
+    else:
+        return  JsonResponse({'exists': 1})
+   
 
 
 @login_required(login_url='index') 
@@ -562,7 +566,7 @@ def pay_rfid(request):
         
         # Save to Balance Logs
         log = Balance_Logs.objects.create(
-            account_Owner=user,
+            account_Owner=user.user,
             cashier_sender=cashier,
             amount=-(amount),
             desc="Fee Payment",

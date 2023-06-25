@@ -104,8 +104,8 @@ urlpatterns = [
     
     
     
-    
-    path("cashdiv_home/validate_refnum", validate_refnum),
+    path("cashdiv_home/getCart", getCart),
+    path("cashdiv_home/pay_validate_school_id", pay_validate_school_id),
     path("cashdiv_home/tallyItems", tallyItems, name='tallyItems'),
     path("cashdiv_home/payRFID", pay_rfid, name='pay_rfid'),
     path("cashdiv_home/order_info", cashier_order_info),
@@ -126,7 +126,7 @@ urlpatterns = [
     path("cashdiv_transaction_poslist", balances_pos_list, name='cashdiv_transaction_poslist'),
 
 
-   
+    
 
 
 

@@ -244,6 +244,14 @@ $(document).ready(function () {
     }
   });
 });
+$(document).ready(function () {
+  $("#paystep4Modal").keyup(function (event) {
+    if (event.keyCode === 13) {
+      // Enter key pressed
+      $("#paybuttontarget4").click();
+    }
+  });
+});
 
 
 // For cashout ========================================================================================================================
@@ -496,7 +504,7 @@ function nextStep(step) {
     var currentSchoolIDElement = document.getElementById("currentschoolid");
     currentSchoolIDElement.innerText = regStudentID;
   }
-}
+} 
 function previousStep(step) {
   currentStep = step;
   showStep(currentStep);
@@ -716,8 +724,8 @@ function pay_showStep(step) {
 function pay_nextStep(step) {
   pay_currentStep = step;
   pay_showStep(pay_currentStep);
-  if (step == 3) {
-    $("#paystep3Modal").on("shown.bs.modal", function () {
+  if (step == 4) {
+    $("#paystep4Modal").on("shown.bs.modal", function () {
       document.getElementById("payrfid").value = "";
       document.getElementById("payrfid").focus();
     });
@@ -730,54 +738,45 @@ function pay_previousStep(step) {
 
 function clearRefNum() {
   $("#paystep1Modal").on("shown.bs.modal", function () {
-    document.getElementById("refnum").value = "";
-    document.getElementById("refnum").focus();
+    document.getElementById("payfees_school_id").value = "";
+    document.getElementById("payfees_school_id").focus();
   });
 }
 
-function validate_refnum() {
-  var refnum = $("#refnum").val();
-  var validateRFIDURL = "cashdiv_home/validate_refnum";
+
+
+function getCart() {
+  var school_id = $("#payfees_school_id").val();
+  var URL = "cashdiv_home/getCart";
   $.ajax({
-    url: validateRFIDURL, // Replace with the URL of your Django view
+    url: URL, // Replace with the URL of your Django view
     method: "POST",
     headers: {
-      "X-CSRFToken": window.csrfTokenRefNum, // Set the CSRF token in the headers
+      "X-CSRFToken": window.csrfTokengetCart, // Set the CSRF token in the headers
     },
     data: {
-      refnum: refnum,
+      school_id: school_id,
     },
     success: function (response) {
-      if (response.exists == 1) {
-        // not yet paid
-        cashier_order_info();
-      } else if(response.exists == 2){
-        // already paid
-        var errorMessage = "Cart with ref number already paid";
-        var errorContainer = $("#pay_errorContainerRFID1");
-        var displayDuration = 5000; // 5 seconds
-        displayErrorMessageWithTimer(
-          errorMessage,
-          errorContainer,
-          displayDuration
-        );
-
-
-      }  else {
-        // RFID does not exist in the database
-        // Perform the desired action
-        var errorMessage = "Reference number does not exist";
-        var errorContainer = $("#pay_errorContainerRFID1");
-        var displayDuration = 5000; // 5 seconds
-        displayErrorMessageWithTimer(
-          errorMessage,
-          errorContainer,
-          displayDuration
-        );
+      // Print cart information\
+      $('#showCart').empty();
+      $("#show_school_id").text(school_id)
+      var orderlist = response.orderlist;
+      for (var i = 0; i < orderlist.length; i++) {
+        var order = orderlist[i];
+        // Access the fields of each order
+        var referenceNumber = order.fields.reference_number;
+        var paid = order.fields.paid;
+        var datetimeString = order.fields.datetime;
+        var options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        var formattedDatetime = new Date(datetimeString).toLocaleString('en-US', options);
+        // Perform further processing with the order data
+        printCart(referenceNumber, paid, formattedDatetime);
       }
+      pay_nextStep(2);
     },
     error: function (xhr, errmsg, err) {
-      var errorMessage = "Please Enter a valid reference number";
+      var errorMessage = "Please enter a valid School ID";
       var errorContainer = $("#pay_errorContainerRFID1");
       var displayDuration = 5000; // 5 seconds
       displayErrorMessageWithTimer(
@@ -789,8 +788,73 @@ function validate_refnum() {
   });
 }
 
-function cashier_order_info() {
-  var refnum = $("#refnum").val();
+
+function pay_clean_school_id() {
+  var school_id = $("#payfees_school_id").val();
+  if (school_id.trim() === "") {
+    var errorMessage = "School ID is required";
+    var errorContainer = $("#pay_errorContainerRFID1");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
+    return;
+  } else {
+    pay_validate_school_id();
+  }
+}
+
+
+
+function pay_validate_school_id() {
+  var school_id = $("#payfees_school_id").val();
+  var URL = "cashdiv_home/pay_validate_school_id";
+  $.ajax({
+    url: URL, // Replace with the URL of your Django view
+    method: "POST",
+    headers: {
+      "X-CSRFToken": window.csrfTokenRefNum, // Set the CSRF token in the headers
+    },
+    data: {
+      school_id: school_id,
+    },
+    success: function (response) {
+      if (response.exists == 1) {
+        var errorMessage = "School ID doesn't Exist";
+        var errorContainer = $("#pay_errorContainerRFID1");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
+      
+      } else if(response.exists == 2){
+        getCart();
+       
+      } else {
+        var errorMessage = "School ID doesn't Have any pending requests";
+        var errorContainer = $("#pay_errorContainerRFID1");
+        var displayDuration = 5000; // 5 seconds
+        displayErrorMessageWithTimer(
+          errorMessage,
+          errorContainer,
+          displayDuration
+        );
+      } 
+    },
+    error: function (xhr, errmsg, err) {
+      var errorMessage = "Please Enter a valid School ID";
+      var errorContainer = $("#pay_errorContainerRFID1");
+      var displayDuration = 5000; // 5 seconds
+      displayErrorMessageWithTimer(
+        errorMessage,
+        errorContainer,
+        displayDuration
+      );
+    },
+  });
+}
+
+function cashier_order_info(refnum) {
   funcURL = "cashdiv_home/order_info";
   $.ajax({
     url: funcURL, // Replace with the URL of your Django view
@@ -799,6 +863,7 @@ function cashier_order_info() {
       refnum: refnum,
     },
     success: function (response) {
+      $("#refnum").val(refnum);
       $('#showTally').empty();
       $('#totalAmount').empty();
       $('#FinalTotalAmount').val('');
@@ -815,11 +880,11 @@ function cashier_order_info() {
         var qty = item.qty;
         printTally(id, name, price, qty)
       }
-      pay_nextStep(2);
+      pay_nextStep(3);
     },
     error: function (xhr, errmsg, err) {
       var errorMessage = "Error please call admin";
-      var errorContainer = $("#pay_errorContainerRFID2");
+      var errorContainer = $("#pay_errorContainerRFID3");
       var displayDuration = 5000; // 5 seconds
       displayErrorMessageWithTimer(
         errorMessage,
@@ -838,7 +903,7 @@ function pay_validateAndProceed() {
   var payrfid = document.getElementById("payrfid").value;
   if (payrfid.trim() === "") {
     var errorMessage = "RFID code is required";
-    var errorContainer = $("#pay_errorContainerRFID3");
+    var errorContainer = $("#pay_errorContainerRFID4");
     var displayDuration = 5000; // 5 seconds
     displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
     return;
@@ -871,7 +936,7 @@ function pay_validate_rfid() {
         // RFID does not exist in the database
         // Perform the desired action
         var errorMessage = "RFID code does not exist";
-        var errorContainer = $("#pay_errorContainerRFID3");
+        var errorContainer = $("#pay_errorContainerRFID4");
         var displayDuration = 5000; // 5 seconds
         displayErrorMessageWithTimer(
           errorMessage,
@@ -882,7 +947,7 @@ function pay_validate_rfid() {
     },
     error: function (xhr, errmsg, err) {
       var errorMessage = "Please Enter Valid RFID code";
-      var errorContainer = $("#pay_errorContainerRFID3");
+      var errorContainer = $("#pay_errorContainerRFID4");
       var displayDuration = 5000; // 5 seconds
       displayErrorMessageWithTimer(
         errorMessage,
@@ -920,11 +985,11 @@ function RFIDpay(rfid) {
           displayDuration
         );
         update_Stats();
-        $('#paystep3Modal').modal('hide');
+        $('#paystep4Modal').modal('hide');
        } else if (response.status=='error'){
         if (response.status=='error'){
           var errorMessage = response.message;
-          var errorContainer = $("#pay_errorContainerRFID3");
+          var errorContainer = $("#pay_errorContainerRFID4");
           var displayDuration = 5000; // 5 seconds
           displayErrorMessageWithTimer(
             errorMessage,

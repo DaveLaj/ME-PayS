@@ -50,6 +50,17 @@ function printTally(id, name, price, qty) {
 }
 
 
+function printCart(reference_number, paid, datetime) {
+  var newItemAdd = '<tr>' +
+                      '<td>'+ reference_number +'</td>'+
+                     '<td>'+ paid +'</td>'+
+                     '<td>'+ datetime +'</td>'+
+                     '<td>'+ '<button type="button" class="btn btn-primary"  onclick="cashier_order_info('+ reference_number +')">Proceed</button>' +'</td>'+
+                   '</tr>';
+  $('#showCart').append(newItemAdd);
+}
+
+
 
 
 
