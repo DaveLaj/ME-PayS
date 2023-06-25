@@ -139,34 +139,42 @@ def cpay_rfid(request):
     rfid = request.POST.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.POST.get('FinalTotalAmount')
-    user = EndUser.objects.filter(rfid_code=rfid).first()
+    enduser = EndUser.objects.filter(rfid_code=rfid).first()
     pos = POS.objects.get(user=request.user)
+    
     # Convert the amount to an integer if needed
     amount = float(amount)
     amount = abs(amount)
-    if user.credit_balance >= amount:
+    if enduser.credit_balance >= amount:
         # Deduct the amount from the current credit_balance
-        user.credit_balance -= amount
+        enduser.credit_balance -= amount
         # Save the updated user object
-        user.save()
+        enduser.save()
         pos.credit_balance+=amount
         pos.save()
 
         # Save to Balance Logs
         log = Balance_Logs.objects.create(
-            account_Owner=user,
+            account_Owner=enduser.user,
             pos_sender=pos,
             amount=-(amount),
             desc="POS Transaction",
         )  
         log.save()
 
+        log2 = Balance_Logs.objects.create(
+            account_Owner=request.user,
+            enduser_sender = enduser,
+            amount=amount,
+            desc="POS Transaction",
+        )
+        log2.save()
         current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         response_data = {
             'status': 'success',
             'message': 'Payment Successful, Please Check Your Load Balance',
-            'school_id': user.school_id,
+            'school_id': enduser.school_id,
             'current_datetime': current_datetime
         }
         
@@ -309,8 +317,7 @@ def canteen_products(request):
 @login_required(login_url='index')
 @user_passes_test(user_has_pos_group)
 def canteen_history(request):
-    pos = POS.objects.get(user=request.user)
-    loglist = Balance_Logs.objects.filter(pos_sender=pos).order_by('-id')
+    loglist = Balance_Logs.objects.filter(account_Owner=request.user).order_by('-id')
     paginator = Paginator(loglist, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -333,15 +340,13 @@ def canteen_history(request):
 @login_required(login_url='index')
 @user_passes_test(user_has_pos_group)
 def searchHistory(request):
-    pos = POS.objects.get(user=request.user)
     search_string = request.GET.get('query')
     date_string = request.GET.get('date')
     
-    loglist = Balance_Logs.objects.filter(pos_sender=pos).order_by('-id')
+    loglist = Balance_Logs.objects.filter(account_Owner=request.user).order_by('-id')
     
     if search_string:
-        loglist = loglist.filter(Q(account_Owner__school_id__icontains=search_string))
-    
+        loglist = loglist.filter(Q(desc__icontains=search_string))
     if date_string:
         try:
             date = datetime.strptime(date_string, '%Y-%m-%d').date()

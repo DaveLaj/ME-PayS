@@ -126,8 +126,7 @@ def updateBalance(request):
 @login_required(login_url='index')
 @user_passes_test(user_has_enduser_group)
 def transactions(request):
-    enduser = EndUser.objects.get(user=request.user)
-    loglist = Balance_Logs.objects.filter(account_Owner=enduser).order_by('-id')
+    loglist = Balance_Logs.objects.filter(account_Owner=request.user).order_by('-id')
     paginator = Paginator(loglist, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

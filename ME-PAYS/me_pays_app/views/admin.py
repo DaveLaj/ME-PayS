@@ -835,10 +835,6 @@ def registrar_list(request):
                 messages.error(request, "Password do not match!")
             elif Registrar.objects.filter(contact_number = form.cleaned_data['contact_number']).exists():
                 messages.error(request, "Contact Number already in use!")
-            elif EndUser.objects.filter(school_id = form.cleaned_data['school_id']).exists():
-                messages.error(request, "School ID already in use!")
-            elif Registrar.objects.filter(school_id = form.cleaned_data['school_id']).exists():
-                messages.error(request, "School ID already in use!")
             else:
                 # Create the user:
                 user = CustomUser.objects.create_registrar(
@@ -850,7 +846,6 @@ def registrar_list(request):
                 user=user,
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
-                school_id=form.cleaned_data['school_id'],
                 contact_number=form.cleaned_data['contact_number'],
                 )
                 user.save()   
