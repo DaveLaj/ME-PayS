@@ -184,8 +184,13 @@ def cashout_validate_rfid(request):
     rfid = request.POST.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     if EndUser.objects.filter(rfid_code=rfid, user__is_active=1).exists():
+        # RFID instance already exists
+        return JsonResponse({'exists': 0})
+    if POS.objects.filter(rfid_code=rfid, user__is_active=1).exists():
+        # RFID instance already exists
         return JsonResponse({'exists': 0})
     else:
+        # RFID code does not exist in the database
         return JsonResponse({'exists': 1})
 
 
@@ -219,13 +224,22 @@ def  load_rfid_creds(request):
 def cashout_rfid_creds(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
-    user=EndUser.objects.filter(rfid_code=rfid).first()
-    fullname = user.first_name+" "+user.last_name
-    response = {
-        'fullname': fullname,
-        'personID': user.school_id,
-        'balance' : user.credit_balance
-    }
+    enduser=EndUser.objects.filter(rfid_code=rfid).first()
+    pos=POS.objects.filter(rfid_code=rfid).first()
+    if enduser:
+        fullname = enduser.first_name+" "+enduser.last_name
+        response = {
+            'fullname': fullname,
+            'personID': enduser.school_id,
+            'balance' : enduser.credit_balance,
+        }
+    elif pos:
+        fullname = pos.store_name
+        response = {
+            'fullname': fullname,
+            'personID': pos.school_id,
+            'balance' : pos.credit_balance,
+        }
     return JsonResponse(response)
 
 
@@ -237,8 +251,13 @@ def cashout_validate_balance(request):
     amount = request.GET.get('amount')
     amount = float(amount)
     amount = abs(amount)
-    user=EndUser.objects.filter(rfid_code=rfid).first()
-    print(user.credit_balance)
+    enduser=EndUser.objects.filter(rfid_code=rfid).first()
+    pos=POS.objects.filter(rfid_code=rfid).first()
+    if enduser:
+        user = enduser
+    elif pos:
+        user = pos
+
     if user.credit_balance >= float(amount):
         return JsonResponse({'status': 'success'})
     else:
@@ -270,11 +289,14 @@ def load_cred_amount(request):
         amount = abs(amount)
         # Add the amount to the current credit_balance
         if hasattr(user, 'enduser'):
-            user.enduser.credit_balance += amount
+            user.enduser.credit_balance += amount 
+            user.enduser.save()
         elif hasattr(user, 'pos'):
             user.pos.credit_balance += amount
+            user.pos.save()
         else: 
-            return {'status': 'error', 'message': 'Status Error'}
+            return print("error")
+        
         # Save the updated user object
         user.save()
         # Save to Balance Logs
@@ -299,7 +321,12 @@ def cashout_cred_amount(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.GET.get('amount')
-    user=EndUser.objects.filter(rfid_code=rfid).first()
+    enduser=EndUser.objects.filter(rfid_code=rfid).first()
+    pos=POS.objects.filter(rfid_code=rfid).first()
+    if enduser:
+        user = enduser
+    elif pos:
+        user = pos
     cashier = Cashier.objects.get(user=request.user)
     amount = float(amount)
     if amount < 0:
@@ -314,7 +341,7 @@ def cashout_cred_amount(request):
         user.save()
         # Save to Balance Logs
         log = Balance_Logs.objects.create(
-            account_Owner = user,
+            account_Owner = user.user,
             cashier_sender = cashier,
             amount = -amount,
             desc = "Cash Out",
