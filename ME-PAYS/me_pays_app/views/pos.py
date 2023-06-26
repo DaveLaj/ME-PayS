@@ -391,3 +391,113 @@ def searchHistory(request):
         'date_string': date_string,      # Pass the date input back to the template
     }
     return render(request, "canteen/canteen_history.html", context)
+
+
+
+
+
+
+
+
+@login_required(login_url='index')
+@user_passes_test(user_has_pos_group)
+@require_POST
+def pos_share_validate_sid(request):
+    sid = request.POST.get('school_id')
+    if EndUser.objects.filter(school_id=sid, user__is_active=1).exists():
+        return JsonResponse({'exists': 1})
+    elif POS.objects.filter(school_id=sid, user__is_active=1).exists():
+        return JsonResponse({'exists': 1})
+    else:
+        return JsonResponse({'exists': 0})
+    
+
+@login_required(login_url='index')
+@user_passes_test(user_has_pos_group)
+@require_GET
+def pos_share_sid_creds(request):
+    school_id = request.GET.get('school_id')
+    enduser=EndUser.objects.filter(school_id=school_id).first()
+    pos=POS.objects.filter(school_id=school_id).first()
+    if enduser:
+        fullname = enduser.first_name+" "+enduser.last_name
+        response = {
+            'fullname': fullname,
+            'personID': enduser.school_id
+        } 
+    elif pos:
+        fullname = pos.store_name
+        response = {
+            'fullname': fullname,
+            'personID': pos.school_id
+        } 
+    return JsonResponse(response)
+
+
+
+
+
+
+
+
+
+@login_required(login_url='index')
+@user_passes_test(user_has_pos_group)
+@require_POST
+def pos_shareAmount(request):
+    sid = request.POST.get('sid')
+    amount = request.POST.get('amount')
+    recipient = EndUser.objects.filter(school_id=sid).first() or POS.objects.filter(school_id=sid).first()
+    sender = POS.objects.get(user=request.user)
+    # Convert the amount to an integer if needed
+    amount = Decimal(amount)
+    amount = abs(amount)
+    if recipient.rfid_code is None:
+        response_data = {
+            'status': 'error',
+            'message': 'Recipient has not activated MC-Pays Services',
+        }
+        return JsonResponse(response_data)
+    elif sender.credit_balance >= amount:
+        # Deduct the amount from the current credit_balance
+        sender.credit_balance -= amount
+        # Save the updated user object
+        sender.save()
+        # Add to recipient
+        recipient.credit_balance += amount
+        # Save the updated user object
+        recipient.save()
+        # Save to Balance Logs
+        receive_log = Balance_Logs.objects.create(
+            account_Owner=recipient.user,
+            pos_sender=sender,
+            amount=amount,
+            desc="Share",
+        )  
+        receive_log.save()
+        
+        if isinstance(recipient, EndUser):
+            send_log = Balance_Logs.objects.create(
+                account_Owner=sender.user,
+                enduser_sender=recipient,
+                amount=-(amount),
+                desc="Send",
+            )  
+            send_log.save()
+        elif isinstance(recipient, POS):
+            send_log = Balance_Logs.objects.create(
+                account_Owner=sender.user,
+                pos_sender=recipient,
+                amount=-(amount),
+                desc="Send",
+            )  
+            send_log.save()
+
+        response_data = {
+            'status': 'success',
+            'message': 'Payment Successful, Please Check Your Load Balance',
+        }
+        
+        return JsonResponse(response_data)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Insufficient Credits'})

@@ -62,7 +62,7 @@ function share_validate_sid() {
           // Perform the desired action
             shareGetCreds();
             share_nextStep(2);
-        } else {
+        } else { 
           // SID does not exist in the database
           // Perform the desired action
           var errorMessage = "ID number does not exist";
@@ -194,7 +194,7 @@ function update_Balance() {
         method: 'GET',
         success: function(response) {
             // Update the values with the response data
-            $('#balance').text(response.balance.toFixed(1));
+            $('#balance').text(response.balance);
         },
         error: function() {
             console.log('Error occurred during AJAX request.');

@@ -163,9 +163,15 @@ urlpatterns = [
     path("pos_home/fetchProducts", FetchProducts),
     path("pos_home/payRFID", cpay_rfid, name='cpay_rfid'),
     path("pos_home", canteen_home, name='canteen_home'),
-
-
+    path("pos_home/share_send", pos_shareAmount, name='pos_shareAmount'),
+    path("pos_home/validateshare", pos_share_validate_sid, name='validateshare'),
+    path("pos_home/share_get_creds", pos_share_sid_creds, name='share_sid_creds'),
     
+
+
+
+
+
     path("pos_account", canteen_account, name='canteen_account'),
     path("pos_account/disable_rfid<int:user_id>", pos_disable_rfid, name='pos_disable_rfid'),
 
