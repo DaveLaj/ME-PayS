@@ -507,7 +507,7 @@ def pay_validate_school_id(request):
     
     if Order.objects.filter(paid=0, enduser__school_id=school_id).exists():
         return JsonResponse({'exists': 2})
-    elif Order.objects.filter(enduser__school_id=school_id).exists():
+    elif EndUser.objects.filter(school_id=school_id).exists():
         return JsonResponse({'exists': 0})
     else:
         return  JsonResponse({'exists': 1})
