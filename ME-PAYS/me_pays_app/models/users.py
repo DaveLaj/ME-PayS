@@ -115,7 +115,7 @@ class EndUser(models.Model):
     last_name = models.CharField(max_length=30, blank=True)
     contact_number = models.BigIntegerField()
     school_id = models.CharField(max_length=9)
-    credit_balance = models.FloatField(default=0)
+    credit_balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     loan_balance = models.FloatField(default=0)
 
 
@@ -132,7 +132,7 @@ class Cashier(models.Model):
     last_name = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=60)
     contact_number = models.CharField(max_length=10)
-    credit_balance = models.FloatField(default=0)
+    credit_balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     
 
 
@@ -143,7 +143,7 @@ class POS(models.Model):
     contact_number = models.BigIntegerField()
     location = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    credit_balance = models.FloatField(default=0)
+    credit_balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     school_id = models.CharField(max_length=9)
     rfid_code =models.CharField(max_length=100, blank=True, null=True)
 class Admin(models.Model):

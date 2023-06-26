@@ -74,9 +74,9 @@
                                             <div class="row">
                                                 <label for="price" class="col-sm-2 col-form-label">Price:</label>
                                                 <div class="col-sm-10">
-                                                    <input type="number" class="form-control" name="product_price"
+                                                    <input type="text" class="form-control" name="product_price"
                                                         placeholder="Price"
-                                                        oninput="this.value = this.value.slice(0, 6);" required='true'>
+                                                        oninput="this.value = this.value.slice(0, 6);" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46 || event.charCode === 0" required='true'>
                                                 </div>
                                             </div>
 
@@ -147,9 +147,9 @@
                                                         <label for="price"
                                                             class="col-sm-2 col-form-label">Price:</label>
                                                         <div class="col-sm-10">
-                                                            <input type="number" class="form-control"
+                                                            <input type="text" class="form-control"
                                                                 name="product_price" placeholder="{{ item.menu_price}}"
-                                                                oninput="this.value = this.value.slice(0, 6);">
+                                                                oninput="this.value = this.value.slice(0, 6);" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46 || event.charCode === 0">
                                                         </div>
                                                     </div>
 

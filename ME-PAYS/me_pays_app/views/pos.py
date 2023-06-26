@@ -7,7 +7,6 @@ from me_pays_app.forms import *
 from me_pays_app.models.pos import menu
 from django.core.paginator import Paginator
 from django.db.models import Q
-import logging
 import hashlib
 from django.http import JsonResponse
 from me_pays_app.models.balance import Balance_Logs
@@ -19,6 +18,8 @@ import json
 from django.db.models import Count
 from django.db.models.functions import TruncDate
 from datetime import date, timedelta
+from decimal import Decimal
+
 def user_has_pos_group(user):
     return user.groups.filter(name='pos').exists()
 
@@ -167,7 +168,7 @@ def cpay_rfid(request):
     pos = POS.objects.get(user=request.user)
     
     # Convert the amount to an integer if needed
-    amount = float(amount)
+    amount = Decimal(amount)
     amount = abs(amount)
     if enduser.credit_balance >= amount:
         # Deduct the amount from the current credit_balance

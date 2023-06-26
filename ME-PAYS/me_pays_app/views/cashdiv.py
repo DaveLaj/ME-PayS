@@ -15,6 +15,7 @@ from django.core.serializers import serialize
 from django.core.serializers.json import DjangoJSONEncoder
 import json
 import hashlib
+from decimal import Decimal
 from datetime import datetime
 from django.db.models import Q
 from me_pays_app.forms import *
@@ -187,7 +188,7 @@ def cashout_validate_rfid(request):
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     enduser = EndUser.objects.filter(rfid_code=rfid, user__is_active=1).first()
     pos = POS.objects.filter(rfid_code=rfid, user__is_active=1).first()
-    amount = float(amount)
+    amount = Decimal(amount)
     amount = abs(amount)
     if enduser:
         if enduser.credit_balance >= amount:
@@ -259,7 +260,7 @@ def cashout_validate_balance(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.GET.get('amount')
-    amount = float(amount)
+    amount = Decimal(amount)
     amount = abs(amount)
     enduser=EndUser.objects.filter(rfid_code=rfid).first()
     pos=POS.objects.filter(rfid_code=rfid).first()
@@ -268,7 +269,7 @@ def cashout_validate_balance(request):
     elif pos:
         user = pos
 
-    if user.credit_balance >= float(amount):
+    if user.credit_balance >= Decimal(amount):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Cannot Withdraw Exceeding Amount'})
@@ -283,7 +284,7 @@ def load_cred_amount(request):
     rfid = request.GET.get('rfid')
     rfid = hashlib.sha256(rfid.encode()).hexdigest()
     amount = request.GET.get('amount')
-    amount = float(amount)
+    amount = Decimal(amount)
     enduser=EndUser.objects.filter(rfid_code=rfid).first()
     pos=POS.objects.filter(rfid_code=rfid).first()
     if enduser:
@@ -297,13 +298,16 @@ def load_cred_amount(request):
         # Convert the amount to an integer if needed
         
         amount = abs(amount)
+        print(amount)
         # Add the amount to the current credit_balance
         if hasattr(user, 'enduser'):
             user.enduser.credit_balance += amount 
             user.enduser.save()
+            print(user.enduser.credit_balance)
         elif hasattr(user, 'pos'):
             user.pos.credit_balance += amount
             user.pos.save()
+            print(user.pos.credit_balance)
         else: 
             return print("error")
         
@@ -338,13 +342,15 @@ def cashout_cred_amount(request):
     elif pos:
         user = pos
     cashier = Cashier.objects.get(user=request.user)
-    amount = float(amount)
+    amount = Decimal(amount)
     if amount < 0:
         return JsonResponse({'status': 'success', 'message': 'Cannot Accept Negative Amount'})
-    elif user.credit_balance >= float(amount):
+    elif user.credit_balance >= amount:
         # Convert the amount to an integer if needed
         
         amount = abs(amount)
+        print(amount)
+        print(user.credit_balance)
         # Add the amount to the current credit_balance
         user.credit_balance -= amount
         # Save the updated user object
@@ -559,7 +565,7 @@ def pay_rfid(request):
     cashier = Cashier.objects.get(user=request.user)
     order = Order.objects.get(reference_number=refnum)
     # Convert the amount to an integer if needed
-    amount = float(amount)
+    amount = Decimal(amount)
     amount = abs(amount)
     if user.credit_balance > amount:
         # Deduct the amount from the current credit_balance

@@ -9,15 +9,10 @@ from me_pays_app.models.pos import *
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
-from django.core import serializers
-from django.core.serializers.json import DjangoJSONEncoder
-import json
-import hashlib
 from datetime import datetime
 from django.db.models import Q
 from me_pays_app.forms import *
-from django.db.models import Sum
-
+from decimal import Decimal
 
 
 def user_has_enduser_group(user):
@@ -72,7 +67,7 @@ def shareAmount(request):
     recipient = EndUser.objects.filter(school_id=sid).first()
     sender = EndUser.objects.get(user=request.user)
     # Convert the amount to an integer if needed
-    amount = float(amount)
+    amount = Decimal(amount)
     amount = abs(amount)
     if recipient.rfid_code is None:
         response_data = {
