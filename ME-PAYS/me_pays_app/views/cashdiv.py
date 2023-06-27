@@ -346,11 +346,8 @@ def cashout_cred_amount(request):
     if amount < 0:
         return JsonResponse({'status': 'success', 'message': 'Cannot Accept Negative Amount'})
     elif user.credit_balance >= amount:
-        # Convert the amount to an integer if needed
         
         amount = abs(amount)
-        print(amount)
-        print(user.credit_balance)
         # Add the amount to the current credit_balance
         user.credit_balance -= amount
         # Save the updated user object

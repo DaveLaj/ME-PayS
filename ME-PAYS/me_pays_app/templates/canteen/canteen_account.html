@@ -28,7 +28,12 @@
                                         <input type="email" value="{{request.user.email}}" class="form-control" id="email" disabled>
                                     </div>
                                 </div>
-            
+                                <div class="mb-3 row">
+                                    <label for="school_id" class="col-sm-2 col-form-label">School ID</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" value="{{request.user.pos.school_id}}"class="form-control" id="school_id" disabled>
+                                    </div>
+                                </div>
                                 <div class="mb-3 row">
                                     <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
                                     <div class="col-sm-10">

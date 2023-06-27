@@ -347,6 +347,16 @@ function cashout_amountValidate() {
       errorContainer,
       displayDuration
     );
+  }
+  else if (amount == 0) {
+    var errorMessage = "Please Enter a Valid Amount";
+    var errorContainer = $("#cashout_errorContainerRFID");
+    var displayDuration = 5000; // 5 seconds
+    displayErrorMessageWithTimer(
+      errorMessage,
+      errorContainer,
+      displayDuration
+    );
   } else {
     cashout_nextStep(2);
   }
@@ -367,6 +377,7 @@ function cashout_validateAndProceed() {
     var displayDuration = 5000; // 5 seconds
     displayErrorMessageWithTimer(errorMessage, errorContainer, displayDuration);
     return;
+  
   } else {
     cashout_validate_rfid();
   }
@@ -909,7 +920,7 @@ function pay_validate_school_id() {
           errorContainer,
           displayDuration
         );
-       
+        
       } else if(response.exists == 2){
         getCart();
        
