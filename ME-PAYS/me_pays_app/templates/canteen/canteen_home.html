@@ -1,71 +1,386 @@
 {% extends 'base.html'%}
-
+{% load custom_filters %}
 {% load static %}
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex">
+<div class="main-container d-flex" style="background-color: #F1F1F1;">
     {% include 'canteen/canteen_sidebar.html' %}
     <div class="content">
         {% include 'canteen/canteen_nav.html' %}
 
-        <div class="dashboard-content px-3 pt-4">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome back!</h1>
-            <div class="row d-flex mt-3 ms-1" style="margin: 12px;">
-                <div class="col-sm-5 mb-3">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
-                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Earnings (as of today)
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        </div>
-                    </div>
+        <div class="dashboard-content px-3 pt-4 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
+            <div>
+                <h2 class="ps-3 fw-bold">Welcome <span class="fw-bolder" style="color: #FFC107;">{{pos.store_name}}!</span></h2>
+            </div>
+            <div>
+                <h6 class="ps-3 pb-4 fw-bold">from the <span class="fst-italic text-decoration-underline"
+                        style="color: #D90D1E;">{{pos.location}}</span></h6>
+            </div>
+            <div class="d-flex">
+                <h6> Your Credit Balance is: </h6>
+                <h3 class="fw-bold text-success ps-2 pb-2">{{ request.user.pos.credit_balance }}</h3>
+              </div>
+            <div class="d-flex justify-content-center col-12 ps-3">
+                <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
                 </div>
-                <div class="col-sm-7">
-                    <div class="card border-3" style="border-color: black;">
-                        <div class="card-header text-center fw-bold" style="border-color: black;">
-                            CART
-                        </div>
-                        <div class="card-body scrollbar-black bordered-black square" style="height: 250px; overflow-y: auto">
-                            <div class="row">
-                                <label for="inputProduct" class="col-sm-2 col-form-label">Product/s:</label>
-                                <div class=" mb-3  col-sm-10  d-flex">
-                                    <select class="form-select" id="inputProductSelect">
-                                        <option selected>Choose Menu...</option>
-                                        <option value="1">Menu 1</option>
-                                        <option value="2">Option 2</option>
-                                        <option value="3">Categorys 2</option>
-                                    </select>
-                                    <button id="addProduct" type="button" class="btn btn-dark d-flex"><i
-                                            class="bi bi-plus-square-fill me-2"></i>Add</button>
+            </div>
+         
+
+            <div class="row d-flex ms-1 mt-4">
+                <div class="col d-flex justify-content-center">
+
+                    <!-- Buttons -->
+                    <button type="button" class="btn btn-warning fw-bold float-end"
+                        style="width: 300px; margin-right: 18px;"
+                        data-bs-toggle="modal" data-bs-target="#cpaystep1Modal"><i class="bi bi-cart-check-fill"></i> Pay Order/s</button>
+                    <button type="button" class="btn btn-warning fw-bold float-end"
+                        style="width: 300px; margin-right: 18px;" data-bs-toggle="modal" data-bs-target="#pos_sharestep1Modal"
+                        onclick="clearInput()">Share MC-Pays Money</button>
+
+
+
+
+
+
+
+                    <!-- PAY ORDER -->
+                    
+
+                    <div class="modal fade" id="cpaystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #931e24;">
+                                    <h1 class="modal-title fw-bold fs-3 text-white" id="staticBackdropLabel">PAY Step 1</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                                 </div>
-                                <div id="newproduct" class="m-1"></div>
-                            </div>
-                            <div class="row">
-                                <label for="amount" class="col-sm-2 col-form-label">Total Amount:</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="amount">
+                                <div class="modal-body fw-bold">
+                                    <!-- <div class="row">
+                                        <label for="inputDocument" class="col-sm-2 col-form-label">Product/s:</label>
+                                        <div id="initInput" class=" mb-3  col-sm-10  d-flex">
+                                            <select id="select_page" style="width:1200px;" class="operator select2">
+                                                <option value="">Select an item</option>
+                                                {% for item in products %}
+                                                <option value="{{ item.id }}">{{ item.menu_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button id="addFile" type="button" class="btn btn-dark d-flex"><i
+                                                    class="bi bi-plus-square-fill me-2"></i>Add</button>
+                                        </div>
+                                        <div id="newinput" class="m-1"></div>
+
+                                        <br>
+
+                                    </div> -->
+
+                                    <div class="row g-3">
+                                        <div class="col-md-8">
+                                            <label for="inputDocument" class="form-label">Product/s:</label>
+                                            <select id="posselect1" class="operator">
+                                                <option value="">Select an item</option>
+                                                {% for item in products %}
+                                                <option value="{{ item.id }}">{{ item.menu_name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                    
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="qty1" class="form-label">Quantity</label>
+                                            <input type="text" class="form-control" id="posselect1qty">
+                                        </div>
+                                        <div class="col-md-2 d-grid mx-auto pb-2">
+                                            <label for="" class="form-label">Add</label>
+                                            <button id="addProduct" type="button" class="btn btn-secondary " style="background-color: #3388e6;"><i class="bi bi-plus-square"></i> </button>
+                                        </div>
+                                        
+                                    </div>
+                                    <div id="newproduct" class="m-1"></div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div id="cpay_errorContainerRFID1"
+                                        class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" id="paybuttontarget" class="btn btn-primary"
+                                        onclick="sendSelectedValuesCanteen()">Next</button>
                                 </div>
                             </div>
-                           
-                            <div class="row">
-                                <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
-                                <div class="col-sm-10 mb-3">
-                                    <input type="password" class="form-control" id="RFID">
-                                </div>
-                            </div>
-                            
-                            
-                        </div>
-                        <div class=" card-footer">
-<a href="#" class="btn btn-primary float-end">PAY</a>
                         </div>
                     </div>
+
+
+                    <div class="modal fade" id="cpaystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #931e24;">
+                                    <h1 class="modal-title fw-bold fs-3 text-white" id="staticBackdropLabel">PAY Step 2</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fw-bold">
+                                    <div>
+                                        <table class="table table-hover table-bordered">
+                                            <thead class="text-center">
+                                                <tr>
+                                                    <th scope="col" style="width: 50px;">#</th>
+                                                    <th scope="col">Name of Product</th>
+                                                    <th scope="col">Qty</th>
+                                                    <th scope="col">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="showTally">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="showTally" class="m-1"></div>
+                                    <div class="row">
+                                        <h6 class="col-sm-2 fw-bold">Total:</h6>
+                                        <div class="col-sm-10">
+                                            <p id='totalAmount'></p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <input type="hidden" id="FinalTotalAmount" value="">
+                                        <label class="col-sm-2 col-form-label">Payment Method:</label>
+                                        <div class="col m-3">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="RadioOptions"
+                                                    id="MC-PayS" value="MC-PayS">
+                                                <label class="form-check-label" for="MC-PayS">MC-PayS</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="RadioOptions"
+                                                    id="Cash" value="Cash">
+                                                <label class="form-check-label" for="Cash">Cash</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="cpay_previousStep(1)">Previous</button>
+                                    <button type="button" class="btn btn-primary"
+                                        onclick="cpay_nextStep(3)">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="modal fade" id="cpaystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #931e24;">
+                                    <h1 class="modal-title fw-bold fs-3 text-white" id="staticBackdropLabel">Pay</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fw-bold">
+                                    <div class="row fw-bold">
+                                        <h1 class="modal-title fw-bold fs-3 pb-3">MC-PayS Method:</h1>
+                                        <label class="col-sm-2 col-form-label fw-bold">Scan RFID:</label>
+                                        <div class="col-sm-10">
+                                            <input type="password" class="form-control" id="cpayrfid">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div id="cpay_errorContainerRFID3"
+                                        class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="cpay_previousStep(2)">Previous</button>
+                                    <button type="button" id="cpaybuttontarget3" class="btn btn-primary"
+                                        onclick="cpay_validateAndProceed()">Pay</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!--  -->
+                <!-- pos Share  -->
+
+                <div class=" pt-5 text-center">
+                   
+                
+                    <div class="modal fade" id="pos_sharestep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #fffb90;">
+                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Share</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fw-bold">
+                                    <div class="row">
+                                        <label for="idnumber" class="col-sm-2 col-form-label">ID Number:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="idnumber" placeholder="ID Number"
+                                             name="idnumber"  >
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <label for="amount" class="col-sm-2 col-form-label">Amount:</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" id="amount" placeholder="Amount"
+                                                oninput="this.value = this.value.slice(0, 6)" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46 || event.charCode === 0">
+                                        </div>
+                                    </div>
+                
+                                </div>
+                                <div class="modal-footer">
+                                    <div id="share_errorContainer"
+                                        class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick='pos_share_validateAndProceed()'>Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                
+                    <div class="modal fade" id="pos_sharestep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header" style="background-color: #fffb90;">
+                                    <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Share</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body fw-bold">
+                                    <div class="row">
+                                        <label for="personID" class="col-sm-2 col-form-label">Recipient ID:</label>
+                                        <div class="mb-3 col-sm-10">
+                                            <input type="text" class="form-control" id="personID" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label for="fullname" class="col-sm-2 col-form-label">Recipient Name:</label>
+                                        <div class="mb-3 col-sm-10">
+                                            <input type="text" class="form-control" id="fullname" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <label for="amountshow" class="col-sm-2 col-form-label">Amount</label>
+                                        <div class="mb-3 col-sm-10">
+                                            <input type="text" class="form-control" id="amountshow" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div id="share_errorContainer2"
+                                        class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                    <button type="button" class="btn btn-secondary" onclick="share_nextStep(1)">Back</button>
+                                    <button type="button" class="btn btn-primary" onclick="pos_SendAmount()"
+                                        >Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+
+            <div class="container-fluid p-3 pb-4">
+                <div class="card text-center" style="border-color: #343434;">
+                    <div class="card-header text-white" style="background-color: #343434;">
+                        <h5 class="fw-bold">Total Daily Earnings</h5>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h1>
+                        <h5 class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payment/s</h5>
+                        <p>You can cashout your earnings at the Cashiering Division.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex mt-5 align-items-center justify-content-center">
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="PaymentHistogramChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="PaymentEarningHistogramChart"></canvas>
+                    </div>
+                </div>
             </div>
 
         </div>
-    </div>{% endblock %}
+
+
+
+    </div>
+    <script>
+        // Set the CSRF token as a global variable
+        window.csrfTokenShareValidate = '{{ csrf_token }}';
+        window.csrfTokenSharePay = '{{ csrf_token }}';
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+    <script>
+        var ctxPayment = document.getElementById('PaymentHistogramChart').getContext('2d');
+        var ctxPaymentAmount = document.getElementById('PaymentEarningHistogramChart').getContext('2d');
+
+        var PaymentEarnings = {{ payment_amounts|safe }};
+        var PaymentDates = {{ payment_dates|safe }};
+        var PaymentCounts = {{ payment_counts|safe }};
+
+
+        var PaymentEarningsData = {
+            labels: PaymentDates,
+            datasets: [{
+                label: 'Payment Earnings',
+                data: PaymentEarnings,
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+       
+            }]
+        };
+       
+        var PaymentChartData = {
+            labels: PaymentDates,
+            datasets: [{
+                label: 'Payment Transaction Count',
+                data: PaymentCounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+            
+            }]
+        };
+        var chartOptions = {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 100, // Specify the desired step size for the ticks
+                        maxTicksLimit: 5 // Set the maximum number of ticks to be displayed
+                    }
+                }]
+            }
+        };
+        var PaymentEarningsChart = new Chart(ctxPaymentAmount, {
+            type: 'bar',
+            data: PaymentEarningsData,
+            options: chartOptions
+        });
+
+        var PaymentChart = new Chart(ctxPayment, {
+            type: 'bar',
+            data: PaymentChartData,
+            options: chartOptions
+        });
+    </script>
+    <script>
+        // Set the CSRF token as a global variable
+        window.csrfTokenCPay = '{{ csrf_token }}';
+        window.csrfTokenCPayRFID = '{{ csrf_token }}';
+    </script>
+
+{% endblock %}

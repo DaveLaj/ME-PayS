@@ -3,17 +3,17 @@
 {% load static %}
 {% block title %} Register {% endblock%}
 {% block content%}
-<main class="login-bg" style="background-color: #dfdddd">
+<main class="login-bg" style="background: url('../static/images/bg1.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
     <div class="container">
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-3">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-5 col-md-6 d-flex flex-column align-items-center justify-content-center">
                         <div class="card border border-secondary rounded-4">
-                            <div class="card-header p-1 m-1">
+                            <div class="card-header">
                                 <div class="d-flex justify-content-center">
                                     <a href="index" class="logo d-flex align-items-center w-auto text-decoration-none">
-                                        <img src="{% static 'logo/LOGO.png' %}" class="img-fluid" width="80px" alt="Logo" />
+                                        <img src="{% static 'logo/LOGO.png' %}" class="img-fluid" width="60px" alt="Logo" />
                                     
                                         <span>
                                             <strong class="d-none d-lg-block text-danger fw-bold h3">
@@ -25,16 +25,13 @@
                                 <!-- End Logo -->
                             </div>
 
-                            <div class="card-body">
+                            <div class="card-body" style="background-color: #e6f1fa;">
                                 <div class="">
-                                    <h5 class="card-title text-center pb-0">
-                                        REGISTER
-                                    </h5>
-                                    <p class="text-center small">
-                                        Enter your username & password to sign up.
+                                    <p class="card-title text-center p-0 m-0">
+                                        Register using My.IIT Account
                                     </p>
                                 </div>
-                                <form class="row g-1 needs-validation"  method="post">
+                                <form class="row needs-validation"  method="post">
                                     {% csrf_token %}
                                     <div class="col-12" id="msg">
                                         {% if messages %}
@@ -74,7 +71,8 @@
                                     </div>
                                     <div class="col-12">
                                         <label for="{{ form.contact_number.id_for_label }}"  class="form-label">Contact Number</label>
-                                        <div class="col-md-12">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text" id="basic-addon1">+63</span>
                                             {{ form.contact_number }}
                                         </div>
                                         <div class="invalid-feedback">
@@ -87,7 +85,7 @@
                                             {{ form.school_id }}
                                         </div>
                                         <div class="invalid-feedback">
-                                            Please enter your First Name!
+                                            Please enter your School ID!
                                         </div>
                                     </div>
                                     
@@ -114,7 +112,7 @@
 
                                 
                                     <div class="col-12 pt-2">
-                                        <button class="btn btn-warning w-100 rounded fw-bold"  type="submit" value="Register" >
+                                        <button class="btn btn-sm btn-warning w-100 rounded fw-bold"  type="submit" value="Register" >
                                             REGISTER
                                         </button>
 
@@ -132,9 +130,8 @@
                                     </ul>
                                 {% endif %}
                             </div>
-                            <div class="card-footer m-1">
-                                <p>Already have account? <a href="{% url 'index' %}">LOGIN HERE</a></p>
-                                <p>A My.IIT account is required to log in.</p>
+                            <div class="card-footer p-1 ">
+                                <p class="ps-3">Already have account? <a href="{% url 'index' %}">LOGIN HERE</a></p>
                             </div>
                         </div>
                     </div>
@@ -143,5 +140,14 @@
         </section>
     </div>
 </main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js" 
+    integrity="sha256-yE5LLp5HSQ/z+hJeCqkz9hdjNkk1jaiGG0tDCraumnA=" 
+    crossorigin="anonymous"></script>
+<script>
+    $('input[name="school_id"]').mask('0000-0000'); 
+</script>
+    
 <!-- End #main -->
 {% endblock %}

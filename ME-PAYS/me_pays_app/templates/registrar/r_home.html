@@ -1,0 +1,188 @@
+{% extends 'base.html'%}
+{% load custom_filters %}
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex" style="background-color: #FA9884 ;">
+    {% include 'registrar/r_sidebar.html' %}
+    <div class="content">
+        {% include 'registrar/r_nav.html' %}
+
+        <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #DBDFEA;">
+            <h1 class="fs-1 ps-3 fw-bold">Welcome {{request.user.registrar.first_name}}!</h1>
+            <h6 class="ps-3 pb-4 fw-bold fst-italic text-decoration-underline text-warning">Registrar Officer</span></h6>
+            <div class="d-flex justify-content-center col-12 ps-3">
+                <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
+                </div>
+            </div>
+            <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
+
+
+
+                    <div class="col-sm-9 pb-4">
+                        <div class="card border-3 border-danger">
+                            <div class="card-header" style="background-color: #E74646;">
+                                <h1 class="card-title fw-bold fs-3 text-center text-white" style="color: black;">PAY</h1>
+                            </div>
+                            <div id="registrar_errorContainer1" class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                            <div class="card-body fw-bold">
+                                <div class="row g-3 fs-5">
+                                    <div class="col-md-8">
+                                        <label for="select1" class="form-label">Student ID:</label>
+                                        <input type="text" class="form-control" id="registrarSID" style="height: 45px;">
+                                    </div>
+
+                                </div>
+                              
+                                <hr>
+                                <br>
+                                <div class="row g-3 fs-5">
+                                    <div class="col-md-8">
+                                        <label for="select1" class="form-label">Document/s:</label>
+                                        <select id="select1" class="operator">
+                                            <option value="">Select document</option>
+                                            {% for item in services %}
+                                            <option value="{{ item.id }}">{{ item.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 ">
+                                        <label for="inputQTY" class="form-label">Quantity</label>
+                                        <input type="text" class="form-control" id="select1qty" style="height: 45px;">
+                                    </div>
+                                    <div class="col-md-2 d-grid mx-auto pb-3">
+                                        <label for="addService" class="form-label">Add File</label>
+                                        <button id="addService" type="button" class="btn btn-dark" style="height: 45px;"><i class="bi bi-plus-square-fill"></i></button>
+                                    </div>
+                                </div>
+                                <div id="newinput"></div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" id="registrar_buttontarget" class="btn btn-primary btn-lg float-end" onclick="registrar_validate_SID()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+
+                <div class="modal fade" id="registrarstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 2</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div>
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th scope="col" style="width: 50px;">#</th>
+                                                <th scope="col">Name of Product</th>
+                                                <th scope="col">Qty</th>
+                                                <th scope="col">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-light" id="showTally">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="showTally" class="m-1"></div>
+                                <div class="row">
+                                    <h5 class="col-sm-2 ">Total:</h5>
+                                    <div class="col-sm-10">
+                                        <p id='totalAmount'></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h5 class="col-sm-2 ">Student ID:</h5>
+                                    <div class="col-sm-10">
+                                        <p id='show_registrarSID'></p>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="FinalTotalAmount" value="">
+                               
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="registrar_buttontarget2" onclick="sendSelectedValuesRegistrar()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal fade" id="registrarstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Reference Number:</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row fw-bold">
+                                    <h1 id='refnum' class="modal-title fw-bold fs-3 pb-3"></h1>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+           
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<script>
+    // Set the CSRF token as a global variable
+    window.csrfTokenTally = '{{ csrf_token }}';
+    window.csrfTokenPay = '{{ csrf_token }}';
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

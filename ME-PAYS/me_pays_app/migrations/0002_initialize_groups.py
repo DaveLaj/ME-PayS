@@ -1,6 +1,5 @@
 from django.db import migrations
 from django.contrib.auth.models import Group, Permission
-from me_pays_app.perm import *
 
 def add_permissions_to_group(group, permissions):
     """
@@ -22,12 +21,14 @@ def create_groups_and_permissions(apps, schema_editor):
     enduser_group = Group.objects.create(name='enduser')
     cashier_group = Group.objects.create(name='cashier')
     pos_group = Group.objects.create(name='pos')
-    admin_group = Group.objects.create(name='admin')
+    admin_group = Group.objects.create(name='admin') 
+    registrar_group = Group.objects.create(name='registrar') 
 
     enduser_group
     cashier_group
     pos_group
     admin_group
+    registrar_group
 
     # Get permissions
     # add_product_permission = Permission.objects.get(codename='add_product')

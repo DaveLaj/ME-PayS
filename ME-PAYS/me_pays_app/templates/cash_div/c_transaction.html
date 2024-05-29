@@ -4,81 +4,192 @@
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex">
-    {% include 'cash_div/c_sidebar.html' %}
-    <div class="content">
-        {% include 'cash_div/c_nav.html' %}
+<div class="main-container d-flex" style="background-color: #f1f1f1;">
+  {% include 'cash_div/c_sidebar.html' %}
+  <div class="content">
+    {% include 'cash_div/c_nav.html' %}
 
-        <div class="dashboard-content pt-4">
+    <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
 
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Transaction History</h1>
-                <div class="col-sm-8 m-auto p-2">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-dark" type="submit">Search</button>
-                    </form>
-                </div>
-                <div class="dashboard-content pt-4">
-                    <div class="container-fluid">
-                            <div class="card-body">
-                                <!-- Table with hoverable rows -->
-                                <table class="table table-hover table-bordered">
-                                    <thead class="text-center">
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col">Type of Payment Method</th>
-                                            <th scope="col">Amount</th>
-                                            <th scope="col">Student ID Number</th>
-                                            <!-- <th scope="col">RFID Number <br> (if MC-PayS is used)</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">4</th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">5</th>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <!-- End Table with hoverable rows -->
-                
+      <h1 class="fs-1 ps-3 pb-3 fw-bold">Recent Transactions</h1>
+      <div class="col-sm-8 m-auto p-2">
+        <form class="d-flex" role="search" method="GET" action="{% url 'searchTransaction' %}">
+          <input class="form-control me-2" type="search" placeholder="Search by ID" aria-label="Search" name="query"
+            value="{{ request.GET.query }}">
+          <input class="form-control me-2" type="date" name="date" value="{{ request.GET.date }}">
+          <button class="btn btn-dark" type="submit">Search</button>
+        </form>
+      </div>
+      <div class="dashboard-content pt-4">
+        <div class="container-fluid">
+          <div class="card-body">
+            <!-- Table with hoverable rows -->
+            <table class="table table-hover table-bordered">
+              <thead class="text-center">
+                <tr>
+                  <th scope="col">School ID</th>
+                  <th scope="col">Transaction Description</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">DateTime</th>
+
+                  <!-- <th scope="col">RFID Number <br> (if MC-PayS is used)</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                {% load custom_filters %}
+                {% for item in page_obj %}
+                <tr>
+                  {% if item.account_Owner.enduser %}
+                  <td>{{item.account_Owner.enduser.school_id}}
+                    <button class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
+                      data-bs-target="#studentInfo{{ item.id }}">Info</button>
+                      
+                    <div class="modal fade" id="studentInfo{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                      aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header text-white" style="background-color: #931e24;">
+                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Student Information</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body fw-bold">
+                            <div class="row d-flex justify-content-center pb-2">
+                              <div class="col-md">
+                                <div class="text-center">
+                                  <a class="img logo rounded-circle"><img src="http://frontendfreecode.com/img/user.jpg" class="rounded-circle"
+                                      style="width: 150px;" alt="Avatar" /></a>
+                                </div>
+                              </div>
                             </div>
-                        
+                            <div class="mb-3 row">
+                              <label for="name" class="col-sm-2 col-form-label">Name</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="name"
+                                  value="{{item.account_Owner.enduser.first_name}} {{item.account_Owner.enduser.last_name}}">
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="contact" value="+63{{item.account_Owner.enduser.contact_number}}">
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="email" class="col-sm-2 col-form-label">Email</label>
+                              <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" value="{{item.account_Owner.email}}">
+                              </div>
+                            </div>
+                    
+                          </div>
+                    
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </td>
+                  {% elif item.account_Owner.pos %}
+                  <td>{{item.account_Owner.pos.school_id}}
+                    <button class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
+                      data-bs-target="#studentInfo{{ item.id }}">Info</button>
+                      
+                    <div class="modal fade" id="studentInfo{{ item.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                      aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                          <div class="modal-header text-white" style="background-color: #931e24;">
+                            <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Student Information</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body fw-bold">
+                            <div class="row d-flex justify-content-center pb-2">
+                              <div class="col-md">
+                                <div class="text-center">
+                                  <a class="img logo rounded-circle"><img src="http://frontendfreecode.com/img/user.jpg" class="rounded-circle"
+                                      style="width: 150px;" alt="Avatar" /></a>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="name" class="col-sm-2 col-form-label">Name</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="name"
+                                  value="{{item.account_Owner.pos.store_name}}">
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="contact" class="col-sm-2 col-form-label">Contact #</label>
+                              <div class="col-sm-10">
+                                <input type="text" class="form-control" id="contact" value="+63{{item.account_Owner.pos.contact_number}}">
+                              </div>
+                            </div>
+                            <div class="mb-3 row">
+                              <label for="email" class="col-sm-2 col-form-label">Email</label>
+                              <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" value="{{item.account_Owner.email}}">
+                              </div>
+                            </div>
+                    
+                          </div>
+                    
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  {% endif %}
+                  <td>{{item.desc}}</td>
+                  {% if item.amount < 0 %} <td>{{ item.amount|neg }}</td>
+                    {% else %}
+                    <td>{{ item.amount }}</td>
+                    {% endif %}
+                    <td>{{item.datetime}}</td>
 
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            
+            <!-- End Table with hoverable rows -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center">
+              <ul class="pagination step-links">
+                <li class="page-item">
+                  <a class="page-link bg-white"
+                    href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page=1">First</a>
+                </li>
+                <li class="d-flex page-item">
+                  {% if page_obj.has_previous %}
+                  <a class="page-link bg-white"
+                    href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.previous_page_number }}">Prev</a>
+                  {% endif %}
+                </li>
+                <li class="page-item">
+                  <a class="page-link current-page bg-primary text-white">{{ page_obj.number }}</a>
+                </li>
+                <li class="page-item d-flex">
+                  {% if page_obj.has_next %}
+                  <a class="page-link bg-white"
+                    href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.next_page_number }}">Next</a>
+                  {% endif %}
+                </li>
+                <li class="page-item">
+                  <a class="page-link bg-white"
+                    href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.paginator.num_pages }}">Last</a>
+                </li>
+              </ul>
+            </nav>
+
+
+          </div>
 
         </div>
 
+
+      </div>
+
     </div>
-</div>{% endblock %}
+  </div>{% endblock %}

@@ -5,8 +5,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from me_pays_app.forms import RegisterForm
-from django.urls import reverse
-from django.contrib.auth.views import auth_login
 from me_pays_app.views.decorators import *
 import time
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -39,11 +37,13 @@ def index(request):
             if user.groups.all()[0].name == 'enduser':
                 return redirect('home')
             elif user.groups.all()[0].name == 'admin':
-                return redirect('admin_home')
+                return redirect('admin_enable')
             elif user.groups.all()[0].name == 'cashier':
                 return redirect('cashdiv_home')
             elif user.groups.all()[0].name == 'pos':
                 return redirect('canteen_home')
+            elif user.groups.all()[0].name == 'registrar':
+                return redirect('registrar_home')
         else:
             # Incorrect credentials, let's throw an error to the screen.
             messages.error(request, "Incorrect username and / or password.")
@@ -90,9 +90,11 @@ def registerenduser(request):
                 enduser.save()
 
                 # Login the user
-                login(request, user,  backend = 'django.contrib.auth.backends.ModelBackend')
+                # login(request, user,  backend = 'django.contrib.auth.backends.ModelBackend')
+
+                
                 messages.success(request, "You're succesfully registered!")
-                return HttpResponseRedirect('register')
+                return HttpResponseRedirect('home')
         else:
             errors = form.errors
             return render(request, template, {'form': form, 'errors': errors})
@@ -104,77 +106,72 @@ def registerenduser(request):
     return render(request, template, {'form': form})
 
 
+# -----------Use this for self account update--------------------------------------------------------------------
+# def updatepos(request):
+#     template = 'admin/admin_listOfPOS.html'
+#     pos = request.user.pos  # Assuming the POS instance is associated with the user
+#     if request.method == 'POST':
+#         form = POS_UpdateForm(request.POST, instance=pos)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Account Deleted Successfully!")
+#             return redirect('pos_list')  # Replace 'pos_list' with your actual URL name for the POS list view
+#     else:
+#         form = POS_UpdateForm(instance=pos)
+#     context = {
+#         'update': form,
+#     }
+
+#     return render(request, template, context) 
 
 
 
 
-
-
-@allowed_users(allowed_roles=['enduser'])
-@login_required(login_url='index')
-def home(request):
-    return render(request, "home.html", {})
 
 @allowed_users(allowed_roles=['enduser'])
 @login_required(login_url='index')
 def transactions(request):
     return render(request, "transactions.html", {})
 
-
+@allowed_users(allowed_roles=['enduser'])
 @login_required(login_url='index')
 def account(request):
     return render(request, "account.html", {})
 
-
+@allowed_users(allowed_roles=['cashier'])
 @login_required(login_url='index')
 def cashdiv_home(request):
     return render(request, "cash_div/c_home.html", {})
 
 
-@login_required(login_url='index')
-def cashdiv_transaction(request):
-    return render(request, "cash_div/c_transaction.html", {})
 
 
-@login_required(login_url='index')
-def cashdiv_account(request):
-    return render(request, "cash_div/c_account.html", {})
 
 
-@login_required(login_url='index')
-def admin_home(request):
-    return render(request, "admin/admin_home.html", {})
 
 
+
+@allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')
 def admin_addUser(request):
     return render(request, "admin/admin_addUser.html", {})
 
-
+@allowed_users(allowed_roles=['admin'])
 @login_required(login_url='index')
-def admin_listOfStaff(request):
-    return render(request, "admin/admin_listOfStaff.html", {})
+def admin_listOfAdmin(request):
+    return render(request, "admin/admin_listOfAdmin.html", {})
 
 
-@login_required(login_url='index')
-def admin_listOfStudent(request):
-    return render(request, "admin/admin_listOfStudent.html", {})
-
-
+@allowed_users(allowed_roles=['pos'])
 @login_required(login_url='index')
 def canteen_home(request):
     return render(request, "canteen/canteen_home.html", {})
 
 
-@login_required(login_url='index')
-def canteen_products(request):
-    return render(request, "canteen/canteen_products.html", {})
-
-
+@allowed_users(allowed_roles=['pos'])
 @login_required(login_url='index')
 def canteen_history(request):
     return render(request, "canteen/canteen_history.html", {})
-
 
 @login_required(login_url='index')
 def logout_request(request):

@@ -1,0 +1,89 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Transaction {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex" style="background-color: #FA9884;">
+  {% include 'registrar/r_sidebar.html' %}
+  <div class="content">
+    {% include 'registrar/r_nav.html' %}
+    <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #DBDFEA;">
+      <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome {{request.user.registrar.first_name}}!</h1>
+      <div class="d-flex justify-content-center col-12 ps-3">
+        <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
+        </div>
+      </div>
+      <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
+        <div class="col-sm-9 pb-4">
+            <div class="card">
+              <div class="card-header" style="background-color: #f1ed71; display: flex; align-items: center;">
+                <button type="button" id="registrar_buttontarget" class="btn btn-secondary btn-lg" onclick="goBack()" style="margin-right: 15px;">Back</button>
+                <div style="flex-grow: 1; text-align: center;">
+                    <h1 class="card-title fw-bold fs-3" style="color: black; margin: 0;">Reference Number: {{ reference_number }}</h1>
+                </div>
+              </div>
+              
+            
+
+            
+            
+            
+                
+                <div class="card-body fw-bold">
+                  <div class="row g-3 fs-5">
+                    <div>
+                      <table class="table table-hover table-bordered">
+                          <thead class="text-center">
+                              <tr>
+                                  <th scope="col" style="width: 50px;">#</th>
+                                  <th scope="col">Name of Product</th>
+                                  <th scope="col">Qty</th>
+                                  <th scope="col">Price</th>
+                              </tr>
+                          </thead>
+                          <tbody class="bg-light">
+                            {% for item in cart %}
+                            <tr>
+                              <td>{{ item.id }}</td>
+                              <td>{{ item.name }}</td>
+                              <td>{{ item.price }}</td>
+                              <td>{{ item.qty }}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                      </table>
+                    </div>
+                    </div>
+                    <div class="row">
+                      <h5 class="col-sm-2 ">Total:</h5>
+                      <div class="col-sm-10">
+                          <h5>{{ total_price }}</h5>
+                      </div>
+                    </div>
+                    <div class="row">   
+                      <h5 class="col-sm-2 ">Student ID:</h5>
+                      <div class="col-sm-10">
+                          <h5>{{ student_id }}</h5>
+                      </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  
+                </div>
+            </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function goBack() {
+      history.back();
+    }
+  </script>
+  
+
+  
+{% endblock %}

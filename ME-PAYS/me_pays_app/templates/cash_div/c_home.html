@@ -1,160 +1,699 @@
 {% extends 'base.html'%}
-
+{% load custom_filters %}
 {% load static %}
 {% block title %} Home {% endblock%}
 
 {% block content%}
-<div class="main-container d-flex">
+<div class="main-container d-flex" style="background-color: #f1f1f1;">
     {% include 'cash_div/c_sidebar.html' %}
     <div class="content">
         {% include 'cash_div/c_nav.html' %}
-
-        <div class="dashboard-content px-3 pt-4">
-            <h1 class="fs-1 ps-3 pb-3 fw-bold">Welcome!</h1>
+      
+        <div class="dashboard-content px-3 pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff;">
+            <div>
+                <h2 class="ps-3 fw-bold">Welcome <span class="fw-bolder" style="color: #D90D1E;">{{cashier.first_name}}!</span></h2>
+            </div>
+            <div>
+                <h6 class="ps-3 pb-4 fw-bold">from the <span class="fst-italic text-decoration-underline"
+                        style="color: #FFC107;">{{cashier.location}}</span></h6>
+            </div>
+            <div class="d-flex justify-content-center col-12 ps-3">
+                <div class="fw-normal bg-success text-white text-center ps-3 pe-3 fs-4 rounded" id="statusContainer">
+                </div>
+            </div>
             <div class="container-fluid mt-3 d-flex align-items-center justify-content-center">
 
                 <!-- Cash IN -->
-                <button type="button" class="btn fw-bold rounded-pill"
-                    style="background-color: #ff7070; width: 400px;" data-bs-toggle="modal"
-                    data-bs-target="#cashIn">Cash In</button>
-
-                <div class="modal fade" id="cashIn" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <button type="button" class="btn btn-danger fw-bold"
+                    style="width: 300px;" data-bs-toggle="modal"
+                    data-bs-target="#loadstep1Modal" onclick="load_nextStep(1)">Cash In
+                </button>
+                
+                <div class="modal fade" id="loadstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">CASH IN</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
+                                
                                 <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Amount:</label>
+                                    <label for="amount" class="col-sm-2 col-form-label">Amount to be Loaded</label>
                                     <div class="mb-3 col-sm-10">
-                                        <input type="text" class="form-control" id="amount">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="date" class="col-sm-2 col-form-label">Date:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <input type="date" class="form-control" id="date">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Student ID:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <input type="text" class="form-control" id="StudentID">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
-                                    <div class="col-sm-10">
-                                        <input type="password" class="form-control" id="RFID">
+                                        <input type="text" class="form-control" id="amountload"  onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46 || event.charCode === 0" oninput="validateNumberInput(this)">
                                     </div>
                                 </div>
                             </div>
+
                             <div class="modal-footer">
+                                <div id="load_errorContainerRFID"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-dark">Submit</button>
+                                <button type="button" id="loadbuttontarget" class="btn btn-primary"
+                                    onclick="load_amountValidate()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="loadstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <input type="password" class="form-control" id="loadrfid">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <div id="load_errorContainerRFID2"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" id="prev1" class="btn btn-secondary"
+                                    onclick='load_previousStep(1)'>Back</button>
+                                <button type="button" id="loadbuttontarget2" class="btn btn-primary"
+                                    onclick='load_validateAndProceed()'>Next</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
 
-                <!-- PAY FEES -->
-                <button type="button" class="btn fw-bold rounded-pill"
-                    style="background-color: #ff7070; width: 400px; margin-left: 30px;" data-bs-toggle="modal"
-                    data-bs-target="#payFees">Pay fees</button>
+
 
                 
-                <div class="modal fade" id="payFees" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+
+                <div class="modal fade" id="loadstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Load Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <h5 class="col-sm-2 ">Load Top Up:</h5>
+                                    <div class="col-sm-10">
+                                        <h7>Php <span id='basetopup'></span></h7>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">School ID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="personID"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Name:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="fullname"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div id="load_errorContainerRFID3"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" id="prev1" class="btn btn-secondary"
+                                    onclick='load_previousStep(2)'>Back</button>
+                                <button type="button" id="loadbuttontarget3" class="btn btn-primary"
+                                    data-bs-dismiss="modal" onclick='payLoad()'>Pay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- CASH OUT-->
+
+
+                <button type="button" class="btn btn-danger fw-bold"
+                    style="width: 300px; margin-left: 70px;" 
+                     onclick="cashout_nextStep(1)">Cash Out</button>
+               
+                     <div class="modal fade" id="cashoutstep1Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                         <div class="modal-content">
+                             <div class="modal-header" style="background-color: #fffb90;">
+                                 <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Cash Out</h1>
+                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                     aria-label="Close"></button>
+                             </div>
+                             <div class="modal-body fw-bold">
+                                 
+                                 <div class="row">
+                                     <label for="amount" class="col-sm-2 col-form-label">Amount to be Cashed Out</label>
+                                     <div class="mb-3 col-sm-10">
+                                         <input type="text" class="form-control" id="amountcashout" oninput="validateNumberInput(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode === 46 || event.charCode === 0">
+                                     </div>
+                                 </div>
+                             </div>
+ 
+                             <div class="modal-footer">
+                                 <div id="cashout_errorContainerRFID"
+                                     class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                 <button type="button" id="cashoutbuttontarget1" class="btn btn-primary"
+                                     onclick="cashout_amountValidate()">Next</button>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                  
+
+                <div class="modal fade" id="cashoutstep2Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Cashout Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <input type="password" class="form-control" id="cashoutrfid">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <div id="cashout_errorContainerRFID1"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" id="prev1" class="btn btn-secondary"
+                                    onclick='cashout_previousStep(1)'>Back</button>
+                                <button type="button" id="cashoutbuttontarget2" class="btn btn-primary"
+                                    onclick="cashout_validateAndProceed()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="cashoutstep3Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Cashout Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">School ID:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="personID_cashout"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Name:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p id="fullname_cashout"></p>
+                                    </div>
+                                </div>
+                               
+                            </div>
+
+                            <div class="modal-footer">
+                                <div id="cashout_errorContainerRFID2"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" id="prev1" class="btn btn-secondary"
+                                    onclick='cashout_previousStep(1)'>Back</button>
+                                <button type="button" id="cashoutbuttontarget3" class="btn btn-primary"
+                                    onclick='cashout_nextStep(4);'>Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="modal fade" id="cashoutstep4Modal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Cashout Card</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row">
+                                    <label for="amount" class="col-sm-2 col-form-label">Cashout Status:</label>
+                                    <div class="mb-3 col-sm-10">
+                                        <p>Php <span id="basetopup_cashout"></span> to be cashed out from current balance of Php <span id='currentbal_cashout'></span></p>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <div id="cashout_errorContainer3"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" id="prev1" class="btn btn-secondary"
+                                    onclick='cashout_previousStep(3)'>Back</button>
+                                <button type="button" id="cashoutbuttontarget4" class="btn btn-primary"
+                                    data-bs-dismiss="modal" onclick='cashout()'>Cash Out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+                <!-- PAY FEES -->
+                <button type="button" class="btn btn-danger fw-bold"
+                    style="width: 300px; margin-left: 70px;"
+                    data-bs-toggle="modal" data-bs-target="#paystep1Modal" onclick="clearRefNum()" >Pay Fees</button>
+
+
+                <div class="modal fade" id="paystep1Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: #fffb90;">
-                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 1</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body fw-bold">
-                                <div class="row">
-                                    <label for="inputDocument" class="col-sm-2 col-form-label">Document/s:</label>
-                                    <div class=" mb-3  col-sm-10  d-flex">
-                                        <select class="form-select" id="inputDocument">
-                                            <option selected>Choose...</option>
-                                            <option value="1">Document Title..</option>
-                                            <option value="2">Document Title...</option>
-                                        </select>
-                                        <button id="addFile" type="button" class="btn btn-dark d-flex"><i class="bi bi-plus-square-fill me-2"></i>Add</button>
-                                    </div>
-                                    <div id="newinput" class="m-1"></div>
-                                </div>
-                                <div class="row">
-                                    <label for="date" class="col-sm-2 col-form-label">Date:</label>
-                                    <div class="mb-3 col-sm-10">
-                                        <input type="date" class="form-control" id="date">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <label for="amount" class="col-sm-2 col-form-label">Total Amount:</label>
+                                <div class="row fw-bold">
+                                    
+                                    <label class="col-sm-2 col-form-label">School ID:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="amount">
+                                        <input type="text" class="form-control" id="payfees_school_id">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <label for="" class="col-sm-2 col-form-label">Payment Method:</label>
-                                    <div class="col m-3">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions" id="MC-PayS" value="MC-PayS">
-                                            <label class="form-check-label" for="MC-PayS">MC-PayS</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="RadioOptions" id="Cash" value="Cash">
-                                            <label class="form-check-label" for="Cash">Cash</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="MC-PayS showRFID">
-                                    <div class="row">
-                                        <label for="" class="col-sm-2 col-form-label">Scan RFID:</label>
-                                        <div class="col-sm-10">
-                                            <input type="password" class="form-control" id="RFID">
-                                        </div>
-                                    </div>
-                                </div>                                
                             </div>
                             <div class="modal-footer">
+                                <div id="pay_errorContainerRFID1"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-dark">Submit</button>
+                                <button type="button"  id="paybuttontarget"  class="btn btn-primary" onclick="pay_clean_school_id()">Next</button>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="paystep2Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 2</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">School ID: <span id='show_school_id'></span></h1>
+                                <br>
+                                <div>
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th scope="col" style="width: 50px;">Ref #</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Date and Time</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="showCart">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+    
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <div id="pay_errorContainerRFID2"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(1)">Previous</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="modal fade" id="paystep3Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">PAY Step 2</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <input type="hidden" id="refnum">
+                            <input type="hidden" id="FinalTotalAmount">
+                            <div class="modal-body fw-bold">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Reference Number:     <span id='show_refnum'></span></h1>
+                                <br>
+                                <div>
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="text-center">
+                                            <tr>
+                                                <th scope="col" style="width: 50px;">#</th>
+                                                <th scope="col">Name of Product</th>
+                                                <th scope="col">Qty</th>
+                                                <th scope="col">Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="showTally">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div id="showTally" class="m-1"></div>
+                                <div class="row">
+                                    <h5 class="col-sm-2 ">Total:</h5>
+                                    <div class="col-sm-10">
+                                        <p id='totalAmount'></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <h5 class="col-sm-2 ">School ID:</h5>
+                                    <div class="col-sm-10">
+                                        <p id='show_sid'></p>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <div id="pay_errorContainerRFID3"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" class="btn btn-secondary"  onclick="pay_previousStep(2)">Previous</button>
+                                <button type="button" class="btn btn-primary" id="paybuttontarget3" onclick="pay_nextStep(4)">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="modal fade" id="paystep4Modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #fffb90;">
+                                <h1 class="modal-title fw-bold fs-3" id="staticBackdropLabel">Pay</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body fw-bold">
+                                <div class="row fw-bold">
+                                    <h1 class="modal-title fw-bold fs-3 pb-3">MC-PayS Method:</h1>
+                                    <label class="col-sm-2 col-form-label">Scan RFID:</label>
+                                    <div class="col-sm-10">
+                                        <input type="password" class="form-control" id="payrfid">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div id="pay_errorContainerRFID4"
+                                    class="fw-normal bg-danger text-white text-center ps-3 pe-3 fs-4 rounded"></div>
+                                <button type="button" class="btn btn-secondary" onclick="pay_previousStep(3)">Previous</button>
+                                <button type="button" id="paybuttontarget4"  class="btn btn-primary"  onclick="pay_validateAndProceed()">Pay</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+            <div class="row d-flex mt-5 align-items-center justify-content-center">
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #3d3c3c;">
+                        <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total
+                            Daily Cash-ins</div>
+                        <div class="card-body">
+                            <h3 class="card-text fw-bold">Php <span id="total-cash-in">{{ dailyTotalCashIn|none2zero }}</span></h3>
+                            <p class="card-title" ><span id="cash-in-count">{{ dailyCashInCount }}</span> Transactions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #3d3c3c;">
+                        <div class="card-header text-white fw-bold fs-5.5" style="background-color: #3d3c3c;">Total
+                            Daily Payments</div>
+                        <div class="card-body">
+                            <h3 class="card-text fw-bold">Php <span id="total-pay">{{dailyTotalPay|neg}}</span></h3>
+                            <p class="card-title"><span id="pay-count">{{dailyPayCount}}</span> Payments</p>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <div class="row d-flex mt-5 align-items-center justify-content-center">
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="cashInHistogramChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-sm-5 mb-3 mt-1">
+                    <div class="chart-container">
+                        <canvas id="feePaymentHistogramChart"></canvas>
                     </div>
                 </div>
             </div>
             <div class="row d-flex mt-5 align-items-center justify-content-center">
                 <div class="col-sm-5 mb-3 mt-1">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
-                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Cash-in's (as of today)
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        </div>
+                    <div class="chart-container">
+                        <canvas id="cashInEarningHistogramChart"></canvas>
                     </div>
                 </div>
                 <div class="col-sm-5 mb-3 mt-1">
-                    <div class="card text-center" style="height: 9rem; border-width: 3px; border-color: #fffb90;">
-                        <div class="card-header fw-bold fs-5.5" style="background-color: #fffb90;">Total Payment's (as of today)
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        </div>
+                    <div class="chart-container">
+                        <canvas id="feePaymentEarningHistogramChart"></canvas>
                     </div>
                 </div>
             </div>
-
+            <br>
+           
         </div>
 
     </div>
 </div>
+
+
+
+<script>
+    // Set the CSRF token as a global variable
+    window.csrfTokenRefNum = '{{ csrf_token }}';
+    window.csrfTokengetCart = '{{ csrf_token }}';
+    window.csrfTokenLoad = '{{ csrf_token }}';
+    window.csrfTokenPay = '{{ csrf_token }}';
+    window.csrfTokenPayRFID = '{{ csrf_token }}';
+    window.csrfTokenCashout ='{{ csrf_token }}';
+    window.csrfTokenCashoutFinal ='{{ csrf_token }}';
+    window.csrfTokenCashoutCreds ='{{ csrf_token }}';
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+     
+        var ctxCashIn = document.getElementById('cashInHistogramChart').getContext('2d');
+        var ctxCashInAmount = document.getElementById('cashInEarningHistogramChart').getContext('2d');
+        var ctxFeePayment = document.getElementById('feePaymentHistogramChart').getContext('2d');
+        var ctxFeePaymentAmount = document.getElementById('feePaymentEarningHistogramChart').getContext('2d');
+
+        var cashInDates = {{ cash_in_dates|safe }};
+        var cashInCounts = {{ cash_in_counts|safe }};
+        var cashInEarnings = {{ cash_in_amounts|safe }};
+        var feePaymentEarnings = {{ fee_payment_amounts|safe }};
+        var feePaymentDates = {{ fee_payment_dates|safe }};
+        var feePaymentCounts = {{ fee_payment_counts|safe }};
+
+
+
+        var cashInEarningsData = {
+            labels: cashInDates,
+            datasets: [{
+                label: 'Cash In Earnings',
+                data: cashInEarnings,
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+       
+            }]
+        };
+        var feePaymentEarningsData = {
+            labels: feePaymentDates,
+            datasets: [{
+                label: 'Fee Payment Earnings',
+                data: feePaymentEarnings,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+       
+            }]
+        };
+ 
+
+        var feePaymentChartData = {
+            labels: feePaymentDates,
+            datasets: [{
+                label: 'Fee Payment Transaction Count',
+                data: feePaymentCounts,
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+            
+            }]
+        };
+
+
+        var cashInChartData = {
+            labels: cashInDates,
+            datasets: [{
+                label: 'Cash In Transaction Count',
+                data: cashInCounts,
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+            
+            }]
+        };
+ 
+        var chartOptionsCount = {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true
+                  }
+                }]
+              }
+            };
+        
+
+            var chartOptions = {
+                responsive: true,
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    precision: 0
+                  },
+                  x: {
+                    type: 'time',
+                    time: {
+                      unit: 'day',
+                      displayFormats: {
+                        day: 'MMM D'
+                      }
+                    }
+                  }
+                },
+                dataset: {
+                  barPercentage: 0.8
+                }
+              };
+            
+              
+              
+            
+
+
+        var cashInChart = new Chart(ctxCashIn, {
+            type: 'bar',
+            data: cashInChartData,
+            options: chartOptionsCount
+        });
+        
+        var cashInEarningsChart = new Chart(ctxCashInAmount, {
+            type: 'bar',
+            data: cashInEarningsData,
+            options: chartOptionsCount
+        });
+
+        var feePaymentEarningsChart = new Chart(ctxFeePaymentAmount, {
+            type: 'bar',
+            data: feePaymentEarningsData,
+            options: chartOptionsCount
+        });
+
+        var feePaymentChart = new Chart(ctxFeePayment, {
+            type: 'bar',
+            data: feePaymentChartData,
+            options: chartOptionsCount
+        });
+    });
+ </script>
+ 
+ 
+
+
+
+
+
+
+
+
+
+
 {% endblock %}

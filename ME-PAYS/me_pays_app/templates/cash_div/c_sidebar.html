@@ -1,23 +1,30 @@
 {% load static %}
 
-<div class="sidebar bg-secondary" id="side_nav">
-    <div class="header-box ps-3 pt-3 pb-4 d-flex justify-content-center ">
+<div class="sidebar " style="background-color: #202427;" id="side_nav">
+    <div class="header-box ps-3 pt-2 pb-2 d-flex justify-content-center " style="background-color: #9c0106" ;>
         <h1 class="fs-4">
-            <span class="bg-white text-dark rounded shadow px-3 me-2 p-2 mx-auto">
-                <img src="{% static 'logo/LOGO2.png' %}" alt="" style="width: 110px; height: 33px;">
+            <span class="bg-white text-dark rounded shadow mx-auto pb-2 px-2">
+                <img src="{% static 'logo/LOGO2.png' %}" alt="" style="width: 110px; height: 27px;">
             </span>
         </h1>
-        <button class="btn d-md-none d-block close-btn px-1 py-0 text-white"><i class="bi bi-list"></i></button>
+        <button class="btn d-md-none d-block close-btn px-3 py-0 text-white"><i class="bi bi-list"></i></button>
     </div>
-    <ul class="list-unstyled px-2 text-center">
+    <ul class="list-unstyled pt-3 px-2 text-center">
         <div class="container-fluid pb-3">
             <a href="#" class="img logo rounded-circle mb-5">
                 <img src="http://frontendfreecode.com/img/user.jpg" class="rounded-circle" style="width: 150px;"
                     alt="Avatar" />
             </a>
         </div>
-        <li><a href="cashdiv_home" class="text-decoration-none fw-bold px-3 py-2 d-block">Home</a></li>
-        <li><a href="cashdiv_transaction" class="text-decoration-none fw-bold px-3 py-2 d-block">Transaction</a></li>
-        <li><a href="cashdiv_account" class="text-decoration-none fw-bold px-3 py-2 d-block">Account</a></li>
+        <li><a href={% url "cashdiv_home" %} class="text-decoration-none fw-bold px-3 py-2 d-block">Home</a></li>
+        <li class="dropdown">
+            <a class="dropdown-toggle text-decoration-none fw-bold px-3 py-2 d-block" data-bs-toggle="dropdown">Transactions</a>
+            <div class="dropdown-menu dropdown-menu-end">
+                <a href={% url "cashdiv_transaction" %} class="dropdown-item p-2">Recent</a>
+                <a href={% url "cashdiv_transactions_enduserlist" %} class="dropdown-item p-2">By Student</a>
+                <a href={% url "cashdiv_transaction_poslist" %} class="dropdown-item p-2">By POS</a>
+            </div>
+        </li>
+        <li><a href={% url "cashdiv_account" %} class="text-decoration-none fw-bold px-3 py-2 d-block">Account</a></li>
     </ul>
 </div>

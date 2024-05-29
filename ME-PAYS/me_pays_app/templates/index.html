@@ -2,8 +2,11 @@
 {% include 'nav.html'%} 
 {% load static %} 
 {% block title %} Login {% endblock%} 
+
 {% block content%}
-<main class="login-bg"  style="background-color: #dfdddd">
+
+<main class="login-bg" style="background: url('../static/images/bg1.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: 100% 100%;">
+  
   <div class="container">
     <section
       class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4"
@@ -42,14 +45,10 @@
                 <!-- End Logo -->
               </div>
 
-              <div class="card-body">
+              <div class="card-body" style="background-color: #e6f1fa;">
                 <br>
-                <div class="pb-1">
-                  <h4 class="card-title text-center pb-0">
-                    Universal Login Page
-                  </h4>
-                  <br>
-                  <h5 class="card-title text-center pb-0">
+                <div class="">
+                  <h5 class="card-title text-center">
                     Login to Your Account
                   </h5>
                   <p class="text-center small">
@@ -57,7 +56,7 @@
                   </p>
                 </div>
 
-                <form class="row g-1 needs-validation" action="{% url 'index' %}" method="post">
+                <form class="row g-0 needs-validation" action="{% url 'index' %}" method="post">
                   {% csrf_token %}
                   <div class="col-12" id="msg">
                     {% if messages %}
@@ -101,8 +100,8 @@
                   </div>
 
                   <div class="col-12">
-                    <p>Forgot Password? <a href="register">CLICK HERE</a></p>
-                    <p>Don't have account yet? <a href="register">REGISTER NOW</a></p>
+                    <!-- <p>Forgot Password? <a href="register">CLICK HERE</a></p> -->
+                    <p class="pt-2">Don't have account yet? <a class="fw-bold" href="register">REGISTER NOW!</a></p>
                   </div>
                   <div class="col-12 pt-3">
                     <button
@@ -115,7 +114,7 @@
                 </form>
               </div>
 
-              <div class="card-footer m-1">
+              <div class="card-footer">
                 <p>A My.IIT account is required to log in.</p>
                 
                 

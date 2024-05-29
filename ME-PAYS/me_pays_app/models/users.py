@@ -2,8 +2,13 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.db.models.signals import post_save  
 from django.contrib.auth.models import Group
+
+
+
+
+
+
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -37,12 +42,9 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
        
-        allgroup = []
-        groups = Group.objects.all
-        for group in groups():
-            allgroup.append(group)
+        group = Group.objects.get(name='admin')
         user = self.create_user(email, password, **extra_fields)
-        user.groups.set(allgroup)
+        user.groups.set([group])
         return user
     
     def create_enduser(self, email, password=None, **extra_fields):
@@ -50,13 +52,27 @@ class CustomUserManager(BaseUserManager):
         user = self.create_user(email, password, **extra_fields)
         user.groups.set([group])
         return user
+    
+    def create_pos(self, email, password=None, **extra_fields):
+        group = Group.objects.get(name='pos')
+        user = self.create_user(email, password, **extra_fields)
+        user.groups.set([group])
+        return user
+    
+    def create_cashier(self, email, password=None, **extra_fields):
+        group = Group.objects.get(name='cashier')
+        user = self.create_user(email, password, **extra_fields)
+        user.groups.set([group])
+        return user
+    
+    def create_registrar(self, email, password=None, **extra_fields):
+        group = Group.objects.get(name='registrar')
+        user = self.create_user(email, password, **extra_fields)
+        user.groups.set([group])
+        return user
+    
 
 
-
-
-    def get_enduser(self):
-        enduser_group = Group.objects.get(name='enduser')
-        return self.objects.filter(groups__name=enduser_group.name)
     
     
     
@@ -90,44 +106,66 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
-
 
 class EndUser(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='enduser')
+    rfid_code =models.CharField(max_length=100, blank=True, null=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     contact_number = models.BigIntegerField()
-    school_id = models.IntegerField()
-    credit_balance = models.FloatField(default=0)
+    school_id = models.CharField(max_length=9)
+    credit_balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     loan_balance = models.FloatField(default=0)
+
+
+
+
+
 
 
 
 class Cashier(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='cashier')
-    name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
     location = models.CharField(max_length=60)
+    contact_number = models.CharField(max_length=10)
+    credit_balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     
 
 
 class POS(models.Model):
 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    contact_number = models.IntegerField()
-    name = models.CharField(max_length=50)
-    location = models.CharField(max_length=60)
+    store_name = models.CharField(max_length=30, blank=True)
+    contact_number = models.BigIntegerField()
+    location = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    credit_balance = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    school_id = models.CharField(max_length=9)
+    rfid_code =models.CharField(max_length=100, blank=True, null=True)
+class Admin(models.Model):
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    contact_number = models.BigIntegerField()
 
 
 
 
 
 
-# technique to create placeholder on creation of CustomUser instance
-# @receiver(post_save, sender=EndUser)
-# def create_enduser_profile(sender, instance, created, **kwargs):
-#     if created and instance.role == "ENDUSER":
-#         EndUser.objects.create(user=instance)
+class Registrar(models.Model):
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    contact_number = models.BigIntegerField()
+
+
+
+
 

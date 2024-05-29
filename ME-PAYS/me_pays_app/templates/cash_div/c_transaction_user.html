@@ -1,0 +1,98 @@
+{% extends 'base.html'%}
+
+{% load static %}
+{% block title %} Home {% endblock%}
+
+{% block content%}
+<div class="main-container d-flex" style="background-color: #f1f1f1;">
+  {% include 'cash_div/c_sidebar.html' %}
+  <div class="content">
+    {% include 'cash_div/c_nav.html' %}
+
+        <div class="dashboard-content pt-4 m-4 border-top border-bottom rounded border-3 border-secondary" style="background-color: #ffffff">
+            <h2 class=" ps-3 fw-bold">SID: {{ school_id }} Transaction History</h2>
+
+            <div class="col-sm-8 m-auto p-2">
+              <form class="d-flex" role="search" method="GET" action="{% url 'cashdiv_transactions_user_search' account_id=account_id group=group %}">
+                <input class="form-control me-2" type="search" placeholder="Search by Description" aria-label="Search" name="query"
+                  value="{{ request.GET.query }}">
+                <input class="form-control me-2" type="date" name="date" value="{{ request.GET.date }}">
+                <button class="btn btn-dark" type="submit">Search</button>
+              </form>
+            </div>
+
+            <div class="container-fluid mx-auto">
+                    <div class="card-body">
+                        <div class="d-flex">
+                          <h6>User Credit Balance is: </h6>
+                          <h3 class="fw-bold text-success ps-2 pb-2">  {{ request.user.enduser.credit_balance}}</h3>
+                        </div>
+                        <!-- Table with hoverable rows -->
+                        <table class="table table-sm table-hover table-bordered ps-1">
+                            <thead class="text-center">
+                                <tr>
+                                 
+                                    <th scope="col">Transaction Description</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Transactor</th>
+                                    <th scope="col">Date & Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% load custom_filters %}
+                                {% for log in page_obj %}
+                                <tr>
+                                  
+                                    <td>{{log.desc}}</td>
+                                   
+                                    {% if log.desc == 'Cash In' or log.desc == 'Share' %}
+                                        <td><span style="color: green;">{{ log.amount }}</span></td>
+                                    {% else %}
+                                        <td><span style="color: red;">{{ log.amount }}</span></td>
+                                    {% endif %}
+                                    {% if log.enduser_sender%}
+                                      <td>[ <i class="bi bi-person"></i> STUDENT] {{log.enduser_sender.school_id}} </td>
+                                    {% elif log.cashier_sender%}
+                                      <td>[ <i class="bi bi-cash-coin"></i> CASHIER] {{log.cashier_sender.first_name}} {{log.cashier_sender.last_name}}</td>
+                                    {% elif log.pos_sender%}
+                                    <td>[ <i class="bi bi-shop"></i> CANTEEN] {{log.pos_sender.store_name}}</td>
+                                    {% endif %}
+                                    <td>{{log.datetime}}</td>
+                                </tr> 
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- End Table with hoverable rows -->
+                        <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                            <ul class="pagination step-links">
+                              <li class="page-item">
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page=1">First</a>
+                              </li>
+                              <li class="d-flex page-item">
+                                {% if page_obj.has_previous %}
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.previous_page_number }}">Prev</a>
+                                {% endif %}
+                              </li> 
+                              <li class="page-item">
+                                <a class="page-link current-page bg-primary text-white">{{ page_obj.number }}</a>
+                              </li>
+                              <li class="page-item d-flex">
+                                {% if page_obj.has_next %}
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.next_page_number }}">Next</a>
+                                {% endif %}
+                              </li>
+                              <li class="page-item">
+                                <a class="page-link bg-white" href="?query={{ search_string }}&amp;date={{ date_string }}&amp;page={{ page_obj.paginator.num_pages }}">Last</a>
+                              </li>
+                            </ul>
+                          </nav>
+                        <!-- End Table with hoverable rows -->
+            
+                    </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
